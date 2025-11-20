@@ -1,0 +1,4 @@
+repository "TSE-Project 2025-11-20_20-55-32/TSE-Project@5773884463205@cloud"
+  path "/"
+    br "/main"
+    co "/main"
