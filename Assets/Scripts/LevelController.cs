@@ -1,7 +1,11 @@
 using UnityEngine;
 
 // TODO
-// Level receives input from coding block tells player to move based on grid
+// Facing
+// Sound when walking (sound manager)
+// Ambient level sound (level sound handling, sound manager)
+// Grid handling in WorldGrid - grid tracked in code when tilemap drawn or physics used? need to snap to grid center if not code validated
+// Tilemap square graphics
 
 public class LevelController : MonoBehaviour
 {
