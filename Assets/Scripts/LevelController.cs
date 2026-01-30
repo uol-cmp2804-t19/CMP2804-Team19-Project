@@ -4,13 +4,15 @@ using UnityEngine;
 // Facing
 // Sound when walking (sound manager)
 // Ambient level sound (level sound handling, sound manager)
-// Grid handling in WorldGrid - grid tracked in code when tilemap drawn or physics used? need to snap to grid center if not code validated
+// Grid handling in worldGrid - grid tracked in code when tilemap drawn or physics used? need to snap to grid center if not code validated
 // Tilemap square graphics
 
 public class LevelController : MonoBehaviour
 {
     public PlayerController player = null;
     public WorldGrid world = null;
+    public float moveDelay = 2.5f;
+    private float nextMove = 0.0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     //void Start()
@@ -61,11 +63,16 @@ public class LevelController : MonoBehaviour
         }
         else
         {
-            if (world.IsValidMove(direction))
+
+            if (Time.time > nextMove)
+            {
+                nextMove = Time.time + moveDelay;
+                if (world.IsValidMove(direction))
                 {
                     player.Move(direction);
                 }
-        }
+            }
 
+        }
     }
 }
