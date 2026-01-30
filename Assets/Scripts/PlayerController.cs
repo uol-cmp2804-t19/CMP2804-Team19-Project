@@ -12,12 +12,18 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     // placeholder testing behaviour
-    void Update()
-    {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
+    //void Update()
+    //{
+    //    float x = Input.GetAxisRaw("Horizontal");
+    //    float y = Input.GetAxisRaw("Vertical");
 
-        Vector3 movement = new Vector3(x, y, 0);
+    //    Vector3 movement = new Vector3(x, y, 0);
+    //    transform.position += movement * speed * Time.deltaTime;
+    //}
+
+    public void Move(Vector2 dir)
+    {
+        Vector3 movement = new Vector3(dir.x, dir.y, 0);
         transform.position += movement * speed * Time.deltaTime;
     }
 }

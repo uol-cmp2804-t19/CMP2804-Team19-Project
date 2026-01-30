@@ -6,11 +6,12 @@ using UnityEngine;
 public class LevelController : MonoBehaviour
 {
     public PlayerController player = null;
+    public WorldGrid world = null;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     //void Start()
     //{
-        
+
     //}
 
     // Update is called once per frame
@@ -21,7 +22,7 @@ public class LevelController : MonoBehaviour
         // TODO remove
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
-        // Vector2 dir = (x, y);
+        Vector2 dir = new Vector2(x, y);
 
         if (x > 0.0)
         {
@@ -39,19 +40,27 @@ public class LevelController : MonoBehaviour
         {
             Debug.Log("Move Down");
         }
+        MovePlayer(dir);
 
         // Vector3 movement = new Vector3(x, y, 0);
         // transform.position += movement * speed * Time.deltaTime;
 
     }
 
-    void MovePLayer()
+    void MovePlayer(Vector2 direction)
     {
-        if (player != null or )
+        if (player == null || world == null)
         {
             //TODO add error handling
-            Debug.Log("You forgot to assign a player!");
+            Debug.Log("You forgot to assign a player and/or grid!");
             return;
+        }
+        else
+        {
+            if (world.IsValidMove(direction))
+                {
+                    player.Move(direction);
+                }
         }
 
     }

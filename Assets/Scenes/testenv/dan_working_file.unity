@@ -639,6 +639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1394649568}
+  world: {fileID: 2061299297}
 --- !u!4 &2010213339
 Transform:
   m_ObjectHideFlags: 0
@@ -664,6 +665,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2061299296}
   - component: {fileID: 2061299295}
+  - component: {fileID: 2061299297}
   m_Layer: 0
   m_Name: WorldGrid
   m_TagString: Untagged
@@ -699,6 +701,18 @@ Transform:
   - {fileID: 2136564597}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2061299297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061299294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f2f51edc34ed6f4f8288fb234040566, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2136564596
 GameObject:
   m_ObjectHideFlags: 0
