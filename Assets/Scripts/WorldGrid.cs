@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WorldGrid : MonoBehaviour
+public class WorldMap : MonoBehaviour
 {
     public bool IsValidMove(Vector2 direction)
     {
