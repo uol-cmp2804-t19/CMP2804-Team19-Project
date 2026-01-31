@@ -68,11 +68,9 @@ public class LevelController : MonoBehaviour
         // silently fail, debug handling only
         if (player == null || tilemap == null) return;
 
-        Vector3Int cell = GetPlayerCell();
-        Vector3 center = tilemap.GetCellCenterWorld(cell);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(center, tilemap.cellSize);
+        Vector3 center = new Vector3();
 
+        // show world highlight
         //TODO this is an unnecessary draw call every drawGizmos call just do it once?
         TileBase[] allTiles = tilemap.GetTilesBlock(tilemap.cellBounds);
         // iterate over the x axis
@@ -94,8 +92,12 @@ public class LevelController : MonoBehaviour
             }
         }
 
+        // show player highlight
+        Vector3Int cell = tilemap.WorldToCell(player.transform.position);
+        center = tilemap.GetCellCenterWorld(cell);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(center, tilemap.cellSize);
 
-        //
     }
 
     Vector3Int GetPlayerCell()
