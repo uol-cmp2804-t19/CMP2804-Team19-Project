@@ -68,7 +68,7 @@ public class LevelController : MonoBehaviour
         // silently fail, debug handling only
         if (player == null || tilemap == null) return;
 
-        Vector3Int cell = GetPlayerCell()
+        Vector3Int cell = GetPlayerCell();
         Vector3 center = tilemap.GetCellCenterWorld(cell);
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(center, tilemap.cellSize);
