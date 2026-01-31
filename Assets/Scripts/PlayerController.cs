@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public enum FACING { UP, DOWN, LEFT, RIGHT };
+    public FACING facing = FACING.DOWN;
     public AudioSource sound_walk = null;
     private float speed = 400.0f;
 

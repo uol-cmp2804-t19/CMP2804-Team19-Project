@@ -3,6 +3,12 @@ using UnityEngine.Tilemaps;
 
 //TODO add an audio manager to choose sound effect based on terrain and modulate pitch/choose from sound array
 // ambient level sound - https://freesound.org/search/?q=ambient+forest
+// first level bgm - https://opengameart.org/content/music-for-your-first-level
+// research game soundtracks like BabaIsYou
+
+//TODO animate player walk
+//TODO make player move to cell gradually rather than snap to - replace moveDelay check with 'is player animating' and queue actions?
+//TODO look at separation of concerns - should player move/jump-to cell be a palyer method?
 
 public class LevelController : MonoBehaviour
 {
@@ -15,7 +21,7 @@ public class LevelController : MonoBehaviour
     // Immediately lock player to their current grid cell
     void Start()
     {
-        MovePlayerToCell(GetPlayerCell());
+        TeleportPlayerToCell(GetPlayerCell());
     }
 
     // Update is called once per frame
@@ -34,24 +40,35 @@ public class LevelController : MonoBehaviour
         if (Time.time <= nextMove) return;
         nextMove = Time.time + moveDelay;
 
+        // erase diagonal moves and multiple direction presses, favouring right/up on axis
+        Vector2 move_direction = new Vector2(dir.x, dir.y);
         if (x > 0.0)
         {
-            Debug.Log("Move Right");
+            move_direction.y = 0.0f;
+            player.facing = PlayerController.FACING.RIGHT;
         }
         else if (y > 0.0)
         {
-            Debug.Log("Move Up");
+            move_direction.x = 0.0f;
+            player.facing = PlayerController.FACING.UP;
         }
         else if (x < 0.0)
         {
-            Debug.Log("Move Left");
+            move_direction.y = 0.0f;
+            player.facing = PlayerController.FACING.LEFT;
         }
         else if (y < 0.0)
         {
-            Debug.Log("Move Down");
+            move_direction.x = 0.0f;
+            player.facing = PlayerController.FACING.DOWN;
+        }
+        else
+        {
+            // no move
+            return;
         }
 
-        MovePlayerInDirection(dir);
+        MovePlayerInDirection(move_direction);
 
         // Vector3 movement = new Vector3(x, y, 0);
         // transform.position += movement * speed * Time.deltaTime;
@@ -121,16 +138,18 @@ public class LevelController : MonoBehaviour
         }
         else
         {
+            //TODO - currently player can move diagonally, this will not be possible with coding block calls - does it need to be captured here?
             Vector3Int targetCell = GetPlayerCell() + new Vector3Int(
                 Mathf.RoundToInt(direction.x),
                 Mathf.RoundToInt(direction.y),
                 0
             );
-            MovePlayerToCell(targetCell);
+            // temporary teleport/snapping behaviour, to animate gradually eventually
+            TeleportPlayerToCell(targetCell);
         }
     }
 
-    void MovePlayerToCell(Vector3Int targetCell)
+    void TeleportPlayerToCell(Vector3Int targetCell)
     {
         if (player == null || tilemap == null)
         {
