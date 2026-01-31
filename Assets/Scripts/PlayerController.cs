@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public AudioSource sound_walk = null;
     private float speed = 400.0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,9 +22,19 @@ public class PlayerController : MonoBehaviour
     //    transform.position += movement * speed * Time.deltaTime;
     //}
 
+    //TODO remove/tidy
+    // debug testing movement for player input
     public void Move(Vector2 dir)
     {
         Vector3 movement = new Vector3(dir.x, dir.y, 0);
         transform.position += movement * speed * Time.deltaTime;
+    }
+
+    public void PlayWalkSound()
+    {
+        if (sound_walk != null)
+        {
+            sound_walk.Play();
+        }
     }
 }

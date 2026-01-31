@@ -1,12 +1,8 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-// TODO
-// Facing
-// Sound when walking (sound manager)
-// Ambient level sound (level sound handling, sound manager)
-// Grid handling in WorldMap - grid tracked in code when tilemap drawn or physics used? need to snap to grid center if not code validated
-// Tilemap square graphics
+//TODO add an audio manager to choose sound effect based on terrain and modulate pitch/choose from sound array
+// ambient level sound - https://freesound.org/search/?q=ambient+forest
 
 public class LevelController : MonoBehaviour
 {
@@ -157,7 +153,8 @@ public class LevelController : MonoBehaviour
         // move player to center of tile
         player.transform.position = tilemap.CellToWorld(targetCell) + tilemap.cellSize / 2f;
         Debug.Log("on map");
-    
+        player.PlayWalkSound();
+
     }
 
 }
