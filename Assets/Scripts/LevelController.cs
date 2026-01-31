@@ -11,10 +11,16 @@ using UnityEngine.Tilemaps;
 public class LevelController : MonoBehaviour
 {
     public PlayerController player = null;
-    public WorldMap world = null;
     public Tilemap tilemap = null;
     public float moveDelay = 0.15f;
     private float nextMove = 0.0f;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Immediately lock player to their current grid cell
+    void Start()
+    {
+        MovePlayerToCell(GetPlayerCell());
+    }
 
     // Update is called once per frame
     // Update behaviour is just for testing whilst code blocks aren't integrated
@@ -49,35 +55,84 @@ public class LevelController : MonoBehaviour
             Debug.Log("Move Down");
         }
 
-        MovePlayer(dir);
+        MovePlayerInDirection(dir);
 
         // Vector3 movement = new Vector3(x, y, 0);
         // transform.position += movement * speed * Time.deltaTime;
 
     }
 
-    void MovePlayer(Vector2 direction)
+    // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
+    void OnDrawGizmos()
     {
-        if (player == null || world == null)
+        // silently fail, debug handling only
+        if (player == null || tilemap == null) return;
+
+        Vector3Int cell = tilemap.WorldToCell(player.transform.position);
+        Vector3 center = tilemap.GetCellCenterWorld(cell);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(center, tilemap.cellSize);
+    }
+
+    Vector3Int GetPlayerCell()
+    {
+        if (player == null || tilemap == null)
         {
             //TODO add error handling
-            Debug.Log("You forgot to assign a player and/or grid!");
+            Debug.Log("You forgot to assign a player and/or map!");
+            return new Vector3Int(0, 0, 0);
+        }
+        else
+        {
+            Vector3Int currentCell = tilemap.WorldToCell(player.transform.position);
+            return currentCell;
+        }
+    }
+
+    void MovePlayerInDirection(Vector2 direction)
+    {
+        if (player == null || tilemap == null)
+        {
+            //TODO add error handling
+            Debug.Log("You forgot to assign a player and/or map!");
             return;
         }
         else
         {
-            // check for blockages - placeholder does nothing currently, passes dir intentionally rn
-            if (!world.IsValidMove(direction)) return;
-
-            //Tilemap tilemap = world.GetComponent<Tilemap>();
-            Vector3Int currentCell = tilemap.WorldToCell(player.transform.position);
-            Vector3Int targetCell = currentCell + new Vector3Int(
+            Vector3Int targetCell = GetPlayerCell() + new Vector3Int(
                 Mathf.RoundToInt(direction.x),
                 Mathf.RoundToInt(direction.y),
                 0
             );
-            player.transform.position = tilemap.GetCellCenterWorld(targetCell);
-
+            MovePlayerToCell(targetCell);
         }
     }
+
+    void MovePlayerToCell(Vector3Int targetCell)
+    {
+        if (player == null || tilemap == null)
+        {
+            //TODO add error handling
+            Debug.Log("You forgot to assign a player and/or map!");
+            return;
+        }
+
+        if (!tilemap.HasTile(targetCell))
+        {
+            Debug.Log("off map");
+            return;
+        }
+
+        // snap to grid
+        player.transform.position =
+        tilemap.GetCellCenterWorld(tilemap.WorldToCell(player.transform.position)
+        );
+        //player.transform.position = tilemap.GetCellCenterWorld(targetCell);
+        // move player to center of tile
+        player.transform.position = tilemap.CellToWorld(targetCell) + tilemap.cellSize / 2f;
+        Debug.Log("on map");
+    
+    }
+
 }
