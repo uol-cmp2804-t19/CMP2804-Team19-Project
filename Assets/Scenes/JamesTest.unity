@@ -502,8 +502,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 972219492}
-        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
+      - m_Target: {fileID: 972219493}
+        m_TargetAssemblyTypeName: CBLogic, Assembly-CSharp
         m_MethodName: PerformActions
         m_Mode: 1
         m_Arguments:
