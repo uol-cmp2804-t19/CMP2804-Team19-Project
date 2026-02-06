@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -19,14 +20,14 @@ public class CBLogic : MonoBehaviour
 
         if (Action1 == null)
         {
-            Action1 = GameObject.Find("ActionBlock1");
+            Action1 = GameObject.Find("ActionBlock");
             Debug.Log("'ActionBlock1' found in Game Controller - CBLogic.");
         }
         else Debug.Log("'ActionBlock1' Manually Added");
 
         if (Action1 == null) Debug.LogError("'ActionBlock1' not found in Game Controller - CBLogic.");
 
-        if (Action1.tag == "Untagged")
+        if (Action1.tag == "ActionBlock")
         {
             Action1.tag = "ActionEmpty";
             Debug.Log("'ActionEmpty' added to Action block 1");
@@ -41,7 +42,7 @@ public class CBLogic : MonoBehaviour
 
         if (Action2 == null) Debug.LogError("'ActionBlock2' not found in Game Controller - CBLogic.");
 
-        if (Action2.tag == "Untagged")
+        if (Action2.tag == "ActionBlock")
         {
             Action2.tag = "ActionEmpty";
             Debug.Log("'ActionEmpty' added to Action block 2");
@@ -56,7 +57,7 @@ public class CBLogic : MonoBehaviour
 
         if (Action3 == null) Debug.LogError("'ActionBlock3' not found in Game Controller - CBLogic.");
 
-        if (Action3.tag == "Untagged")
+        if (Action3.tag == "ActionBlock")
         {
             Action3.tag = "ActionEmpty";
             Debug.Log("'ActionEmpty' added to Action block 3");
@@ -64,9 +65,29 @@ public class CBLogic : MonoBehaviour
 
     }
     // currently seperate from start for testing purposes, will add once guarenteed to work.
+    /// <summary>
+    /// finds all the action blocks in the scene via the actionBlock Tag, then sets their tag to empty
+    /// </summary>
     void AddActionBlocks()
     {
-        
+        ActionBlocks = GameObject.FindGameObjectsWithTag("ActionBlock").ToList<GameObject>();
+        foreach (GameObject block in ActionBlocks)
+        {
+            Debug.Log("ActionBlock '" + block.name + "' added to CBLogic");
+            block.tag = "ActionEmpty";
+            Debug.Log("ActionBlock '" + block.name + "' tag changed to `ActionEmpty`");
+        }
+    }
+
+    /// <summary>
+    /// Adds a Action Block to the Action Blocks List
+    /// </summary>
+    /// <param name="block">
+    /// the action block to be added
+    /// </param>
+    public void AddActionBlock(GameObject block)
+    {
+        ActionBlocks.Add(block);
     }
 
     // Update is called once per frame
@@ -96,15 +117,19 @@ public class CBLogic : MonoBehaviour
                 {
                     case CBActionTypes.up:
                         Debug.Log("CBLogics performed the 'up' action");
+                        CBAction(CBActionTypes.up);
                         break;
                     case CBActionTypes.down:
                         Debug.Log("CBLogics performed the 'down' action");
+                        CBAction(CBActionTypes.down);
                         break;
                     case CBActionTypes.left:
                         Debug.Log("CBLogics performed the 'left' action");
+                        CBAction(CBActionTypes.left);
                         break;
                     case CBActionTypes.right:
                         Debug.Log("CBLogics performed the 'right' action");
+                        CBAction(CBActionTypes.right);
                         break;
                     default:
                         Debug.LogError("'PerformActions' in CBLogic failed to identify: " + action);
@@ -112,8 +137,6 @@ public class CBLogic : MonoBehaviour
                 }
             }
         }
-
-        CBAction(CBActionTypes.up);
     }
 
     List<CBActionTypes> GetActions()
