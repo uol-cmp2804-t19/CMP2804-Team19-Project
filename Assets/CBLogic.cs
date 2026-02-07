@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,7 +21,7 @@ public class CBLogic : MonoBehaviour
 
         if (Action1 == null)
         {
-            Action1 = GameObject.Find("ActionBlock");
+            Action1 = GameObject.Find("ActionBlock1");
             Debug.Log("'ActionBlock1' found in Game Controller - CBLogic.");
         }
         else Debug.Log("'ActionBlock1' Manually Added");
@@ -62,6 +63,10 @@ public class CBLogic : MonoBehaviour
             Action3.tag = "ActionEmpty";
             Debug.Log("'ActionEmpty' added to Action block 3");
         }
+
+        ActionBlocks.Add(Action1);
+        ActionBlocks.Add(Action2);
+        ActionBlocks.Add(Action3);
 
     }
     // currently seperate from start for testing purposes, will add once guarenteed to work.
@@ -131,6 +136,8 @@ public class CBLogic : MonoBehaviour
                         Debug.Log("CBLogics performed the 'right' action");
                         CBAction(CBActionTypes.right);
                         break;
+                    case CBActionTypes.none:
+                        break;
                     default:
                         Debug.LogError("'PerformActions' in CBLogic failed to identify: " + action);
                         break;
@@ -142,6 +149,36 @@ public class CBLogic : MonoBehaviour
     List<CBActionTypes> GetActions()
     {
         List<CBActionTypes> actionList = new List<CBActionTypes>();
+
+        foreach(GameObject action in ActionBlocks)
+        {
+            switch (action.tag)
+            {
+                case "ActionEmpty":
+                    actionList.Add(CBActionTypes.none);
+                    Debug.Log("'"+action.name+"' contained: Action Empty");
+                    break;
+                case "ActionUp":
+                    actionList.Add(CBActionTypes.up);
+                    Debug.Log("'" + action.name + "' contained: Action Up");
+                    break;
+                case "ActionDown":
+                    actionList.Add(CBActionTypes.down);
+                    Debug.Log("'" + action.name + "' contained: Action Down");
+                    break;
+                case "ActionLeft":
+                    actionList.Add(CBActionTypes.left);
+                    Debug.Log("'" + action.name + "' contained: Action Left");
+                    break;
+                case "ActionRight":
+                    actionList.Add(CBActionTypes.right);
+                    Debug.Log("'" + action.name + "' contained: Action Right");
+                    break;
+                default:
+                    Debug.LogError("'"+action.name+"' contains a erroneous tag.");
+                    break;
+            }
+        }
 
         return actionList;
     }
