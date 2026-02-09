@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    Vector3Int GetPlayerCell()
+    public Vector3Int GetPlayerCell()
     {
         if (tilemap == null)
         {
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void MovePlayerInDirection(Vector2 direction)
+    public void MovePlayerInDirection(Vector2 direction)
     {
         if (tilemap == null)
         {
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void TeleportPlayerToCell(Vector3Int targetCell)
+    public void TeleportPlayerToCell(Vector3Int targetCell)
     {
         if (tilemap == null)
         {
