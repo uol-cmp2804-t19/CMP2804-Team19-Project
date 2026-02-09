@@ -186,7 +186,9 @@ public class CBLogic : MonoBehaviour
 
     void CBAction(CBActionTypes CBActionType)
     {
-        float movementSpeed = 1f;
+        //TODO determine if to be used, disabled to quiet the compiler warning
+        //float movementSpeed = 1f;
+
         Vector2 MovementDirection;
         switch (CBActionType)
         {
