@@ -26,6 +26,9 @@ public class CBLogic : MonoBehaviour
     public GameObject Action2 = null;
     public GameObject Action3 = null;
 
+    // assign through bootstrap/gamecontroller on load
+    public PlayerController ActivePlayer = null;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -201,7 +204,7 @@ public class CBLogic : MonoBehaviour
         //TODO determine if to be used, disabled to quiet the compiler warning
         //float movementSpeed = 1f;
 
-        Vector2 MovementDirection;
+        Vector2 MovementDirection = new Vector2(0, 0);
         switch (CBActionType)
         {
             case CBActionTypes.up:
@@ -220,6 +223,18 @@ public class CBLogic : MonoBehaviour
                 Debug.LogError("Something went wrong in CBAction in Game Controller - CBLogic.");
                 break;
         }
+    
+        // TODO fix
+        // move player
+        if (ActivePlayer != null)
+        {
+            ActivePlayer.MovePlayerInDirection(MovementDirection);
+}
+        else
+        {
+            Debug.Log("Assign player controller in Game Controller - CBLogic!");
+        }
+
     }
 
 }
