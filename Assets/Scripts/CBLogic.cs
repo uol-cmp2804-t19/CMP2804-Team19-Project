@@ -8,11 +8,23 @@ using UnityEngine.UIElements;
 
 public class CBLogic : MonoBehaviour
 {
+
+    // enum to store Coding Block action types
+    public enum CBActionTypes
+    {
+        up,
+        down,
+        left,
+        right,
+        none
+    }
+
+    // TODO convert action blocks to an ordered list of blocks objects
     public List<GameObject> ActionBlocks = new List<GameObject>();
+
     public GameObject Action1 = null;
     public GameObject Action2 = null;
     public GameObject Action3 = null;
-
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -208,15 +220,6 @@ public class CBLogic : MonoBehaviour
                 Debug.LogError("Something went wrong in CBAction in Game Controller - CBLogic.");
                 break;
         }
+    }
 
-    }
-    // enum to store Coding Block action types
-    public enum CBActionTypes
-    {
-        up,
-        down,
-        left,
-        right,
-        none
-    }
 }
