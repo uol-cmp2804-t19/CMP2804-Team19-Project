@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Android.Gradle;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -33,32 +34,28 @@ public class CBLogic : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // adds all actionblocks with the correct tag
+        // !important! if you want to add action blocks, make sure the have the tag 'ActionBlock'
         actionBlocks = GameObject.FindGameObjectsWithTag("ActionBlock").ToList<GameObject>();
+
+        // changes tags to empty for later use
         foreach (GameObject block in actionBlocks)
         {
             Debug.Log("ActionBlock '" + block.name + "' added to CBLogic via automated find");
             block.tag = "ActionEmpty";
             Debug.Log("ActionBlock '" + block.name + "' tag changed to `ActionEmpty`");
         }
-        actionBlocks = actionBlocks.OrderBy(o => o.name).ToList();
 
-        if (activePlayer==null)
+        actionBlocks = actionBlocks.OrderBy(ab => ab.name).ToList(); // sorts the action blocks via name so it reads correctly
+
+        // adds the player if not manually assigned, !important! player should have the tag 'Player'
+        if (activePlayer == null)
         {
             activePlayer = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            Debug.Log("Player successfully added");
         }
         else { Debug.Log("Active Player Manually Assigned to CBLogic."); }
 
-    }
-
-    /// <summary>
-    /// Adds a Action Block to the Action Blocks List
-    /// </summary>
-    /// <param name="block">
-    /// the action block to be added
-    /// </param>
-    public void AddActionBlock(GameObject block)
-    {
-        actionBlocks.Add(block);
     }
 
     // Update is called once per frame
@@ -68,7 +65,7 @@ public class CBLogic : MonoBehaviour
     }
 
     /// <summary>
-    /// Performs the actions queued in the Action Blocks
+    /// Gets the actions to be performed, converts them to a in code output and sends to CBAction
     /// </summary>
     public void PerformActions()
     {
@@ -84,7 +81,7 @@ public class CBLogic : MonoBehaviour
         {
             foreach (CBActionTypes action in actions)
             {
-                switch(action)
+                switch (action)
                 {
                     case CBActionTypes.up:
                         Debug.Log("CBLogics performed the 'up' action");
@@ -111,18 +108,23 @@ public class CBLogic : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// reads action blocks and returns a list of actions
+    /// </summary>
+    /// <returns>
+    /// the list of actions to be performed
+    /// </returns>
     List<CBActionTypes> GetActions()
     {
         List<CBActionTypes> actionList = new List<CBActionTypes>();
 
-        foreach(GameObject action in actionBlocks)
+        foreach (GameObject action in actionBlocks)
         {
             switch (action.tag)
             {
                 case "ActionEmpty":
                     actionList.Add(CBActionTypes.none);
-                    Debug.Log("'"+action.name+"' contained: Action Empty");
+                    Debug.Log("'" + action.name + "' contained: Action Empty");
                     break;
                 case "ActionUp":
                     actionList.Add(CBActionTypes.up);
@@ -141,7 +143,7 @@ public class CBLogic : MonoBehaviour
                     Debug.Log("'" + action.name + "' contained: Action Right");
                     break;
                 default:
-                    Debug.LogError("'"+action.name+"' contains a erroneous tag.");
+                    Debug.LogError("'" + action.name + "' contains a erroneous tag.");
                     break;
             }
         }
@@ -149,7 +151,12 @@ public class CBLogic : MonoBehaviour
         return actionList;
     }
 
-
+    /// <summary>
+    /// performs the selected action
+    /// </summary>
+    /// <param name="CBActionType">
+    /// the action to be performed
+    /// </param>
     void CBAction(CBActionTypes CBActionType)
     {
         //TODO determine if to be used, disabled to quiet the compiler warning
@@ -174,18 +181,50 @@ public class CBLogic : MonoBehaviour
                 Debug.LogError("Something went wrong in CBAction in Game Controller - CBLogic.");
                 break;
         }
-    
-        // TODO fix
+
         // move player
         if (activePlayer != null)
         {
             activePlayer.MovePlayerInDirection(MovementDirection);
-}
+        }
         else
         {
             Debug.Log("Assign player controller in Game Controller - CBLogic!");
         }
 
+    }
+
+    /// <summary>
+    /// adds an action to the last empty Action Block
+    /// </summary>
+    public void AddAction(string action)
+    {
+        string tag = null;
+        switch (action)
+        {
+            case "up":
+                tag = "ActionUp";
+                break;
+            case "down":
+                tag = "ActionUp";
+                break;
+            case "left":
+                tag = "ActionUp";
+                break;
+            case "right":
+                tag = "ActionUp";
+                break;
+            default:
+                Debug.Log("");
+                break;
+        }
+        if (tag != null)
+        {
+            foreach (GameObject block in actionBlocks)
+            {
+                if (block.tag == "ActionEmpty") { block.tag = tag; break; }
+            }
+        }
     }
 
 }

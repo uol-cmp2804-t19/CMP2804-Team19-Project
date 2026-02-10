@@ -7,6 +7,9 @@ TagManager:
   - ActionEmpty
   - ActionBlock
   - ActionDown
+  - ActionUp
+  - ActionLeft
+  - ActionRight
   layers:
   - Default
   - TransparentFX
