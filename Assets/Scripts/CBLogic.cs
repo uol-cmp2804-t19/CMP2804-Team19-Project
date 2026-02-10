@@ -20,83 +20,34 @@ public class CBLogic : MonoBehaviour
     }
 
     // TODO convert action blocks to an ordered list of blocks objects
-    public List<GameObject> ActionBlocks = new List<GameObject>();
+    public List<GameObject> actionBlocks = new List<GameObject>();
 
+    // game objects are declared here for manual assignment
     public GameObject Action1 = null;
     public GameObject Action2 = null;
     public GameObject Action3 = null;
 
     // assign through bootstrap/gamecontroller on load
-    public PlayerController ActivePlayer = null;
+    public PlayerController activePlayer = null;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // AddActionBlocks(); // commented while still in testing
-
-        if (Action1 == null)
+        actionBlocks = GameObject.FindGameObjectsWithTag("ActionBlock").ToList<GameObject>();
+        foreach (GameObject block in actionBlocks)
         {
-            Action1 = GameObject.Find("ActionBlock1");
-            Debug.Log("'ActionBlock1' found in Game Controller - CBLogic.");
-        }
-        else Debug.Log("'ActionBlock1' Manually Added");
-
-        if (Action1 == null) Debug.LogError("'ActionBlock1' not found in Game Controller - CBLogic.");
-
-        if (Action1.tag == "ActionBlock")
-        {
-            Action1.tag = "ActionEmpty";
-            Debug.Log("'ActionEmpty' added to Action block 1");
-        }
-
-        if (Action2 == null)
-        {
-            Action2 = GameObject.Find("ActionBlock2");
-            Debug.Log("'ActionBlock2' found in Game Controller - CBLogic.");
-        }
-        else Debug.Log("'ActionBlock2' Manually Added");
-
-        if (Action2 == null) Debug.LogError("'ActionBlock2' not found in Game Controller - CBLogic.");
-
-        if (Action2.tag == "ActionBlock")
-        {
-            Action2.tag = "ActionEmpty";
-            Debug.Log("'ActionEmpty' added to Action block 2");
-        }
-
-        if (Action3 == null)
-        {
-            Action3 = GameObject.Find("ActionBlock3");
-            Debug.Log("'ActionBlock3' found in Game Controller - CBLogic.");
-        }
-        else Debug.Log("'ActionBlock3' Manually Added");
-
-        if (Action3 == null) Debug.LogError("'ActionBlock3' not found in Game Controller - CBLogic.");
-
-        if (Action3.tag == "ActionBlock")
-        {
-            Action3.tag = "ActionEmpty";
-            Debug.Log("'ActionEmpty' added to Action block 3");
-        }
-
-        ActionBlocks.Add(Action1);
-        ActionBlocks.Add(Action2);
-        ActionBlocks.Add(Action3);
-
-    }
-    // currently seperate from start for testing purposes, will add once guarenteed to work.
-    /// <summary>
-    /// finds all the action blocks in the scene via the actionBlock Tag, then sets their tag to empty
-    /// </summary>
-    void AddActionBlocks()
-    {
-        ActionBlocks = GameObject.FindGameObjectsWithTag("ActionBlock").ToList<GameObject>();
-        foreach (GameObject block in ActionBlocks)
-        {
-            Debug.Log("ActionBlock '" + block.name + "' added to CBLogic");
+            Debug.Log("ActionBlock '" + block.name + "' added to CBLogic via automated find");
             block.tag = "ActionEmpty";
             Debug.Log("ActionBlock '" + block.name + "' tag changed to `ActionEmpty`");
         }
+        actionBlocks = actionBlocks.OrderBy(o => o.name).ToList();
+
+        if (activePlayer==null)
+        {
+            activePlayer = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        }
+        else { Debug.Log("Active Player Manually Assigned to CBLogic."); }
+
     }
 
     /// <summary>
@@ -107,7 +58,7 @@ public class CBLogic : MonoBehaviour
     /// </param>
     public void AddActionBlock(GameObject block)
     {
-        ActionBlocks.Add(block);
+        actionBlocks.Add(block);
     }
 
     // Update is called once per frame
@@ -165,7 +116,7 @@ public class CBLogic : MonoBehaviour
     {
         List<CBActionTypes> actionList = new List<CBActionTypes>();
 
-        foreach(GameObject action in ActionBlocks)
+        foreach(GameObject action in actionBlocks)
         {
             switch (action.tag)
             {
@@ -226,9 +177,9 @@ public class CBLogic : MonoBehaviour
     
         // TODO fix
         // move player
-        if (ActivePlayer != null)
+        if (activePlayer != null)
         {
-            ActivePlayer.MovePlayerInDirection(MovementDirection);
+            activePlayer.MovePlayerInDirection(MovementDirection);
 }
         else
         {

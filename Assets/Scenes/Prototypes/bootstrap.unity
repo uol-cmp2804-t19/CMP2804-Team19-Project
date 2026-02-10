@@ -201,7 +201,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8533754608683748004, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: m_TagString
-      value: ActionDown
+      value: ActionBlock
       objectReference: {fileID: 0}
     - target: {fileID: 8552355718556627009, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: PlayerCharacter
