@@ -6,6 +6,8 @@ using Unity.Android.Gradle;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using CBClass;
+using UnityEngine.Rendering;
 
 public class CBLogic : MonoBehaviour
 {
@@ -20,13 +22,7 @@ public class CBLogic : MonoBehaviour
         none
     }
 
-    // TODO convert action blocks to an ordered list of blocks objects
-    public List<GameObject> actionBlocks = new List<GameObject>();
-
-    // game objects are declared here for manual assignment
-    public GameObject Action1 = null;
-    public GameObject Action2 = null;
-    public GameObject Action3 = null;
+    List<CodeBlock> ActionBlockObjects = new List<CodeBlock>();
 
     // assign through bootstrap/gamecontroller on load
     public PlayerController activePlayer = null;
@@ -36,14 +32,14 @@ public class CBLogic : MonoBehaviour
     {
         // adds all actionblocks with the correct tag
         // !important! if you want to add action blocks, make sure the have the tag 'ActionBlock'
-        actionBlocks = GameObject.FindGameObjectsWithTag("ActionBlock").ToList<GameObject>();
+        List<GameObject> actionBlocks = GameObject.FindGameObjectsWithTag("ActionBlock").ToList<GameObject>();
 
         // changes tags to empty for later use
         foreach (GameObject block in actionBlocks)
         {
             Debug.Log("ActionBlock '" + block.name + "' added to CBLogic via automated find");
-            block.tag = "ActionEmpty";
-            Debug.Log("ActionBlock '" + block.name + "' tag changed to `ActionEmpty`");
+            ActionBlockObjects.Add(new CodeBlock(block, ActionBlockObjects.Count(), false));
+            Debug.Log("ActionBlock '" + block.name + "' added as an Object to ActionBlockObjects");
         }
 
         actionBlocks = actionBlocks.OrderBy(ab => ab.name).ToList(); // sorts the action blocks via name so it reads correctly
@@ -117,34 +113,35 @@ public class CBLogic : MonoBehaviour
     List<CBActionTypes> GetActions()
     {
         List<CBActionTypes> actionList = new List<CBActionTypes>();
-
-        foreach (GameObject action in actionBlocks)
+        foreach (CodeBlock block in ActionBlockObjects)
         {
-            switch (action.tag)
+            List<String> blockActions = block.GetActions();
+            int actionCount = 0;
+            foreach (string action in blockActions)
             {
-                case "ActionEmpty":
-                    actionList.Add(CBActionTypes.none);
-                    Debug.Log("'" + action.name + "' contained: Action Empty");
-                    break;
-                case "ActionUp":
-                    actionList.Add(CBActionTypes.up);
-                    Debug.Log("'" + action.name + "' contained: Action Up");
-                    break;
-                case "ActionDown":
-                    actionList.Add(CBActionTypes.down);
-                    Debug.Log("'" + action.name + "' contained: Action Down");
-                    break;
-                case "ActionLeft":
-                    actionList.Add(CBActionTypes.left);
-                    Debug.Log("'" + action.name + "' contained: Action Left");
-                    break;
-                case "ActionRight":
-                    actionList.Add(CBActionTypes.right);
-                    Debug.Log("'" + action.name + "' contained: Action Right");
-                    break;
-                default:
-                    Debug.LogError("'" + action.name + "' contains a erroneous tag.");
-                    break;
+                switch (action)
+                {
+                    case "Up":
+                        actionList.Add(CBActionTypes.up);
+                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Up");
+                        break;
+                    case "Down":
+                        actionList.Add(CBActionTypes.down);
+                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Down");
+                        break;
+                    case "Left":
+                        actionList.Add(CBActionTypes.left);
+                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Left");
+                        break;
+                    case "Right":
+                        actionList.Add(CBActionTypes.right);
+                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Right");
+                        break;
+                    default:
+                        Debug.LogError("Code Block " + block.orderNumber + " contains a erroneous action at point: " + actionCount);
+                        break;
+                }
+                actionCount++;
             }
         }
 
@@ -197,34 +194,35 @@ public class CBLogic : MonoBehaviour
     /// <summary>
     /// adds an action to the last empty Action Block
     /// </summary>
-    public void AddAction(string action)
+    /// <returns> a bool to signal it is completed </returns>
+    public bool AddAction(string action)
     {
-        string tag = null;
-        switch (action)
+        foreach (CodeBlock block in ActionBlockObjects)
         {
-            case "up":
-                tag = "ActionUp";
-                break;
-            case "down":
-                tag = "ActionUp";
-                break;
-            case "left":
-                tag = "ActionUp";
-                break;
-            case "right":
-                tag = "ActionUp";
-                break;
-            default:
-                Debug.Log("");
-                break;
-        }
-        if (tag != null)
-        {
-            foreach (GameObject block in actionBlocks)
+            if (block.HasSpace)
             {
-                if (block.tag == "ActionEmpty") { block.tag = tag; break; }
+                block.AssignAction(action);
+                return true;
             }
         }
+        try
+        {
+            createBlock(false, action);
+            return true; 
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// creates a block
+    /// </summary>
+    /// <param name="loop"> if it is a loop block assign true</param>
+    /// <param name="action"> the action to add </param>
+    private void createBlock(bool loop, string action)
+    {
+        if (loop) { }
+        else { }
+
     }
 
 }
