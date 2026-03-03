@@ -17,11 +17,25 @@ public class LevelController : MonoBehaviour
     public float moveDelay = 0.15f;
     private float nextMove = 0.0f;
 
+    // for debugging
+    public int player_score = 0;
+
+    public void AddScore()
+    {
+        player_score++;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     // Immediately lock player to their current grid cell
     void Start()
     {
         TeleportPlayerToCell(GetPlayerCell());
+        //FileIO.WriteFile("test.txt", "new test content");
+        //string new_content = FileIO.ReadFile("test.txt")
+        //Debug.Log(new_content);
+        Debug.Log("new levelcontroller loaded");
+        GameManager.Main.Config.LevelsCompleted = 69;
+        GameManager.Main.SaveConfig();
     }
 
     // Update is called once per frame
