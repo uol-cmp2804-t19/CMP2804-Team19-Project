@@ -1,8 +1,16 @@
 using UnityEngine;
 using Config;
 
+/// <summary>
 /// Singleton that persists across all scenes and can be accessed from where-ever.
 /// 'Owns' the configData.
+/// Usage:
+///  Access/Update:
+///     GameManager.Main.Config.LevelsCompleted++;
+///     GameManager.Main.Config.BestTimes["Level1"] = 300;
+///  Save:
+///     GameManager.Main.SaveConfig();
+/// </summary>
 
 public class GameManager : MonoBehaviour
 {

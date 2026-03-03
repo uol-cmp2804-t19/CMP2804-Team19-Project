@@ -609,6 +609,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1872493044}
+  - component: {fileID: 1872493046}
   - component: {fileID: 1872493045}
   m_Layer: 0
   m_Name: GameLoader
@@ -647,6 +648,20 @@ MonoBehaviour:
   debug_level: {fileID: 160711667}
   coding_block_parser: {fileID: 1174672167}
   coding_blocks_ui: {fileID: 59754963}
+--- !u!114 &1872493046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872493043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca37d611988f8e946b7c906a71faf459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Config:
+    LevelsCompleted: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
