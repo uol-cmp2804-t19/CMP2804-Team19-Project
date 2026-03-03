@@ -3,23 +3,20 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-"""
-Config class library to manage metrics and configuration settings for the player.
-Used alongside FileIO class library to save and load metrics for the game.
-
-Usage:
- Read:
-    string json = FileIO.ReadFile("config.json");
-    ConfigData config = ConfigReader.FromJson(json);
- Access/Update:
-    config.LevelsCompleted += 1;
-    config.BestTimes["Level1"] = 300;
-    Debug.Log(config.LevelsCompleted);
-    Debug.Log(config.BestTimes["Level1"]);
-Write:
-   string json = JsonConvert.SerializeObject(config);
-   FileIO.WriteFile("config.json", json);
-"""
+/// Config class library to manage metrics and configuration settings for the player.
+/// Used alongside FileIO class library to save and load metrics for the game.
+/// Usage:
+///  Read:
+///    string json = FileIO.ReadFile("config.json");
+///    ConfigData config = ConfigReader.FromJson(json);
+///  Access/Update:
+///    config.LevelsCompleted += 1;
+///    config.BestTimes["Level1"] = 300;
+///    Debug.Log(config.LevelsCompleted);
+///    Debug.Log(config.BestTimes["Level1"]);
+///  Write:
+///   string json = JsonConvert.SerializeObject(config);
+///   FileIO.WriteFile("config.json", json);
 
 namespace Config
 {
@@ -47,5 +44,11 @@ namespace Config
             ConfigData data = JsonConvert.DeserializeObject<ConfigData>(jsonString);
             return data ?? new ConfigData();
         }
+
+        public static string ToJson(ConfigData data)
+        {
+            return JsonConvert.SerializeObject(data);
+        }
+
     }
 }
