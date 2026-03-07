@@ -43,6 +43,7 @@ public class LevelMapManager : MonoBehaviour {
         else
         {
             Vector3Int currentCell = activeLayer.tilemap.WorldToCell(player.transform.position);
+            currentCell.z = activeLayer.zLevel;
             return currentCell;
         }
     }
