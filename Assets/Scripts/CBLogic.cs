@@ -9,17 +9,28 @@ using UnityEngine.UIElements;
 using CBClass;
 using UnityEngine.Rendering;
 
+/// <summary>
+/// Behaviour to read the action blocks and perform the actions on the player
+/// Requires the player to exist when this is added - player is added to levels, if this isn't a child of level the startup needs recalled
+/// PerformActions() -> GetActions() -> CBAction() -> PlayerController functions
+/// </summary>
 public class CBLogic : MonoBehaviour
 {
 
-    // enum to store Coding Block action types
+    /// <summary>
+    /// enum to store Coding Block action types
+    /// Used in getActions to convert the string output of the code blocks to a in code output for CBAction
+    /// Used in CBAction to determine what action to perform
+    /// When adding a new action it needs to be specified here.
+    /// </summary>
+    //TODO - add a wait action, interact, pickup/drop
+    //Move to CBClass? Add a getString/printer method there? Why are we using strings?
     public enum CBActionTypes
     {
-        up,
-        down,
-        left,
-        right,
-        none
+        MOVE,
+        TURNLEFT,
+        TURNRIGHT,
+        NONE
     }
 
     List<CodeBlock> ActionBlockObjects = new List<CodeBlock>();
@@ -41,10 +52,12 @@ public class CBLogic : MonoBehaviour
             ActionBlockObjects.Add(new CodeBlock(block, ActionBlockObjects.Count(), false));
             Debug.Log("ActionBlock '" + block.name + "' added as an Object to ActionBlockObjects");
         }
-
+    
+        //should this be actionBlockObjects?
         actionBlocks = actionBlocks.OrderBy(ab => ab.name).ToList(); // sorts the action blocks via name so it reads correctly
 
         // adds the player if not manually assigned, !important! player should have the tag 'Player'
+        // This only works if the player exists - but player is a child of level so if level is reloaded this needs resetting
         if (activePlayer == null)
         {
             activePlayer = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
@@ -55,13 +68,16 @@ public class CBLogic : MonoBehaviour
     }
 
     // Update is called once per frame
+    /*
     void Update()
     {
 
     }
+    */
 
     /// <summary>
     /// Gets the actions to be performed, converts them to a in code output and sends to CBAction
+    /// When adding a new action needs to be updated here.
     /// </summary>
     public void PerformActions()
     {
@@ -79,23 +95,19 @@ public class CBLogic : MonoBehaviour
             {
                 switch (action)
                 {
-                    case CBActionTypes.up:
-                        Debug.Log("CBLogics performed the 'up' action");
-                        CBAction(CBActionTypes.up);
+                    case CBActionTypes.MOVE:
+                        Debug.Log("CBLogics performed the 'move' action");
+                        CBAction(CBActionTypes.MOVE);
                         break;
-                    case CBActionTypes.down:
-                        Debug.Log("CBLogics performed the 'down' action");
-                        CBAction(CBActionTypes.down);
+                    case CBActionTypes.TURNLEFT:
+                        Debug.Log("CBLogics performed the 'turn left' action");
+                        CBAction(CBActionTypes.TURNLEFT);
                         break;
-                    case CBActionTypes.left:
-                        Debug.Log("CBLogics performed the 'left' action");
-                        CBAction(CBActionTypes.left);
+                    case CBActionTypes.TURNRIGHT:
+                        Debug.Log("CBLogics performed the 'turn right' action");
+                        CBAction(CBActionTypes.TURNRIGHT);
                         break;
-                    case CBActionTypes.right:
-                        Debug.Log("CBLogics performed the 'right' action");
-                        CBAction(CBActionTypes.right);
-                        break;
-                    case CBActionTypes.none:
+                    case CBActionTypes.NONE:
                         break;
                     default:
                         Debug.LogError("'PerformActions' in CBLogic failed to identify: " + action);
@@ -104,12 +116,15 @@ public class CBLogic : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// reads action blocks and returns a list of actions
+    /// When adding a new action needs to be updated here.
     /// </summary>
     /// <returns>
     /// the list of actions to be performed
     /// </returns>
+    //TODO - can the string approach be removed/return enum?
     List<CBActionTypes> GetActions()
     {
         List<CBActionTypes> actionList = new List<CBActionTypes>();
@@ -121,21 +136,17 @@ public class CBLogic : MonoBehaviour
             {
                 switch (action)
                 {
-                    case "Up":
-                        actionList.Add(CBActionTypes.up);
-                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Up");
+                    case "Move":
+                        actionList.Add(CBActionTypes.MOVE);
+                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Move");
                         break;
-                    case "Down":
-                        actionList.Add(CBActionTypes.down);
-                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Down");
+                    case "TurnLeft":
+                        actionList.Add(CBActionTypes.TURNLEFT);
+                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Turn Left");
                         break;
-                    case "Left":
-                        actionList.Add(CBActionTypes.left);
-                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Left");
-                        break;
-                    case "Right":
-                        actionList.Add(CBActionTypes.right);
-                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Right");
+                    case "TurnRight":
+                        actionList.Add(CBActionTypes.TURNRIGHT);
+                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Turn Right");
                         break;
                     default:
                         Debug.LogError("Code Block " + block.orderNumber + " contains a erroneous action at point: " + actionCount);
@@ -149,44 +160,37 @@ public class CBLogic : MonoBehaviour
     }
 
     /// <summary>
-    /// performs the selected action
+    /// Performs the selected action - when adding a new action the behaviour must be specified here.
     /// </summary>
     /// <param name="CBActionType">
     /// the action to be performed
     /// </param>
     void CBAction(CBActionTypes CBActionType)
     {
-        //TODO determine if to be used, disabled to quiet the compiler warning
-        //float movementSpeed = 1f;
+        // move player
+        if (activePlayer == null)
+        {
+            Debug.Log("Assign player controller in Game Controller - CBLogic!");
+            return;
+        }
 
-        Vector2 MovementDirection = new Vector2(0, 0);
         switch (CBActionType)
         {
-            case CBActionTypes.up:
-                MovementDirection = new Vector2(0, 1);
+            case CBActionTypes.MOVE:
+                //TODO implement this function
+                activePlayer.MovePlayerByFacing();
                 break;
-            case CBActionTypes.down:
-                MovementDirection = new Vector2(0, -1);
+            case CBActionTypes.TURNLEFT:
+                //TODO implement this function (arg is false as .x is -1 for left)
+                activePlayer.TurnPlayer(false);
                 break;
-            case CBActionTypes.left:
-                MovementDirection = new Vector2(-1, 0);
-                break;
-            case CBActionTypes.right:
-                MovementDirection = new Vector2(1, 0);
+            case CBActionTypes.TURNRIGHT:
+                //TODO implement this function (arg is true as .x is +1 for right)
+                activePlayer.TurnPlayer(true);
                 break;
             default:
                 Debug.LogError("Something went wrong in CBAction in Game Controller - CBLogic.");
                 break;
-        }
-
-        // move player
-        if (activePlayer != null)
-        {
-            activePlayer.MovePlayerInDirection(MovementDirection);
-        }
-        else
-        {
-            Debug.Log("Assign player controller in Game Controller - CBLogic!");
         }
 
     }
