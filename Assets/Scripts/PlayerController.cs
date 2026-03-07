@@ -12,13 +12,14 @@ public class PlayerController : MonoBehaviour
     }
     public FACING facing = FACING.DOWN;
     public AudioSource sound_walk = null;
-    private float speed = 400.0f;
-    public Tilemap tilemap = null;
+    // unused for now but will be used to control player movement speed and animation eventually
+    // private float speed = 400.0f;
+    public LevelMapManager level = null;
     public int zLevel = 0;
 
     public Vector3Int GetPlayerCell()
     {
-        if (tilemap == null)
+        if (level == null)
         {
             //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Vector3Int currentCell = tilemap.WorldToCell(transform.position);
+            Vector3Int currentCell = level.GetPlayerCell();
             return currentCell;
         }
     }
@@ -58,7 +59,7 @@ public class PlayerController : MonoBehaviour
     //TODO delay needs to be implemented
     public void MovePlayerInDirection(Vector2 direction)
     {
-        if (tilemap == null)
+        if (level == null)
         {
             //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
@@ -115,31 +116,33 @@ public class PlayerController : MonoBehaviour
                 case FACING.RIGHT: facing = FACING.UP;    break;
             }
         }
+    }
 
+    //TODO this is duplicated by levelmapmanager, one or the other needs to own this
+    // there is a lot of level.* access in this method, levelMapManager should probably own this
     //debug handling, no animation currently
     public void TeleportPlayerToCell(Vector3Int targetCell)
     {
-        if (tilemap == null)
+        if (level == null)
         {
             //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
             return;
         }
 
-        if (!tilemap.HasTile(targetCell))
+        if (!level.isValidMove(targetCell))
         {
-            Debug.Log("off map");
+            Debug.Log("Invalid move attempted to cell " + targetCell + " on z-level " + targetCell.z);
             return;
         }
 
         // snap to grid
         transform.position =
-        tilemap.GetCellCenterWorld(tilemap.WorldToCell(transform.position)
+        level.activeLayer.GetCellCenterWorld(level.activeLayer.WorldToCell(transform.position)
         );
-        //player.transform.position = tilemap.GetCellCenterWorld(targetCell);
         // move player to center of tile
-        transform.position = tilemap.CellToWorld(targetCell) + tilemap.cellSize / 2f;
-        Debug.Log("on map");
+        transform.position = level.activeLayer.tilemap.CellToWorld(targetCell) + level.activeLayer.tilemap.cellSize / 2f;
+        // Debug.Log("on map");
         PlayWalkSound();
     }
 
