@@ -14,6 +14,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Level manager controls the separate tilemap z-levels and player movement
+/// </summary>
 public class LevelMapManager : MonoBehaviour {
 
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
@@ -30,9 +31,28 @@ public class LevelMapManager : MonoBehaviour {
         _setupMapLayer();
         _setupPlayerOnMap();
     }
+    
+    /// <summary>
+    /// Changes the active map layer to the one corresponding to the given z-level, if it exists in the register
+    /// </summary>
+    public void changeActiveMap(int newZLevel)
+    {
+        if (!mapLayerRegister.ContainsKey(newZLevel))
+        {
+            Debug.Log("No map layer registered for z-level " + newZLevel);
+            return;
+        }
+        else
+        {
+            //TODO check if valid beforehand
+            //TODO add transition animation effect (level fade?)
+            LevelLayer newLayer = mapLayerRegister[newZLevel];
+            activeLayer = newLayer;
+        }
+    }
 
     // doesn't rely on cell existing in layer
-    Vector3Int GetPlayerCell()
+    public Vector3Int GetPlayerCell()
     {
         if (player == null || activeLayer == null)
         {
@@ -57,7 +77,7 @@ public class LevelMapManager : MonoBehaviour {
     /// <returns>
     /// True if the move is valid, false otherwise
     /// </returns>
-    bool isValidMove(Vector3Int cellPosition) {
+    public bool isValidMove(Vector3Int cellPosition) {
         if (mapLayerRegister.ContainsKey(cellPosition.z)) {
             LevelLayer checkLayer = mapLayerRegister[cellPosition.z];
             if (checkLayer.tilemap.HasTile(cellPosition)) {
@@ -75,13 +95,14 @@ public class LevelMapManager : MonoBehaviour {
 
     /// <summary>
     /// Moves the player in the specified direction.
+    /// Call alongside changeActiveMap to move between layers, as player z-level is not automatically updated by this function
     /// </summary>
     /// <param name="direction">
     /// The direction to move the player, where (0, 1) is up, (0, -1) is down, (-1, 0) is left, and (1, 0) is right. Handled by facing logic.
     /// </param>    
-    void MovePlayerInDirection(Vector2 direction)
+    public void MovePlayerInDirection(Vector2 direction)
     {
-        if (player == null || tilemap == null)
+        if (player == null || activeLayer == null)
         {
             //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
@@ -100,25 +121,6 @@ public class LevelMapManager : MonoBehaviour {
         }
     }
 
-    /// <summary>
-    /// Changes the active map layer to the one corresponding to the given z-level, if it exists in the register
-    /// </summary>
-    void OnChangeActiveMap(int newZLevel)
-    {
-        if (!mapLayerRegister.ContainsKey(newZLevel))
-        {
-            Debug.Log("No map layer registered for z-level " + newZLevel);
-            return;
-        }
-        else
-        {
-            //TODO check if valid beforehand
-            //TODO add transition animation effect (level fade?)
-            LevelLayer newLayer = mapLayerRegister[newZLevel];
-            activeLayer = newLayer;
-        }
-    }
-
     // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
     void OnDrawGizmos() {
         // silently fail, debug handling only
@@ -129,6 +131,7 @@ public class LevelMapManager : MonoBehaviour {
         Gizmos.DrawWireCube(center, activeLayer.tilemap.cellSize);
     }
 
+    //TODO this is duplicated by playerController, one or the other needs to own this
     //TODO - this is currently a teleport, needs to be replaced with gradual movement and animation (especially for jumping) eventually
     void TeleportPlayerToCell(Vector3Int targetCell)
     {
@@ -163,30 +166,45 @@ public class LevelMapManager : MonoBehaviour {
 
     private void _setupMapLayer() {
         // Map layer setup
-        List<LevelLayer> mapLayers = GameObject.FindGameObjectsWithTag("LevelLayer").ToList<LevelLayer>();
-        for (int i = 0; i < mapLayers.Count; i++)
+
+        // bugged
+        // List<LevelLayer> mapLayers = GameObject.FindGameObjectsWithTag("LevelLayer").ToList<LevelLayer>();
+        // for (int i = 0; i < mapLayers.Count; i++)
+        // {
+        //     LevelLayer layer = mapLayers[i];
+        //     mapLayerRegister[layer.zLevel] = layer;
+        //     Debug.Log("LevelLayer '" + layer.name + "' added to LevelMapManager via automated find");
+        // }
+
+        foreach (var layer_object in GameObject.FindGameObjectsWithTag("LevelLayer"))
         {
-            // will overwrite if multiple layers have the same zLevel, but this is a user error and should be caught in editor
-            LevelLayer layer = mapLayers[i];
-            mapLayerRegister[layer.zLevel] = layer;
-            Debug.Log("LevelLayer '" + layer.name + "' added to LevelMapManager via automated find");
+            LevelLayer layer = layer_object.GetComponent<LevelLayer>();
+            if (layer != null)
+            {
+                // will overwrite if multiple layers have the same zLevel, but this is a user error and should be caught in editor
+                mapLayerRegister[layer.zLevel] = layer;
+                Debug.Log("LevelLayer '" + layer.name + "' added to LevelMapManager via automated find");
+            }
         }
     }
 
     private void _setupPlayerOnMap() {
-        // Initial player setup within the level
+        // Initial player setup within the level if not manually assigned
         if (player == null)
         {
+            // search for child with tag player, player gets reloaded with level
             player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-            Debug.Log("Player successfully added to LevelMapManager via automated find");
+            if (player != null) {
+                Debug.Log("Player successfully added to LevelMapManager via automated find");
+            } else {
+                Debug.Log("Player must be manually assigned to LevelMapManager as cannot be found - does it exist within level scene?"); 
+                return;
+            }
         }
-         else {
-            Debug.Log("Player must be manually assigned to LevelMapManager as cannot be found - does it exist within level scene?"); 
-         }
 
         // Player startup
         // Set the initial active map layer to player z-level
-        OnChangeActiveMap(player.zLevel);
+        changeActiveMap(player.zLevel);
         if (activeLayer == null)
         {
             Debug.Log("No active layer found for z-level " + player.zLevel + ", please check your map layers!");
