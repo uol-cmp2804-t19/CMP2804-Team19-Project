@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public AudioSource sound_walk = null;
     private float speed = 400.0f;
     public Tilemap tilemap = null;
-
+    public int zLevel = 0;
 
     public Vector3Int GetPlayerCell()
     {
