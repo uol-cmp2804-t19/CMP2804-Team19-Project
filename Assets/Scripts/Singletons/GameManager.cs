@@ -1,5 +1,6 @@
 using UnityEngine;
 using Config;
+using System;
 
 /// <summary>
 /// Singleton that persists across all scenes and can be accessed from where-ever.
@@ -33,8 +34,15 @@ public class GameManager : MonoBehaviour
 
     void LoadConfig()
     {
-        string json = FileIO.ReadFile("config.json");
-        Config = ConfigReader.FromJson(json);
+        try
+        {
+            string json = FileIO.ReadFile("config.json");
+            Config = ConfigReader.FromJson(json);
+        }
+        catch
+        {
+            Debug.LogError("LoadConfig in GameManager called with no config.json file present");
+        }
     }
 
     public void SaveConfig()

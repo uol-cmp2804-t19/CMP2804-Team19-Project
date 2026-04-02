@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
 
 /// Config class library to manage metrics and configuration settings for the player.
 /// Used alongside FileIO class library to save and load metrics for the game.
@@ -41,8 +42,16 @@ namespace Config
     {
         public static ConfigData FromJson(string jsonString)
         {
-            ConfigData data = JsonConvert.DeserializeObject<ConfigData>(jsonString);
-            return data ?? new ConfigData();
+            try
+            {
+                ConfigData data = JsonConvert.DeserializeObject<ConfigData>(jsonString);
+                return data ?? new ConfigData();
+            }
+            catch
+            {
+                Debug.LogError("Config Reader could not read the JSON");
+                return null;
+            }
         }
 
         public static string ToJson(ConfigData data)
