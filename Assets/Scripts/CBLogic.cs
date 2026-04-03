@@ -220,9 +220,23 @@ public class CBLogic : MonoBehaviour
     /// <param name="action"> the action to add </param>
     private void createBlock(bool loop, string action)
     {
-        if (loop) { }
-        else { }
+        if (loop) 
+        { 
 
+        }
+        else 
+        {
+
+        }
+
+    }
+    /// <summary>
+    /// Removes an item from the order list
+    /// </summary>
+    /// <param name="orderNumber"> the order number to be removed </param>
+    public void removeActionBlock(int orderNumber)
+    {
+        
     }
 
 }
