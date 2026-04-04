@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class CodeBlockUI : MonoBehaviour
 {
@@ -53,6 +54,7 @@ public class CodeBlockUI : MonoBehaviour
         // loop through array of the CBActionTypes enum, using the name as the button text
         foreach (CBLogic.CBActionTypes actionType in System.Enum.GetValues(typeof(CBLogic.CBActionTypes)))
         {
+            Debug.LogFormat("add {0} to palette!", actionType);
             // place button with click function adding the same action type to queue
             Button blockButton = CreateBlockButton(actionType.ToString());
             blockButton.onClick.AddListener(() => QueueAdd(actionType));
@@ -112,6 +114,7 @@ public class CodeBlockUI : MonoBehaviour
     private Button CreateBlockButton(string label)
     {
         Button button = new GameObject(label).AddComponent<Button>();
+        button.AddComponent<RectTransform>();
         button.GetComponent<RectTransform>().sizeDelta = queueButtonSize;
         return button;
     }
