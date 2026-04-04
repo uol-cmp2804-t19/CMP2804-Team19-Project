@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1787540779035953971}
   m_Layer: 0
-  m_Name: ui_cb_prefab
+  m_Name: ui_cb_prefab_empty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,6 +247,14 @@ PrefabInstance:
     - target: {fileID: 5952650976306577057, guid: a0cb79d040012a540b5edd457fe58445, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045905624038061281, guid: a0cb79d040012a540b5edd457fe58445, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8045905624038061281, guid: a0cb79d040012a540b5edd457fe58445, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8068478334569411928, guid: a0cb79d040012a540b5edd457fe58445, type: 3}
       propertyPath: m_AnchorMax.y
