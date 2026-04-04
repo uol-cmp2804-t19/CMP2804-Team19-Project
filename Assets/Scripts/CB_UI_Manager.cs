@@ -26,6 +26,8 @@ public class CodeBlockUI : MonoBehaviour
             //TODO are we handling enough LogError validation?
             Debug.LogError("CodeBlockUI: CBLogic is not assigned in Inspector. Please find within the scene.");
         }
+        // disable interface before shown, does not default to open
+        mainInterfacePanel.SetActive(!mainInterfacePanel.activeSelf);
     }
 
     private void Start()
@@ -40,6 +42,7 @@ public class CodeBlockUI : MonoBehaviour
 
     private void ToggleInterface()
     {
+        //Debug.Log("toggle interface clicked!!");
         mainInterfacePanel.SetActive(!mainInterfacePanel.activeSelf);
     }
 
