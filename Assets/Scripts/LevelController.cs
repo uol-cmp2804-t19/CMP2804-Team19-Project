@@ -34,8 +34,11 @@ public class LevelController : MonoBehaviour
         //string new_content = FileIO.ReadFile("test.txt")
         //Debug.Log(new_content);
         Debug.Log("new levelcontroller loaded");
-        GameManager.Main.Config.LevelsCompleted = 69;
-        GameManager.Main.SaveConfig();
+
+        // removed for testing
+        // TODO re-enable when config fixed
+        //GameManager.Main.Config.LevelsCompleted = 69;
+        //GameManager.Main.SaveConfig();
     }
 
     // Update is called once per frame
