@@ -359,6 +359,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3121265786907604556, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
+      propertyPath: codeBlockLogic
+      value: 
+      objectReference: {fileID: 738242645}
     - target: {fileID: 9026064938521897323, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
       propertyPath: m_Name
       value: ui_cb_prefab_v3
@@ -523,6 +527,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &738242645 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1366739347633409303, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
+  m_PrefabInstance: {fileID: 408880636}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26df4e07804dc24788e5ec776b1c8d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1174672167 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5226370529757506131, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
