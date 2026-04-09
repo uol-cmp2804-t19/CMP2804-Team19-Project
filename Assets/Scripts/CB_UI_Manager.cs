@@ -17,10 +17,9 @@ public class CodeBlockUI : MonoBehaviour
     // find on cb_prefab/GameController
     [SerializeField] private CBLogic codeBlockLogic;
 
-    int maxQueueSize = 60; // visual limit to prevent overflow
-
     // hold a list of every action currently in the queue, build queue from this - whenever this updates call UpdateQueueDisplay()
     private List<CBLogic.CBActionTypes> actionQueue = new List<CBLogic.CBActionTypes>();
+    private int maxQueueSize = 60; // visual limit to prevent overflow
 
     private void Awake()
     {
@@ -131,8 +130,18 @@ public class CodeBlockUI : MonoBehaviour
         // set hierarchy
         buttonObj.transform.SetParent(parent);
 
-        // todo - add tint
+        // add hover & click colours
+        button.transition = Selectable.Transition.ColorTint;
         button.targetGraphic = button_visual;
+        button.transition = Selectable.Transition.ColorTint;
+        button.targetGraphic = button_visual;
+        ColorBlock buttonColors = button.colors;
+        buttonColors.normalColor = Color.white;                 // Default color
+        buttonColors.highlightedColor = new Color(0.9f, 0.9f, 0.9f); // Slightly darker when hovered
+        buttonColors.pressedColor = new Color(0.7f, 0.7f, 0.7f);     // Darker when clicked
+        buttonColors.selectedColor = Color.white;
+        buttonColors.colorMultiplier = 1f;
+        button.colors = buttonColors;
 
         // TODO - text is placeholder for actual block visuals - blocks need to be assigned to an image text by type
         // add text to button
