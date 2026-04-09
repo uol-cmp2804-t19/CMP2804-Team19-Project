@@ -242,13 +242,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 670
       objectReference: {fileID: 0}
+    - target: {fileID: 6907814154705404919, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -895
+      objectReference: {fileID: 0}
+    - target: {fileID: 6907814154705404919, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -154
+      objectReference: {fileID: 0}
     - target: {fileID: 7093443554700500195, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 541
+      value: -684
       objectReference: {fileID: 0}
     - target: {fileID: 7093443554700500195, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 320
+      value: 424
       objectReference: {fileID: 0}
     - target: {fileID: 7746753718710752725, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: m_Camera
@@ -366,6 +374,10 @@ PrefabInstance:
     - target: {fileID: 9026064938521897323, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
       propertyPath: m_Name
       value: ui_cb_prefab_v3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9203793891982504905, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
+      propertyPath: m_Name
+      value: ButtonOpenInterface
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

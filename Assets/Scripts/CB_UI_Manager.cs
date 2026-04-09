@@ -56,9 +56,8 @@ public class CodeBlockUI : MonoBehaviour
         {
             Debug.LogFormat("add {0} to palette!", actionType);
             // place button with click function adding the same action type to queue
-            Button blockButton = CreateBlockButton(actionType.ToString());
+            Button blockButton = CreateBlockButton(actionType.ToString(), paletteContainer);
             blockButton.onClick.AddListener(() => QueueAdd(actionType));
-            blockButton.transform.SetParent(paletteContainer);
         }
         //*/
     }
@@ -77,9 +76,8 @@ public class CodeBlockUI : MonoBehaviour
         // after destroying old items, loop through the refernce to active blocks and build entirely new block UI objects
         foreach (var action in actionQueue)
         {
-            Button blockButton = CreateBlockButton(action.ToString());
+            Button blockButton = CreateBlockButton(action.ToString(), queueContainer);
             blockButton.onClick.AddListener(() => QueueRemove(action));
-            blockButton.transform.SetParent(queueContainer);
         }
     }
 
@@ -111,11 +109,40 @@ public class CodeBlockUI : MonoBehaviour
     }
 
     // create button object & set fixed size
-    private Button CreateBlockButton(string label)
+    private Button CreateBlockButton(string label, Transform parent)
     {
-        Button button = new GameObject(label).AddComponent<Button>();
-        button.AddComponent<RectTransform>();
-        button.GetComponent<RectTransform>().sizeDelta = queueButtonSize;
+        GameObject buttonObj = new GameObject(label);
+        // set bounding box
+        RectTransform button_visual_container = buttonObj.AddComponent<RectTransform>();
+        button_visual_container.sizeDelta = queueButtonSize;
+        // Default unity UI sprit
+        Image button_visual = buttonObj.AddComponent<Image>();
+        // add actual button - this is the returned object because different methods set different listeners
+        Button button = buttonObj.AddComponent<Button>();
+        // set hierarchy
+        buttonObj.transform.SetParent(parent);
+
         return button;
+
+        /*
+        // removed complex setup behvaiour to troubleshoot
+        // tints on hover?
+        button.targetGraphic = buttonImage;
+        // text label
+        GameObject textObj = new GameObject("Text");
+        textObj.transform.SetParent(buttonObj.transform, false);
+
+        Text buttonText = textObj.AddComponent<Text>();
+        buttonText.text = label;
+        buttonText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        buttonText.alignment = TextAnchor.MiddleCenter;
+        buttonText.color = Color.black;
+
+        // Stretch text to fill the button's bounds
+        RectTransform textRect = textObj.GetComponent<RectTransform>();
+        textRect.anchorMin = Vector2.zero;
+        textRect.anchorMax = Vector2.one;
+        textRect.sizeDelta = Vector2.zero;
+         */
     }
 }
