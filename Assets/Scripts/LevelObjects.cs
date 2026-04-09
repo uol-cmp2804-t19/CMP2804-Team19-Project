@@ -7,14 +7,13 @@ namespace LevelObjects
 
     public class ScoreCollectable : Collectable
     {
-        public int score;
+        public int score = 1;
 
         protected override void Collected()
         {
             if (owning_level != null)
             {
-                //no parameter for testing just adds 1
-                owning_level.AddScore();
+                owning_level.AddScore(score);
             }
         }
     }
@@ -41,7 +40,7 @@ namespace LevelObjects
 
     public abstract class Collectable : MonoBehaviour
     {
-        public LevelController owning_level = null;
+        public LevelMapManager owning_level = null;
         protected bool is_collected = false;
         protected bool destroy_on_collect = true;
 
