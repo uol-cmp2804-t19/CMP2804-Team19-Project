@@ -1,0 +1,12 @@
+ORGANISATION STRUCTURE
+
+Everything in Assets
+Everything inside organised by owner subdirectories and type (e.g. player, tilemap, ui)
+
+Audio		- Sound effects and music
+Graphics	- Art assets 
+Prefabs		- Prefabs
+Scenes		- Scenes
+Scripts		- Scripts
+Settings	- Unity default
+TextMeshPro	- Unity default
