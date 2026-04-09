@@ -4,12 +4,9 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - ActionEmpty
   - ActionBlock
-  - ActionDown
-  - ActionUp
-  - ActionLeft
-  - ActionRight
+  - ActionSingle
+  - ActionLoop
   layers:
   - Default
   - TransparentFX
