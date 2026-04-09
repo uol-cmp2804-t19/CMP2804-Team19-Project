@@ -74,13 +74,18 @@ public class CodeBlockUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        // after destroying old items, loop through the refernce to active blocks and build entirely new block UI objects
-        foreach (var action in actionQueue)
+        // after destroying old items, loop through through and build entirely new block UI objects
+        for (int i = 0; i < actionQueue.Count; i++)
         {
-            Button blockButton = CreateBlockButton(action.ToString(), queueContainer);
-            blockButton.onClick.AddListener(() => QueueRemove(action));
+            // if not using indexes the actionQueue will not respect the order of blocks when removing blocks
+            var actionAtPos = actionQueue[i];
+            int indexToRemove = i;
+
+            Button blockButton = CreateBlockButton(actionAtPos.ToString(), queueContainer);
+            blockButton.onClick.AddListener(() => QueueRemove(indexToRemove));
         }
-    }
+     }
+
 
     // counterpart to QueueRemove
     private void QueueAdd(CBLogic.CBActionTypes actionType)
@@ -96,10 +101,18 @@ public class CodeBlockUI : MonoBehaviour
     }
 
     // counterpart to QueueAdd
-    private void QueueRemove(CBLogic.CBActionTypes actionType)
+    private void QueueRemove(int index)
     {
-        actionQueue.Remove(actionType);
-        UpdateQueueDisplay();
+        // Check to prevent out-of-bounds errors
+        if (index >= 0 && index < actionQueue.Count)
+        {
+            actionQueue.RemoveAt(index);
+            UpdateQueueDisplay();
+        }
+        else 
+        {
+            Debug.LogWarning("Invalid index for QueueRemove call, at idx: " + index);
+        }
     }
 
     // not yet implemented, need to confirm CBUI update & integration with @Masa before integrating with world
