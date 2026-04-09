@@ -7,6 +7,7 @@ TagManager:
   - ActionBlock
   - ActionSingle
   - ActionLoop
+  - LevelLayer
   layers:
   - Default
   - TransparentFX

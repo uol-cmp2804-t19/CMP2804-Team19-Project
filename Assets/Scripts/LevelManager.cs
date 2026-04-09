@@ -236,16 +236,42 @@ public class LevelMapManager : MonoBehaviour {
         //     Debug.Log("LevelLayer '" + layer.name + "' added to LevelMapManager via automated find");
         // }
 
-        foreach (var layer_object in GameObject.FindGameObjectsWithTag("LevelLayer"))
+        var map_layers = FindObjectsByType<LevelLayer>(FindObjectsSortMode.None);
+        foreach (var layer_object in map_layers)
         {
-            LevelLayer layer = layer_object.GetComponent<LevelLayer>();
-            if (layer != null)
+            LevelLayer layerComp = layer_object.GetComponent<LevelLayer>();
+            if (layerComp != null)
             {
                 // will overwrite if multiple layers have the same zLevel, but this is a user error and should be caught in editor
-                mapLayerRegister[layer.zLevel] = layer;
-                Debug.Log("LevelLayer '" + layer.name + "' added to LevelMapManager via automated find");
+                mapLayerRegister[layerComp.zLevel] = layerComp;
+                Debug.Log("LevelLayer '" + layerComp.name + "' added to LevelMapManager via automated find");
             }
         }
+        foreach (var (key, value) in mapLayerRegister)
+        {
+            // set sorting order by specified ZLevel (offset by 1), forcing levellayers with duplicate ZLevels to default to nil & not render
+            if (value != null || value is LevelLayer) {
+                if (value.tilemap == null) {
+                    Debug.Log("No tilemap found on LevelLayer '" + value.name + "', cannot set sorting order!");
+                    continue;
+                }
+                TilemapRenderer renderer = value.tilemap.GetComponent<TilemapRenderer>();
+                if (renderer == null)
+                {
+                    Debug.Log("No TilemapRenderer found on LevelLayer '" + value.name + "', cannot set sorting order!");
+                    continue;
+                }
+                // else
+                renderer.sortingOrder = key+1;
+            }
+            else
+            {
+                Debug.Log("No LevelLayer found for z-level " + key + ", cannot set sorting order!");
+            }
+            Debug.Log("Registered map layer for z-level " + key + ": " + value.name);
+            
+        }
+        Debug.Log("MLR=\n"+mapLayerRegister);
     }
 
     private void _setupPlayerOnMap() {
