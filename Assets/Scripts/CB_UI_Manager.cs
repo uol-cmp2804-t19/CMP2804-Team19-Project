@@ -17,6 +17,8 @@ public class CodeBlockUI : MonoBehaviour
     // find on cb_prefab/GameController
     [SerializeField] private CBLogic codeBlockLogic;
 
+    int maxQueueSize = 60; // visual limit to prevent overflow
+
     // hold a list of every action currently in the queue, build queue from this - whenever this updates call UpdateQueueDisplay()
     private List<CBLogic.CBActionTypes> actionQueue = new List<CBLogic.CBActionTypes>();
 
@@ -84,6 +86,12 @@ public class CodeBlockUI : MonoBehaviour
     // counterpart to QueueRemove
     private void QueueAdd(CBLogic.CBActionTypes actionType)
     {
+        if (actionQueue.Count >= maxQueueSize)
+        {
+            //TODO - add user feedback for trying to add blocks when queue is full
+            Debug.LogWarning("Queue full! TODO - add user feedback!");
+            return;
+        }
         actionQueue.Add(actionType);
         UpdateQueueDisplay();
     }

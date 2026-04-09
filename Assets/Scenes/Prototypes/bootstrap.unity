@@ -375,10 +375,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ui_cb_prefab_v3
       objectReference: {fileID: 0}
-    - target: {fileID: 9203793891982504905, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
-      propertyPath: m_Name
-      value: ButtonOpenInterface
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
