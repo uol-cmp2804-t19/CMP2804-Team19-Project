@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4566983141493820595}
   - component: {fileID: 2900069405389523969}
-  - component: {fileID: 8797919931234495540}
+  - component: {fileID: 7350699385373622223}
   m_Layer: 0
   m_Name: WorldGrid
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 437896966708873730}
+  - {fileID: 4855812313056941697}
   m_Father: {fileID: 3603084814753398222}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &2900069405389523969
@@ -46,7 +46,7 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
---- !u!114 &8797919931234495540
+--- !u!114 &7350699385373622223
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -55,12 +55,58 @@ MonoBehaviour:
   m_GameObject: {fileID: 227737766314274611}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0668498489251be4e9fff0a68c5c78d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activeLayer: {fileID: 9044477125950102343}
+  player: {fileID: 5453123737546547116}
+--- !u!1 &472043641664600474
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4855812313056941697}
+  - component: {fileID: 9044477125950102343}
+  m_Layer: 0
+  m_Name: Layer0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4855812313056941697
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472043641664600474}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 437896966708873730}
+  m_Father: {fileID: 4566983141493820595}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9044477125950102343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472043641664600474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5136dcdc582713246966c1c636deba8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 5453123737546547116}
   tilemap: {fileID: 6362772328088779657}
-  moveDelay: 0.15
+  zLevel: 0
 --- !u!1 &1345668409064895734
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,6 +276,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   facing: 1
   sound_walk: {fileID: 7936306250581425331}
+  level: {fileID: 0}
+  zLevel: 0
 --- !u!1 &2295711501777434738
 GameObject:
   m_ObjectHideFlags: 0
@@ -467,7 +515,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4566983141493820595}
+  m_Father: {fileID: 4855812313056941697}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &6362772328088779657
 Tilemap:
