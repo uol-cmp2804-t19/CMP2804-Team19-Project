@@ -11,10 +11,6 @@ public class LevelLayer : MonoBehaviour
     public Tilemap tilemap = null;
     public int zLevel = 0;
 
-    //TODO - unused currently but these should be in levelManager or a global singleton not a component of each layer
-    //public float moveDelay = 0.15f;
-    //private float nextMove = 0.0f;
-
     // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
     void OnDrawGizmos()
     {
