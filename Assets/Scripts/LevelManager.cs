@@ -22,6 +22,7 @@ public class LevelMapManager : MonoBehaviour {
     public bool useDebugMoveWASD = true;
 
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
+    int levelScore = 0;
 
     /// <summary>
     /// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -43,6 +44,10 @@ public class LevelMapManager : MonoBehaviour {
         }
     }
 
+    public void AddScore(int score_change)
+    {
+        levelScore += score_change;
+    }
 
     /// <summary>
     /// Changes the active map layer to the one corresponding to the given z-level, if it exists in the register

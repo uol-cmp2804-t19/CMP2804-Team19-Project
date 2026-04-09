@@ -18,6 +18,7 @@ public class FileIO
         }
         catch 
         {
+            //TODO if this can't be found, create it
             Debug.LogError("ReadFile called on '" + path + "'file not found");
             return null;
         }
