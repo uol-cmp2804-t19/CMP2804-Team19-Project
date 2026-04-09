@@ -2,7 +2,8 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Android.Gradle;
+// causing build error - temporary removed
+//using Unity.Android.Gradle;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -224,9 +225,23 @@ public class CBLogic : MonoBehaviour
     /// <param name="action"> the action to add </param>
     private void createBlock(bool loop, string action)
     {
-        if (loop) { }
-        else { }
+        if (loop) 
+        { 
 
+        }
+        else 
+        {
+
+        }
+
+    }
+    /// <summary>
+    /// Removes an item from the order list
+    /// </summary>
+    /// <param name="orderNumber"> the order number to be removed </param>
+    public void removeActionBlock(int orderNumber)
+    {
+        
     }
 
 }
