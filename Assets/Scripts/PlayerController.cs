@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
 
         // snap to grid
         transform.position =
-        level.activeLayer.GetCellCenterWorld(level.activeLayer.WorldToCell(transform.position)
+        level.activeLayer.tilemap.GetCellCenterWorld(level.activeLayer.tilemap.WorldToCell(transform.position)
         );
         // move player to center of tile
         transform.position = level.activeLayer.tilemap.CellToWorld(targetCell) + level.activeLayer.tilemap.cellSize / 2f;

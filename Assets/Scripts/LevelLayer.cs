@@ -10,7 +10,8 @@ public class LevelLayer : MonoBehaviour
 {
     public Tilemap tilemap = null;
     public float moveDelay = 0.15f;
-    private float nextMove = 0.0f;
+    // unused
+    //private float nextMove = 0.0f;
     public int zLevel = 0;
 
     // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move

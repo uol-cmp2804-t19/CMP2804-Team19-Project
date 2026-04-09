@@ -17,10 +17,10 @@ using System.Collections.Generic;
 /// </summary>
 public class LevelMapManager : MonoBehaviour {
 
-    Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
-    LevelLayer activeLayer = null;
-
+    public LevelLayer activeLayer = null;
     public PlayerController player = null;
+
+    Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
 
     /// <summary>
     /// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -124,9 +124,9 @@ public class LevelMapManager : MonoBehaviour {
     // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
     void OnDrawGizmos() {
         // silently fail, debug handling only
-        if (player == null || activeLayer == null) return;
-        Vector3Int cell = activeLayer.WorldToCell(player.transform.position);
-        Vector3 center = activeLayer.GetCellCenterWorld(cell);
+        if (player == null || activeLayer == null || activeLayer.tilemap == null) return;
+        Vector3Int cell = activeLayer.tilemap.WorldToCell(player.transform.position);
+        Vector3 center = activeLayer.tilemap.GetCellCenterWorld(cell);
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(center, activeLayer.tilemap.cellSize);
     }
