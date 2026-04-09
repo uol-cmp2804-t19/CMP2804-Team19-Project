@@ -39,7 +39,7 @@ public class CBLogic : MonoBehaviour
         foreach (GameObject block in actionBlocks)
         {
             Debug.Log("ActionBlock '" + block.name + "' added to CBLogic via automated find");
-            ActionBlockObjects.Add(new CodeBlock(block, ActionBlockObjects.Count(), false));
+            ActionBlockObjects.Add(new CodeBlock(block, ActionBlockObjects.Count(), false, this));
             Debug.Log("ActionBlock '" + block.name + "' added as an Object to ActionBlockObjects");
         }
 
