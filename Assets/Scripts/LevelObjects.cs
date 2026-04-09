@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 //TODO need to find the level without being assigned for ease of use by team
 namespace LevelObjects
@@ -18,9 +19,31 @@ namespace LevelObjects
         }
     }
 
+    public class GoalCollectable : Collectable
+    {
+        GoalCollectable()
+        {
+            destroy_on_collect = false;
+        }
+        protected override void Collected()
+        {
+            if (owning_level != null)
+            {
+                Victory();
+            }
+        }
+        IEnumerator Victory()
+        {
+            yield return new WaitForSeconds(3);
+            Application.Quit();
+        }
+    }
+
     public abstract class Collectable : MonoBehaviour
     {
         public LevelController owning_level = null;
+        protected bool is_collected = false;
+        protected bool destroy_on_collect = true;
 
         // define functionality in derived classes
         protected abstract void Collected();
@@ -29,8 +52,12 @@ namespace LevelObjects
         {
             if (other.CompareTag("Player"))
             {
+                if (is_collected == true) { return; }
                 Collected();
-                Destroy(gameObject);
+                if (destroy_on_collect)
+                {
+                    Destroy(gameObject);
+                }
             }
         }
     }
