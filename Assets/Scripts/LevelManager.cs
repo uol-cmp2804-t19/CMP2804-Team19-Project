@@ -138,9 +138,21 @@ public class LevelMapManager : MonoBehaviour {
     /// True if the move is valid, false otherwise
     /// </returns>
     public bool isValidMove(Vector3Int cellPosition) {
+        // check if tile exists on current layer
+        // if jumping layer should be updated first (call before movePlayerInDirection) so player z-level is correct for this check
         if (mapLayerRegister.ContainsKey(cellPosition.z)) {
             LevelLayer checkLayer = mapLayerRegister[cellPosition.z];
             if (checkLayer.tilemap.HasTile(cellPosition)) {
+                // tile exists, now check if we're blocked by higher layers
+                // check all layers in MapLayerRegister with higher z-levels than the target cell for a tile at the same x,y position, if any exist then move is invalid
+                foreach (var (key, value) in mapLayerRegister) {
+                    if (key > cellPosition.z) {
+                        if (value.tilemap.HasTile(cellPosition)) {
+                            Debug.Log("Move blocked by tile on higher layer " + value.name + " at z-level " + key);
+                            return false;
+                        }
+                    }
+                }
                 return true;
             }
             else {
@@ -202,9 +214,9 @@ public class LevelMapManager : MonoBehaviour {
             return;
         }
 
-        if (!activeLayer.tilemap.HasTile(targetCell))
+        if (!isValidMove(targetCell))
         {
-            Debug.Log("off map");
+            Debug.Log("Invalid move attempted to cell " + targetCell + " on z-level " + targetCell.z);
             return;
         }
 
@@ -219,6 +231,7 @@ public class LevelMapManager : MonoBehaviour {
         player.PlayWalkSound();
 
     }
+
 
     /* #####################################################################################################################
     // private functions

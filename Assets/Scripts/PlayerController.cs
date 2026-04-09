@@ -37,6 +37,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void MovePlayerByFacing()
     {
+        if (level == null)
+        {
+            //TODO add error handling
+            Debug.Log("You forgot to assign a player and/or map!");
+            return;
+        }
         Vector2 dir = Vector2.zero;
         switch (facing)
         {
@@ -53,30 +59,7 @@ public class PlayerController : MonoBehaviour
                 dir = Vector2.right;
                 break;
         }
-        MovePlayerInDirection(dir);
-    }
-
-    //TODO delay needs to be implemented
-    public void MovePlayerInDirection(Vector2 direction)
-    {
-        if (level == null)
-        {
-            //TODO add error handling
-            Debug.Log("You forgot to assign a player and/or map!");
-            return;
-        }
-        else
-        {
-            //player can move diagonally but by coding block calls should not
-            Vector3Int targetCell = GetPlayerCell() + new Vector3Int(
-                Mathf.RoundToInt(direction.x),
-                Mathf.RoundToInt(direction.y),
-                0
-            );
-            // temporary teleport/snapping behaviour, to animate gradually eventually
-            //TODO add animation and delay, preventing further input
-            TeleportPlayerToCell(targetCell);
-        }
+        level.MovePlayerInDirection(dir);
     }
 
     //TODO move to playerAudioController?
@@ -116,34 +99,6 @@ public class PlayerController : MonoBehaviour
                 case FACING.RIGHT: facing = FACING.UP;    break;
             }
         }
-    }
-
-    //TODO this is duplicated by levelmapmanager, one or the other needs to own this
-    // there is a lot of level.* access in this method, levelMapManager should probably own this
-    //debug handling, no animation currently
-    public void TeleportPlayerToCell(Vector3Int targetCell)
-    {
-        if (level == null)
-        {
-            //TODO add error handling
-            Debug.Log("You forgot to assign a player and/or map!");
-            return;
-        }
-
-        if (!level.isValidMove(targetCell))
-        {
-            Debug.Log("Invalid move attempted to cell " + targetCell + " on z-level " + targetCell.z);
-            return;
-        }
-
-        // snap to grid
-        transform.position =
-        level.activeLayer.tilemap.GetCellCenterWorld(level.activeLayer.tilemap.WorldToCell(transform.position)
-        );
-        // move player to center of tile
-        transform.position = level.activeLayer.tilemap.CellToWorld(targetCell) + level.activeLayer.tilemap.cellSize / 2f;
-        // Debug.Log("on map");
-        PlayWalkSound();
     }
 
 }
