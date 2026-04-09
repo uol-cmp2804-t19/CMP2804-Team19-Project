@@ -137,7 +137,14 @@ public class LevelMapManager : MonoBehaviour {
     /// <returns>
     /// True if the move is valid, false otherwise
     /// </returns>
-    public bool isValidMove(Vector3Int cellPosition) {
+    public bool isValidMove(Vector3Int cellPosition)
+    {
+        if (player == null)
+        {
+            //TODO add error handling
+            Debug.Log("You forgot to assign a player and/or map!");
+            return false;
+        }
         // check if tile exists on current layer
         // if jumping layer should be updated first (call before movePlayerInDirection) so player z-level is correct for this check
         if (mapLayerRegister.ContainsKey(cellPosition.z)) {
