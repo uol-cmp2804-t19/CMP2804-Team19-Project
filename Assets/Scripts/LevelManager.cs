@@ -137,7 +137,14 @@ public class LevelMapManager : MonoBehaviour {
     /// <returns>
     /// True if the move is valid, false otherwise
     /// </returns>
-    public bool isValidMove(Vector3Int cellPosition) {
+    public bool isValidMove(Vector3Int cellPosition)
+    {
+        if (player == null)
+        {
+            //TODO add error handling
+            Debug.Log("You forgot to assign a player and/or map!");
+            return false;
+        }
         // check if tile exists on current layer
         // if jumping layer should be updated first (call before movePlayerInDirection) so player z-level is correct for this check
         if (mapLayerRegister.ContainsKey(cellPosition.z)) {
@@ -183,6 +190,7 @@ public class LevelMapManager : MonoBehaviour {
         else
         {
             //TODO - currently player can move diagonally, this will not be possible with coding block calls - does it need to be captured here?
+            // add nil z because not updating zLayer here
             Vector3Int targetCell = GetPlayerCell() + new Vector3Int(
                 Mathf.RoundToInt(direction.x),
                 Mathf.RoundToInt(direction.y),
@@ -205,6 +213,7 @@ public class LevelMapManager : MonoBehaviour {
 
     //TODO this is duplicated by playerController, one or the other needs to own this
     //TODO - this is currently a teleport, needs to be replaced with gradual movement and animation (especially for jumping) eventually
+    //TODO is this respecting levelLayer Z Levels?
     void TeleportPlayerToCell(Vector3Int targetCell)
     {
         if (player == null || activeLayer == null)
