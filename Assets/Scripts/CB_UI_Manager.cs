@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 public class CodeBlockUI : MonoBehaviour
 {
@@ -131,6 +130,12 @@ public class CodeBlockUI : MonoBehaviour
     //TODO would this be easier with a prefab instantation and property update rather than manually building in code?
     private Button CreateBlockButton(string label, Transform parent)
     {
+        /*
+         TODO
+        CreateBlockButton parent setting can produce incorrect local scale/anchoring under UI layout groups.
+        Use SetParent(parent, false) so RectTransform local values are preserved.
+         */
+
         GameObject buttonObj = new GameObject(label);
         // set bounding box
         RectTransform button_visual_container = buttonObj.AddComponent<RectTransform>();
@@ -143,8 +148,6 @@ public class CodeBlockUI : MonoBehaviour
         buttonObj.transform.SetParent(parent);
 
         // add hover & click colours
-        button.transition = Selectable.Transition.ColorTint;
-        button.targetGraphic = button_visual;
         button.transition = Selectable.Transition.ColorTint;
         button.targetGraphic = button_visual;
         ColorBlock buttonColors = button.colors;
