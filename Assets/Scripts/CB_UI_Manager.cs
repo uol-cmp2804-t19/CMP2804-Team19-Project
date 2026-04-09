@@ -117,6 +117,7 @@ public class CodeBlockUI : MonoBehaviour
     }
 
     // create button object & set fixed size
+    //TODO would this be easier with a prefab instantation and property update rather than manually building in code?
     private Button CreateBlockButton(string label, Transform parent)
     {
         GameObject buttonObj = new GameObject(label);
@@ -130,27 +131,25 @@ public class CodeBlockUI : MonoBehaviour
         // set hierarchy
         buttonObj.transform.SetParent(parent);
 
-        return button;
+        // todo - add tint
+        button.targetGraphic = button_visual;
 
-        /*
-        // removed complex setup behvaiour to troubleshoot
-        // tints on hover?
-        button.targetGraphic = buttonImage;
-        // text label
+        // TODO - text is placeholder for actual block visuals - blocks need to be assigned to an image text by type
+        // add text to button
         GameObject textObj = new GameObject("Text");
         textObj.transform.SetParent(buttonObj.transform, false);
-
         Text buttonText = textObj.AddComponent<Text>();
         buttonText.text = label;
         buttonText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         buttonText.alignment = TextAnchor.MiddleCenter;
         buttonText.color = Color.black;
-
-        // Stretch text to fill the button's bounds
+        // stretch text to button
         RectTransform textRect = textObj.GetComponent<RectTransform>();
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
         textRect.sizeDelta = Vector2.zero;
-         */
+
+        return button;
+
     }
 }
