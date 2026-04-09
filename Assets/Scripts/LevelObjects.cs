@@ -12,14 +12,14 @@ namespace LevelObjects
             if (owning_level != null)
             {
                 //no parameter for testing just adds 1
-                owning_level.AddScore();
+                // owning_level.AddScore();
             }
         }
     }
 
     public abstract class Collectable : MonoBehaviour
     {
-        public LevelController owning_level = null;
+        public LevelMapManager owning_level = null;
 
         // define functionality in derived classes
         protected abstract void Collected();
