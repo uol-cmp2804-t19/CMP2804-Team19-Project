@@ -86,7 +86,6 @@ public class CodeBlockUI : MonoBehaviour
         }
      }
 
-
     // counterpart to QueueRemove
     private void QueueAdd(CBLogic.CBActionTypes actionType)
     {
