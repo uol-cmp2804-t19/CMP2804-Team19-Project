@@ -19,6 +19,7 @@ public class LevelMapManager : MonoBehaviour {
 
     public LevelLayer activeLayer = null;
     public PlayerController player = null;
+    public bool useDebugMoveWASD = true;
 
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
 
@@ -35,6 +36,35 @@ public class LevelMapManager : MonoBehaviour {
     public float moveDelay = 0.15f;
     private float nextMove = 0.0f;
     void Update()
+    {
+        if (useDebugMoveWASD == true)
+        {
+            CheckMovementInput();
+        }
+    }
+
+
+    /// <summary>
+    /// Changes the active map layer to the one corresponding to the given z-level, if it exists in the register
+    /// TODO - this should be called with jump before movePlayerInDirection, as player z-level is not automatically updated by that function
+    /// </summary>
+    public void changeActiveMap(int newZLevel)
+    {
+        if (!mapLayerRegister.ContainsKey(newZLevel))
+        {
+            Debug.Log("No map layer registered for z-level " + newZLevel);
+            return;
+        }
+        else
+        {
+            //TODO check if valid beforehand
+            //TODO add transition animation effect (level fade?)
+            LevelLayer newLayer = mapLayerRegister[newZLevel];
+            activeLayer = newLayer;
+        }
+    }
+
+    void CheckMovementInput()
     {
         // testing behaviour only
         // TODO remove
@@ -81,26 +111,6 @@ public class LevelMapManager : MonoBehaviour {
         // transform.position += movement * speed * Time.deltaTime;
     }
 
-
-    /// <summary>
-    /// Changes the active map layer to the one corresponding to the given z-level, if it exists in the register
-    /// </summary>
-    public void changeActiveMap(int newZLevel)
-    {
-        if (!mapLayerRegister.ContainsKey(newZLevel))
-        {
-            Debug.Log("No map layer registered for z-level " + newZLevel);
-            return;
-        }
-        else
-        {
-            //TODO check if valid beforehand
-            //TODO add transition animation effect (level fade?)
-            LevelLayer newLayer = mapLayerRegister[newZLevel];
-            activeLayer = newLayer;
-        }
-    }
-
     // doesn't rely on cell existing in layer
     public Vector3Int GetPlayerCell()
     {
@@ -145,7 +155,7 @@ public class LevelMapManager : MonoBehaviour {
 
     /// <summary>
     /// Moves the player in the specified direction.
-    /// Call alongside changeActiveMap to move between layers, as player z-level is not automatically updated by this function
+    /// TODO - if jumping call alongside changeActiveMap to move between layers, as player z-level is not automatically updated by this function
     /// </summary>
     /// <param name="direction">
     /// The direction to move the player, where (0, 1) is up, (0, -1) is down, (-1, 0) is left, and (1, 0) is right. Handled by facing logic.
