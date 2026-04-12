@@ -620,6 +620,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1407089190 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9026064938521897323, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
+  m_PrefabInstance: {fileID: 1217070502}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1474098881
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,7 +825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug_level: {fileID: 160711667}
   coding_block_parser: {fileID: 1174672167}
-  coding_blocks_ui: {fileID: 0}
+  coding_blocks_ui: {fileID: 1407089190}
 --- !u!114 &1872493046
 MonoBehaviour:
   m_ObjectHideFlags: 0
