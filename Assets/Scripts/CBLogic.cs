@@ -171,7 +171,7 @@ public class CBLogic : MonoBehaviour
         // move player
         if (activePlayer == null)
         {
-            Debug.Log("Assign player controller in Game Controller - CBLogic!");
+            Debug.LogError("CBLogic: Active player is not assigned!");
             return;
         }
 
