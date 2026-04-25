@@ -14,6 +14,7 @@ namespace GoalCollectable
         }
         protected override void Collected()
         {
+            Debug.Log("Collected!");
             if (owning_level != null)
             {
                 Victory();

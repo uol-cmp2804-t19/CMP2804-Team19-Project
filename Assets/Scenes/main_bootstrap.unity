@@ -448,6 +448,11 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!4 &671488710 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8740150183880199152, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
+  m_PrefabInstance: {fileID: 671488704}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &822137879 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7350699385373622223, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
@@ -459,11 +464,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0668498489251be4e9fff0a68c5c78d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &671488710 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8740150183880199152, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
-  m_PrefabInstance: {fileID: 671488704}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &930787896
 PrefabInstance:
   m_ObjectHideFlags: 0
