@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &73729473 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1366739347633409303, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
+  m_PrefabInstance: {fileID: 408880636}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e26df4e07804dc24788e5ec776b1c8d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &160711667 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4191069152570200963, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
@@ -165,7 +176,7 @@ PrefabInstance:
     - target: {fileID: 1366739347633409303, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: activePlayer
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 671488706}
     - target: {fileID: 5226370529757506131, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: m_Name
       value: cb_prefab
@@ -335,6 +346,10 @@ PrefabInstance:
       value: test_level_prefab
       objectReference: {fileID: 0}
     - target: {fileID: 5453123737546547116, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
+      propertyPath: level
+      value: 
+      objectReference: {fileID: 822137879}
+    - target: {fileID: 5453123737546547116, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
       propertyPath: tilemap
       value: 
       objectReference: {fileID: 296437728}
@@ -429,6 +444,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &822137879 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7350699385373622223, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
+  m_PrefabInstance: {fileID: 671488704}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0668498489251be4e9fff0a68c5c78d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1079454542 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1307129230163729555, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
@@ -527,6 +553,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3121265786907604556, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
+      propertyPath: codeBlockLogic
+      value: 
+      objectReference: {fileID: 73729473}
     - target: {fileID: 9026064938521897323, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
       propertyPath: m_Name
       value: ui_cb_prefab_v3
