@@ -21,13 +21,20 @@ public class MainMenuManager : MonoBehaviour
 		SceneManager.LoadScene(sceneName);
 	}
 
+	// no longer in use, play game converted to use level select
 	public void LoadLevelSelect()
-	{
-		SceneManager.LoadScene("LevelSelect");
+    {
+        Debug.Log("Implement the start game functionality! Pass to LevelManager tracking last level");
+        SceneManager.LoadScene("LevelSelect");
 	}
 
+	// play game now level select
 	public void PlayGame()
 	{
+		Debug.Log("Implement the start game functionality! Pass to LevelManager tracking last level");
+
+		//to review 'play next level functionality' as looking at just having level select
+		/*
 		int highestCompletedLevel = 0;
 
 		if (GameManager.Main != null && GameManager.Main.Config != null)
@@ -47,5 +54,6 @@ public class MainMenuManager : MonoBehaviour
 		}
 
 		SceneManager.LoadScene("Level" + nextLevel);
+		*/
 	}
 }
