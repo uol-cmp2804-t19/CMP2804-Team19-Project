@@ -11,30 +11,19 @@ namespace CBClass
 {
     public class CodeBlock
     {
-        private GameObject container;
         private List<string> action_list = new List<string>();
-        public int orderNumber;
         private bool type_loop;
         public bool HasSpace = true;
 
         /// <summary>
         /// main constructor for CBClass objects
         /// </summary>
-        /// <param name="parent_container"> the parent UnityAsset </param>
-        /// <param name="order"> the order it is in the Block UI</param>
         /// <param name="loop"> if it is a looping block</param>
-        public CodeBlock(GameObject parent_container, int order, bool loop, CBLogic controller)
+        public CodeBlock(bool loop, string actionType)
         {
-            container = parent_container;
             type_loop = loop;
-            orderNumber = order;
-            if (loop) { container.tag = "ActionLoop"; }
-            else { container.tag = "ActionSingle"; }
+            action_list.Add(actionType);
 
-            //cursed stuff right here, pls don't judge <3
-            // adds a onclick listener call to the RemoveActionBlock via lambda expression
-            // this is done to add the ordernumber to the function call on the newly created game objects
-            container.GetComponent<Button>().onClick.AddListener(() => controller.removeActionBlock(orderNumber));
         }
 
         /// <summary>
@@ -77,7 +66,6 @@ namespace CBClass
 
         public void emptyBlock()
         {
-            GameObject.Destroy(container);
         }
 
     }

@@ -19,6 +19,7 @@ public class CodeBlockUI : MonoBehaviour
     // hold a list of every action currently in the queue, build queue from this - whenever this updates call UpdateQueueDisplay()
     private List<CBLogic.CBActionTypes> actionQueue = new List<CBLogic.CBActionTypes>();
     private int maxQueueSize = 60; // visual limit to prevent overflow
+    public int softMaxQueueSize = 60;
 
     private void Awake()
     {
@@ -88,7 +89,7 @@ public class CodeBlockUI : MonoBehaviour
     // counterpart to QueueRemove
     private void QueueAdd(CBLogic.CBActionTypes actionType)
     {
-        if (actionQueue.Count >= maxQueueSize)
+        if (actionQueue.Count >= softMaxQueueSize && actionQueue.Count >= maxQueueSize)
         {
             //TODO - add user feedback for trying to add blocks when queue is full
             Debug.LogWarning("Queue full! TODO - add user feedback!");
@@ -118,12 +119,11 @@ public class CodeBlockUI : MonoBehaviour
     {
         Debug.Log("This button runs the code blocks but this isn't implemented yet!");
 
-        /* (pseudo)
-        foreach (var action in actionQueue)
+        foreach (CBLogic.CBActionTypes action in actionQueue)
         {
+            Debug.Log("actiontype "+action+" was called");
             codeBlockLogic.CBAction(action);
         }
-        */
     }
 
     // create button object & set fixed size

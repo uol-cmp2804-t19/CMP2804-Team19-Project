@@ -50,7 +50,6 @@ public class CBLogic : MonoBehaviour
         foreach (GameObject block in actionBlocks)
         {
             Debug.Log("ActionBlock '" + block.name + "' added to CBLogic via automated find");
-            ActionBlockObjects.Add(new CodeBlock(block, ActionBlockObjects.Count(), false, this));
             Debug.Log("ActionBlock '" + block.name + "' added as an Object to ActionBlockObjects");
         }
     
@@ -129,28 +128,30 @@ public class CBLogic : MonoBehaviour
     List<CBActionTypes> GetActions()
     {
         List<CBActionTypes> actionList = new List<CBActionTypes>();
+        int blockCount = 0;
         foreach (CodeBlock block in ActionBlockObjects)
         {
             List<String> blockActions = block.GetActions();
             int actionCount = 0;
+            
             foreach (string action in blockActions)
             {
                 switch (action)
                 {
                     case "Move":
                         actionList.Add(CBActionTypes.MOVE);
-                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Move");
+                        Debug.Log("Code Block at position:" + blockCount + " contained: Action Move");
                         break;
                     case "TurnLeft":
                         actionList.Add(CBActionTypes.TURNLEFT);
-                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Turn Left");
+                        Debug.Log("Code Block at position:" + blockCount + " contained: Action Turn Left");
                         break;
                     case "TurnRight":
                         actionList.Add(CBActionTypes.TURNRIGHT);
-                        Debug.Log("Code Block " + block.orderNumber + " contained: Action Turn Right");
+                        Debug.Log("Code Block at position:" + blockCount + " contained: Action Turn Right");
                         break;
                     default:
-                        Debug.LogError("Code Block " + block.orderNumber + " contains a erroneous action at point: " + actionCount);
+                        Debug.LogError("Code Block at position:" + blockCount + " contains a erroneous action at point: " + actionCount);
                         break;
                 }
                 actionCount++;
@@ -166,12 +167,12 @@ public class CBLogic : MonoBehaviour
     /// <param name="CBActionType">
     /// the action to be performed
     /// </param>
-    void CBAction(CBActionTypes CBActionType)
+    public void CBAction(CBActionTypes CBActionType)
     {
         // move player
         if (activePlayer == null)
         {
-            Debug.Log("Assign player controller in Game Controller - CBLogic!");
+            Debug.Log("player controller not assigned in Game Controller - CBLogic! - Please Assign Manually/check it exists!");
             return;
         }
 
@@ -210,38 +211,12 @@ public class CBLogic : MonoBehaviour
                 return true;
             }
         }
-        try
-        {
-            createBlock(false, action);
-            return true; 
-        }
-        catch { return false; }
+        return false;
     }
 
-    /// <summary>
-    /// creates a block
-    /// </summary>
-    /// <param name="loop"> if it is a loop block assign true</param>
-    /// <param name="action"> the action to add </param>
-    private void createBlock(bool loop, string action)
+    void updateActionQueue(List<CodeBlock> currentQueue)
     {
-        if (loop) 
-        { 
-
-        }
-        else 
-        {
-
-        }
-
-    }
-    /// <summary>
-    /// Removes an item from the order list
-    /// </summary>
-    /// <param name="orderNumber"> the order number to be removed </param>
-    public void removeActionBlock(int orderNumber)
-    {
-        
+        ActionBlockObjects = currentQueue;
     }
 
 }
