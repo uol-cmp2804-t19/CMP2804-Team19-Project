@@ -19,7 +19,6 @@ public class LevelMapManager : MonoBehaviour {
 
     public LevelLayer activeLayer = null;
     public PlayerController player = null;
-    public bool useDebugMoveWASD = true;
 
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
     int levelScore = 0;
@@ -32,16 +31,6 @@ public class LevelMapManager : MonoBehaviour {
     {
         _setupMapLayer();
         _setupPlayerOnMap();
-    }
-
-    public float moveDelay = 0.15f;
-    private float nextMove = 0.0f;
-    void Update()
-    {
-        if (useDebugMoveWASD == true)
-        {
-            CheckMovementInput();
-        }
     }
 
     public void AddScore(int score_change)
@@ -67,53 +56,6 @@ public class LevelMapManager : MonoBehaviour {
             LevelLayer newLayer = mapLayerRegister[newZLevel];
             activeLayer = newLayer;
         }
-    }
-
-    void CheckMovementInput()
-    {
-        // testing behaviour only
-        // TODO remove
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
-        Vector2 dir = new Vector2(x, y);
-
-        // is it a valid input/is a move currently allowed
-        if (dir == Vector2.zero) return;
-        if (Time.time <= nextMove) return;
-        nextMove = Time.time + moveDelay;
-
-        // erase diagonal moves and multiple direction presses, favouring right/up on axis
-        Vector2 move_direction = new Vector2(dir.x, dir.y);
-        if (x > 0.0)
-        {
-            move_direction.y = 0.0f;
-            player.facing = PlayerController.FACING.RIGHT;
-        }
-        else if (y > 0.0)
-        {
-            move_direction.x = 0.0f;
-            player.facing = PlayerController.FACING.UP;
-        }
-        else if (x < 0.0)
-        {
-            move_direction.y = 0.0f;
-            player.facing = PlayerController.FACING.LEFT;
-        }
-        else if (y < 0.0)
-        {
-            move_direction.x = 0.0f;
-            player.facing = PlayerController.FACING.DOWN;
-        }
-        else
-        {
-            // no move
-            return;
-        }
-
-        MovePlayerInDirection(move_direction);
-
-        // Vector3 movement = new Vector3(x, y, 0);
-        // transform.position += movement * speed * Time.deltaTime;
     }
 
     // doesn't rely on cell existing in layer

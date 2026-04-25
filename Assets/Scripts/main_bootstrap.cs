@@ -81,6 +81,14 @@ public class main_bootstrap : MonoBehaviour
 
     }
 
+    // change gameState back to title after reporting victory (//TODO this is where to add the level metric screen)
+    public void Victory()
+    {
+        // TODO add handling to stop CB block execution & play when in transition
+        GameManager.Main.current_game_state = GameManager.GAME_STATE.TRANSITION;
+        ChangeGameState_TitleMenu();
+    }
+
     private void LoadInstances()
     {
         // ignore prefab instantiation if dragging from hierarchy view prefab-as-scene-objects

@@ -9,9 +9,9 @@ public class PauseManager : MonoBehaviour
 
 	void Update()
 	{
-        // Currently using the Escape key to toggle pause
+		// Currently using the Escape key to toggle pause - cannot do whilst animating or on main menu
 
-		if (GameManager.Main.current_game_state == GameManager.GAME_STATE.TITLE_MENU)
+		if (GameManager.Main.current_game_state == GameManager.GAME_STATE.TITLE_MENU || GameManager.Main.current_game_state == GameManager.GAME_STATE.TRANSITION )
 		{
 			return;
 		}
