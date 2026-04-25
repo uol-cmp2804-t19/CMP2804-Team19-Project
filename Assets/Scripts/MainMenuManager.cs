@@ -8,25 +8,43 @@ public class MainMenuManager : MonoBehaviour
 
 	public void OpenSettings()
 	{
-		settingsPanel.SetActive(true);
+		if (settingsPanel == null)
+		{
+			Debug.Log("settings menu not assigned in inspector!");
+			return;
+		}
+        Debug.Log("Opening settings menu");
+        settingsPanel.SetActive(true);
 	}
 
 	public void CloseSettings()
-	{
-		settingsPanel.SetActive(false);
+    {
+        if (settingsPanel == null)
+        {
+            Debug.Log("settings menu not assigned in inspector!");
+            return;
+        }
+        Debug.Log("Closing settings menu");
+        settingsPanel.SetActive(false);
 	}
 
+    // defunct function
+    /*
 	public void LoadLevel(string sceneName)
-	{
-		SceneManager.LoadScene(sceneName);
+    {
+        SceneManager.LoadScene(sceneName);
 	}
+	*/
 
-	// no longer in use, play game converted to use level select
-	public void LoadLevelSelect()
+    // defunct function
+    // no longer in use, play game converted to use level select
+	/*
+    public void LoadLevelSelect()
     {
         Debug.Log("Implement the start game functionality! Pass to LevelManager tracking last level");
-        SceneManager.LoadScene("LevelSelect");
+        //SceneManager.LoadScene("LevelSelect");
 	}
+	*/
 
 	// play game now level select
 	public void PlayGame()
