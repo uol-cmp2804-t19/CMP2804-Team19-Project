@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 977031f48fb2cc945971060a27acc5ef
+guid: a72a60825378a7c48bcf331c54536e7a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1236990618667152462
-    second: CodeBlock_Interact_0
+      213: 5059033973944905352
+    second: Settings_SliderBGFull_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CodeBlock_Interact_0
+      name: Settings_SliderBGFull_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
-        width: 60
-        height: 60
+        x: 0
+        y: 0
+        width: 75
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 3, y: 0, z: 2, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e447520f96caa2110800000000000000
-      internalID: 1236990618667152462
+      spriteID: 88e6e9b689c453640800000000000000
+      internalID: 5059033973944905352
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: e3f26e15af636194a80f55a96422d6d9
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      CodeBlock_Interact_0: 1236990618667152462
+      Settings_SliderBGFull_0: 5059033973944905352
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

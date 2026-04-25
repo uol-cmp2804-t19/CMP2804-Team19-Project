@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 977031f48fb2cc945971060a27acc5ef
+guid: 6083d78bea571134db8d624cd5f6fbc8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1236990618667152462
-    second: CodeBlock_Interact_0
+      213: -7042645462491325319
+    second: Pause_Background_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CodeBlock_Interact_0
+      name: Pause_Background_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
+        x: 0
+        y: 0
         width: 60
-        height: 60
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e447520f96caa2110800000000000000
-      internalID: 1236990618667152462
+      spriteID: 97c1031f34f734e90800000000000000
+      internalID: -7042645462491325319
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      CodeBlock_Interact_0: 1236990618667152462
+      Pause_Background_0: -7042645462491325319
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
