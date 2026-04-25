@@ -11,7 +11,7 @@ public class PauseManager : MonoBehaviour
 	{
         // Currently using the Escape key to toggle pause
 
-		if (GameManager.Main.current_game_state == GameManager.GAME_STATE.TITLE_MENU || GameManager.Main.current_game_state == GameManager.GAME_STATE.SETTINGS_MENU_FROM_TITLE)
+		if (GameManager.Main.current_game_state == GameManager.GAME_STATE.TITLE_MENU)
 		{
 			return;
 		}
