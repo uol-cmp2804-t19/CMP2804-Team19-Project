@@ -10,7 +10,12 @@ public class PauseManager : MonoBehaviour
 	void Update()
 	{
         // Currently using the Escape key to toggle pause
-        // Needs to be changed to in-level pause button in the future
+
+		if (GameManager.Main.current_game_state == GameManager.GAME_STATE.TITLE_MENU || GameManager.Main.current_game_state == GameManager.GAME_STATE.SETTINGS_MENU_FROM_TITLE)
+		{
+			return;
+		}
+
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
 			if (isPaused)

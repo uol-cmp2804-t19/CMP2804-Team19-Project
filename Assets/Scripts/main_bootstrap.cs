@@ -37,7 +37,7 @@ public class main_bootstrap : MonoBehaviour
     }
 
     // before changing state to GAME_ACTIVE make sure the level instance is set
-    void ChangeGameState_ActiveGame()
+    public void ChangeGameState_ActiveGame()
     {
         if (main_menu_ui_instance != null && level_instance != null) {
             main_menu_ui_instance.SetActive(false);
@@ -62,8 +62,8 @@ public class main_bootstrap : MonoBehaviour
         }
     }
 
-    
-    void ChangeGameState_TitleMenu()
+
+    public void ChangeGameState_TitleMenu()
     {
         if (main_menu_ui_instance != null)
         {
