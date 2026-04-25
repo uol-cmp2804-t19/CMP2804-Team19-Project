@@ -23,17 +23,27 @@ public class CodeBlockUI : MonoBehaviour
 
     private void Awake()
     {
-        if (codeBlockLogic == null)
-        {
-            //TODO are we handling enough LogError validation?
-            Debug.LogError("CodeBlockUI: CBLogic is not assigned in Inspector. Please find within the scene.");
-        }
         // disable interface before shown, does not default to open
         mainInterfacePanel.SetActive(!mainInterfacePanel.activeSelf);
     }
 
     private void Start()
     {
+        if (codeBlockLogic == null)
+        {
+            //TODO are we handling enough LogError validation?
+            Debug.Log("CodeBlockUI: CBLogic is not assigned in Inspector.");
+            try
+            {
+                codeBlockLogic = GameObject.FindWithTag("GameController").GetComponent<CBLogic>();
+                if (codeBlockLogic == null) { Debug.LogError("CodeBlockUI: CBLogic could not be assigned automatically"); }
+                else { Debug.Log("CodeBlockUI: CBLogic automatically assigned"); }
+            }
+            catch
+            {
+                Debug.LogError("CodeBlockUI: CBLogic could not be assigned automatically");
+            }
+        }
         // open menu button calls method to flip active state of interface panel when clicked
         buttonToggleInterface.onClick.AddListener(ToggleInterface);
         // play button calls method to run the code within the level
