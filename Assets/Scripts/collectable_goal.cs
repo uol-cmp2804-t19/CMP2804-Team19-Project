@@ -8,22 +8,24 @@ namespace GoalCollectable
 
     public class GoalCollectable : Collectable
     {
+        public main_bootstrap GameManager = null;
         GoalCollectable()
         {
+            //Debug.Log("setup goal collectable");
             destroy_on_collect = false;
         }
         protected override void Collected()
         {
-            Debug.Log("Collected!");
-            if (owning_level != null)
+            Debug.Log("GAME OVER!");
+            if (GameManager != null && !is_collected)
             {
-                Victory();
+                is_collected = true;
+                GameManager.ChangeGameState_TitleMenu();
             }
-        }
-        IEnumerator Victory()
-        {
-            yield return new WaitForSeconds(3);
-            Application.Quit();
+            else
+            {
+                Debug.LogWarning("You have not set GameManager on LevelGoal!");
+            }
         }
     }
 

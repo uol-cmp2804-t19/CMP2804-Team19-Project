@@ -11,30 +11,15 @@ namespace LevelObjects
 
         protected override void Collected()
         {
-            if (owning_level != null)
+            if (owning_level != null && !is_collected)
             {
+                is_collected = true;
                 owning_level.AddScore(score);
             }
-        }
-    }
-
-    public class GoalCollectable : Collectable
-    {
-        GoalCollectable()
-        {
-            destroy_on_collect = false;
-        }
-        protected override void Collected()
-        {
-            if (owning_level != null)
+            else
             {
-                Victory();
+                Debug.LogWarning("You have not set owning_level on LevelCollectable!");
             }
-        }
-        IEnumerator Victory()
-        {
-            yield return new WaitForSeconds(3);
-            Application.Quit();
         }
     }
 
@@ -52,6 +37,7 @@ namespace LevelObjects
             if (other.CompareTag("Player"))
             {
                 if (is_collected == true) { return; }
+                //Debug.Log("Collected!");
                 Collected();
                 if (destroy_on_collect)
                 {
