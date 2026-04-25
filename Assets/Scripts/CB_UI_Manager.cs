@@ -31,7 +31,7 @@ public class CodeBlockUI : MonoBehaviour
     {
         if (codeBlockLogic == null)
         {
-            //TODO are we handling enough LogError validation?
+            //if Game Controller isn't assigned, finds and adds it
             Debug.Log("CodeBlockUI: CBLogic is not assigned in Inspector.");
             try
             {
