@@ -83,6 +83,8 @@ MonoBehaviour:
   sound_walk: {fileID: 4769196975620621257}
   level: {fileID: 0}
   zLevel: 0
+  moveDelay: 0.15
+  useDebugMoveWASD: 0
 --- !u!1 &3733759448407787272
 GameObject:
   m_ObjectHideFlags: 0
