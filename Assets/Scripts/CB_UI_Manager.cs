@@ -13,6 +13,9 @@ public class CodeBlockUI : MonoBehaviour
     [SerializeField] private Transform paletteContainer;
     [SerializeField] private Transform queueContainer;
     [SerializeField] private Button buttonPlay;
+    public GameObject codeBlockRight;
+    public GameObject codeBlockLeft;
+    public GameObject codeBlockMove;
     // find on cb_prefab/GameController
     [SerializeField] private CBLogic codeBlockLogic;
 
@@ -65,10 +68,13 @@ public class CodeBlockUI : MonoBehaviour
         // loop through array of the CBActionTypes enum, using the name as the button text
         foreach (CBLogic.CBActionTypes actionType in System.Enum.GetValues(typeof(CBLogic.CBActionTypes)))
         {
-            Debug.LogFormat("add {0} to palette!", actionType);
-            // place button with click function adding the same action type to queue
-            Button blockButton = CreateBlockButton(actionType.ToString(), paletteContainer);
-            blockButton.onClick.AddListener(() => QueueAdd(actionType));
+            if (actionType != CBLogic.CBActionTypes.NONE)
+            {
+                Debug.LogFormat("add {0} to palette!", actionType);
+                // place button with click function adding the same action type to queue
+                Button blockButton = CreateBlockButton(actionType.ToString(), paletteContainer);
+                blockButton.onClick.AddListener(() => QueueAdd(actionType));
+            }
         }
         //*/
     }
@@ -145,8 +151,25 @@ public class CodeBlockUI : MonoBehaviour
         CreateBlockButton parent setting can produce incorrect local scale/anchoring under UI layout groups.
         Use SetParent(parent, false) so RectTransform local values are preserved.
          */
+        GameObject buttonObj;
+        Debug.LogError("Action Label: " + label);
+        switch (label)
+        {
+            case "TURNLEFT":
+                buttonObj = Instantiate(codeBlockLeft);
+                break;
+            case "TURNRIGHT":
+                buttonObj = Instantiate(codeBlockRight);
+                break;
+            case "MOVE":
+                buttonObj = Instantiate(codeBlockMove);
+                break;
+            default:
+                buttonObj = Instantiate(codeBlockMove);
+                break;
+        }
 
-        GameObject buttonObj = new GameObject(label);
+
         // set bounding box
         RectTransform button_visual_container = buttonObj.AddComponent<RectTransform>();
         button_visual_container.sizeDelta = queueButtonSize;
@@ -159,7 +182,6 @@ public class CodeBlockUI : MonoBehaviour
 
         // add hover & click colours
         button.transition = Selectable.Transition.ColorTint;
-        button.targetGraphic = button_visual;
         ColorBlock buttonColors = button.colors;
         buttonColors.normalColor = Color.white;                 // Default color
         buttonColors.highlightedColor = new Color(0.9f, 0.9f, 0.9f); // Slightly darker when hovered
@@ -167,21 +189,6 @@ public class CodeBlockUI : MonoBehaviour
         buttonColors.selectedColor = Color.white;
         buttonColors.colorMultiplier = 1f;
         button.colors = buttonColors;
-
-        // TODO - text is placeholder for actual block visuals - blocks need to be assigned to an image text by type
-        // add text to button
-        GameObject textObj = new GameObject("Text");
-        textObj.transform.SetParent(buttonObj.transform, false);
-        Text buttonText = textObj.AddComponent<Text>();
-        buttonText.text = label;
-        buttonText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        buttonText.alignment = TextAnchor.MiddleCenter;
-        buttonText.color = Color.black;
-        // stretch text to button
-        RectTransform textRect = textObj.GetComponent<RectTransform>();
-        textRect.anchorMin = Vector2.zero;
-        textRect.anchorMax = Vector2.one;
-        textRect.sizeDelta = Vector2.zero;
 
         return button;
 
