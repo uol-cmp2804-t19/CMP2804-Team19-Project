@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+	public main_bootstrap main_game;
 	public GameObject settingsPanel;
 	public int totalLevels;
 
@@ -15,7 +16,8 @@ public class MainMenuManager : MonoBehaviour
 		}
         Debug.Log("Opening settings menu");
         settingsPanel.SetActive(true);
-	}
+        //GameManager.Main.current_game_state = GameManager.GAME_STATE.SETTINGS_MENU_FROM_TITLE;
+    }
 
 	public void CloseSettings()
     {
@@ -26,7 +28,8 @@ public class MainMenuManager : MonoBehaviour
         }
         Debug.Log("Closing settings menu");
         settingsPanel.SetActive(false);
-	}
+        //GameManager.Main.current_game_state = GameManager.GAME_STATE.TITLE_MENU;
+    }
 
     // defunct function
     /*
@@ -38,7 +41,7 @@ public class MainMenuManager : MonoBehaviour
 
     // defunct function
     // no longer in use, play game converted to use level select
-	/*
+    /*
     public void LoadLevelSelect()
     {
         Debug.Log("Implement the start game functionality! Pass to LevelManager tracking last level");
@@ -46,8 +49,8 @@ public class MainMenuManager : MonoBehaviour
 	}
 	*/
 
-	// play game now level select
-	public void PlayGame()
+    // play game now level select
+    public void PlayGame()
 	{
 		Debug.Log("Implement the start game functionality! Pass to LevelManager tracking last level");
 
