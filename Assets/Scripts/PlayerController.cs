@@ -3,6 +3,11 @@ using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject sprite_down = null;
+    public GameObject sprite_up = null;
+    public GameObject sprite_left = null;
+    public GameObject sprite_right = null;
+
     public enum FACING
     {
         UP,
@@ -10,8 +15,10 @@ public class PlayerController : MonoBehaviour
         DOWN,
         LEFT
     }
+
     public FACING facing = FACING.DOWN;
     public AudioSource sound_walk = null;
+
     // unused for now but will be used to control player movement speed and animation eventually
     // private float speed = 400.0f;
     public LevelMapManager level = null;
@@ -20,8 +27,13 @@ public class PlayerController : MonoBehaviour
     // currently used for debug movement input but could be extended for 'check next move allowed' or queueing actions
     public float moveDelay = 0.15f;
     private float nextMove = 0.0f;
-
     public bool useDebugMoveWASD = true;
+
+    private void Start()
+    {
+        turnPlayer(FACING.DOWN);
+    }
+
     void Update()
     {
         if (useDebugMoveWASD == true)
@@ -96,23 +108,94 @@ public class PlayerController : MonoBehaviour
         {
             switch (facing)
             {
-                case FACING.UP: facing = FACING.RIGHT; break;
-                case FACING.RIGHT: facing = FACING.DOWN; break;
-                case FACING.DOWN: facing = FACING.LEFT; break;
-                case FACING.LEFT: facing = FACING.UP; break;
+                case FACING.UP:
+                    turnPlayer(FACING.RIGHT);
+                    break;
+
+                case FACING.RIGHT:
+                    turnPlayer(FACING.DOWN);
+                    break;
+
+                case FACING.DOWN:
+                    turnPlayer(FACING.LEFT);
+                    break;
+
+                case FACING.LEFT:
+                    turnPlayer(FACING.UP);
+                    break;
             }
         }
         else
         {
+            // TURNING LEFT
             switch (facing)
             {
-                case FACING.UP: facing = FACING.LEFT; break;
-                case FACING.LEFT: facing = FACING.DOWN; break;
-                case FACING.DOWN: facing = FACING.RIGHT; break;
-                case FACING.RIGHT: facing = FACING.UP; break;
+                case FACING.UP:
+                    turnPlayer(FACING.LEFT);
+                    break;
+
+                case FACING.LEFT:
+                    turnPlayer(FACING.DOWN);
+                    break;
+
+                case FACING.DOWN:
+                    turnPlayer(FACING.RIGHT);
+                    break;
+
+                case FACING.RIGHT:
+                    turnPlayer(FACING.UP);
+                    break;
             }
         }
     }
+
+    // changes internal facing tracker & updates graphic
+    // clumsy approach but future proofing for animation setup rather than changing image in code
+    private void turnPlayer(FACING new_direction)
+    {
+        // do graphic
+        facing = new_direction;
+
+        // single line as bulks code out otherwise
+        if (sprite_up == null) { Debug.Log("You have not set player sprite_up in inspector!"); return; }
+        if (sprite_down == null) { Debug.Log("You have not set player sprite_down in inspector!"); return; }
+        if (sprite_left == null) { Debug.Log("You have not set player sprite_left in inspector!"); return; }
+        if (sprite_right == null) { Debug.Log("You have not set player sprite_right in inspector!"); return; }
+
+        sprite_up.GetComponent<SpriteRenderer>().enabled = false;
+        sprite_down.GetComponent<SpriteRenderer>().enabled = false;
+        sprite_left.GetComponent<SpriteRenderer>().enabled = false;
+        sprite_right.GetComponent<SpriteRenderer>().enabled = false;
+        sprite_up.SetActive(false);
+        sprite_down.SetActive(false);
+        sprite_left.SetActive(false);
+        sprite_right.SetActive(false);
+
+        switch (new_direction)
+        {
+            case FACING.UP:
+                sprite_up.SetActive(true);
+                sprite_up.GetComponent<SpriteRenderer>().enabled = true;
+                return;
+
+            case FACING.DOWN:
+                sprite_down.SetActive(true);
+                sprite_down.GetComponent<SpriteRenderer>().enabled = true;
+                return;
+
+            case FACING.LEFT:
+                sprite_left.SetActive(true);
+                sprite_left.GetComponent<SpriteRenderer>().enabled = true;
+                return;
+
+            case FACING.RIGHT:
+                sprite_right.SetActive(true);
+                sprite_right.GetComponent<SpriteRenderer>().enabled = true;
+                return;
+
+        }
+    }
+
 
     private void CheckMovementInput()
     {
@@ -137,22 +220,24 @@ public class PlayerController : MonoBehaviour
         if (x > 0.0)
         {
             move_direction.y = 0.0f;
-            facing = PlayerController.FACING.RIGHT;
+            Debug.Log("YOU ARE GOING RIGHT");
+            turnPlayer(FACING.RIGHT);
         }
         else if (y > 0.0)
         {
             move_direction.x = 0.0f;
-            facing = PlayerController.FACING.UP;
+            turnPlayer(FACING.UP);
         }
         else if (x < 0.0)
         {
+            Debug.Log("YOU ARE GOING LEFT");
             move_direction.y = 0.0f;
-            facing = PlayerController.FACING.LEFT;
+            turnPlayer(FACING.LEFT);
         }
         else if (y < 0.0)
         {
             move_direction.x = 0.0f;
-            facing = PlayerController.FACING.DOWN;
+            turnPlayer(FACING.DOWN);
         }
         else
         {
