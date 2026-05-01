@@ -21,7 +21,12 @@ public class LevelMapManager : MonoBehaviour {
     public PlayerController player = null;
 
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
+    
+    // metrics fed back to configData
+    public string levelName = "undefined_level";
     int levelScore = 0;
+    int levelTime = 0;
+    int blockQueueSize = 0;
 
     /// <summary>
     /// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -148,14 +153,57 @@ public class LevelMapManager : MonoBehaviour {
         }
     }
 
-    // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
-    void OnDrawGizmos() {
-        // silently fail, debug handling only
-        if (player == null || activeLayer == null || activeLayer.tilemap == null) return;
-        Vector3Int cell = activeLayer.tilemap.WorldToCell(player.transform.position);
-        Vector3 center = activeLayer.tilemap.GetCellCenterWorld(cell);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(center, activeLayer.tilemap.cellSize);
+    // disabled for release build
+    // // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
+    // void OnDrawGizmos() {
+    //     // silently fail, debug handling only
+    //     if (player == null || activeLayer == null || activeLayer.tilemap == null) return;
+    //     Vector3Int cell = activeLayer.tilemap.WorldToCell(player.transform.position);
+    //     Vector3 center = activeLayer.tilemap.GetCellCenterWorld(cell);
+    //     Gizmos.color = Color.red;
+    //     Gizmos.DrawWireCube(center, activeLayer.tilemap.cellSize);
+    // }
+
+    public void saveLevelMetricsToConfig() {
+        if (gamemanager.Main.configData == null) {
+            Debug.Log("No config data found to save level metrics to!");
+            return;
+        }
+        
+        //TODO implement saving level metrics to configData on level completion, called from completion screen
+
+        // overwrite level name in configData as complete
+        gamemanager.Main.configData.LevelsCompleted[levelName] = true;
+        
+        // overwrite level best time if new time is better or no existing time
+        if (gamemanager.Main.configData.LevelBestTimes.ContainsKey(levelName) {
+            int recorded_best_time = gamemanager.Main.configData.LevelBestTimes[levelName];
+            if (levelTime < recorded_best_time || recorded_best_time == 0) {
+                gamemanager.Main.configData.LevelBestTimes[levelName] = levelTime;
+            }
+        } else {
+            gamemanager.Main.configData.LevelBestTimes[levelName] = levelTime;
+        }
+
+        // overwrite level best score if new score is better or no existing score
+        if (gamemanager.Main.configData.LevelBestScores.ContainsKey(levelName) {
+            int recorded_best_score = gamemanager.Main.configData.LevelBestScores[levelName];
+            if (levelScore > recorded_best_score || recorded_best_score == 0) {
+                gamemanager.Main.configData.LevelBestScores[levelName] = levelScore;
+            }
+        } else {
+            gamemanager.Main.configData.LevelBestScores[levelName] = levelScore;
+        }
+
+        // overwrite level best actions if new action count is better or no existing action count
+        if (gamemanager.Main.configData.LevelBestActions.ContainsKey(levelName) {
+            int recorded_best_blocks = gamemanager.Main.configData.LevelBestActions[levelName];
+            if (blockQueueSize < recorded_best_blocks || recorded_best_blocks == 0) {
+                gamemanager.Main.configData.LevelBestActions[levelName] = blockQueueSize;
+            }
+        } else {
+            gamemanager.Main.configData.LevelBestActions[levelName] = blockQueueSize;
+        }
     }
 
     //TODO this is duplicated by playerController, one or the other needs to own this
