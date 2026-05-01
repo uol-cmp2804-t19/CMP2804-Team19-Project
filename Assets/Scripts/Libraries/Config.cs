@@ -1,8 +1,6 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Linq.Expressions;
 
 /// Config class library to manage metrics and configuration settings for the player.
 /// Used alongside FileIO class library to save and load metrics for the game.
@@ -21,7 +19,6 @@ using System.Linq.Expressions;
 
 namespace Config
 {
-    [Serializable]
     public class ConfigData
     {
         // basic metrics recorded including collection of level name/best time in ticks

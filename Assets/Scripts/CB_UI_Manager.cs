@@ -13,9 +13,9 @@ public class CodeBlockUI : MonoBehaviour
     [SerializeField] private Transform paletteContainer;
     [SerializeField] private Transform queueContainer;
     [SerializeField] private Button buttonPlay;
-    public GameObject codeBlockRight;
-    public GameObject codeBlockLeft;
-    public GameObject codeBlockMove;
+    [SerializeField] private  GameObject codeBlockRight;
+    [SerializeField] private GameObject codeBlockLeft;
+    [SerializeField] private GameObject codeBlockMove;
     // find on cb_prefab/GameController
     [SerializeField] private CBLogic codeBlockLogic;
 
