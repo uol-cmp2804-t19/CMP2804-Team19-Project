@@ -40,7 +40,8 @@ namespace Config
 
     public class ConfigReader
     {
-        public static ConfigData FromJson(string jsonString)
+        // Reads a JSON string and converts to ConfigData object - create default if invalid
+            public static ConfigData FromJson(string jsonString)
         {
             try
             {
@@ -50,10 +51,11 @@ namespace Config
             catch
             {
                 Debug.LogError("Config Reader could not read the JSON");
-                return null;
+                return new ConfigData();
             }
         }
 
+        // Converts ConfigData to JSON
         public static string ToJson(ConfigData data)
         {
             return JsonConvert.SerializeObject(data);
