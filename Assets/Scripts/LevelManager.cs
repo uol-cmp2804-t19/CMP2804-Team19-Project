@@ -226,6 +226,11 @@ public class LevelMapManager : MonoBehaviour {
             gamemanager.Main.configData.LevelBestActions[levelName] = blockQueueSize;
         }
     }
+    
+    public void SetBlockQueueSize(int count)
+    {
+        blockQueueSize = count;
+    }
 
     //TODO this is duplicated by playerController, one or the other needs to own this
     //TODO - this is currently a teleport, needs to be replaced with gradual movement and animation (especially for jumping) eventually

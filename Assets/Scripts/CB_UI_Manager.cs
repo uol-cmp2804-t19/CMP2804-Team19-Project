@@ -7,6 +7,9 @@ public class CodeBlockUI : MonoBehaviour
     //TODO fixed size for queue button, may not scale well with UI, to be re-evaluated
     public Vector2 queueButtonSize = new Vector2(100, 50);
 
+    // refernece to LevelMapManager for updating block queue count
+    [SerializeField] private LevelMapManager levelManager;
+
     // references to UI objects
     [SerializeField] private Button buttonToggleInterface;
     [SerializeField] private GameObject mainInterfacePanel;
@@ -81,9 +84,18 @@ public class CodeBlockUI : MonoBehaviour
 
 
     // performance concerns should be minimal due to limited process competition in the game loop,
-    // however, (TODO) it may be worthwhile to introduce a click delay to the button
+    // however, (//TODO) it may be worthwhile to introduce a click delay to the button
     private void UpdateQueueDisplay()
     {
+        // update the block queue size on level manager
+        if (levelManager == null)
+        {
+            Debug.LogWarning("Level Manager reference not set in CB_UI_Manager, cannot update block queue size display!");
+            return;
+        }
+        levelManager.SetBlockQueueSize(actionQueue.Count);
+        
+        // rebuild the action visible list
         // list is immutable - whenever the list updates, completely destroy and rebuild it
         foreach (Transform child in queueContainer)
         {
@@ -193,4 +205,5 @@ public class CodeBlockUI : MonoBehaviour
         return button;
 
     }
+
 }
