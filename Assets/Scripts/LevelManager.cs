@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 //TODO add an audio manager to choose sound effect based on terrain and modulate pitch/choose from sound array
 // ambient level sound - https://freesound.org/search/?q=ambient+forest
@@ -20,6 +21,8 @@ public class LevelMapManager : MonoBehaviour {
     public LevelLayer activeLayer = null;
     public PlayerController player = null;
 
+    public is_level_active = false;
+
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
     
     // metrics fed back to configData
@@ -36,6 +39,19 @@ public class LevelMapManager : MonoBehaviour {
     {
         _setupMapLayer();
         _setupPlayerOnMap();
+    }
+
+    void Update() {
+        if (is_level_active) {
+            //TODO implement level timer, feeding into levelTime for config saving on completion
+            levelTime += 1;
+        }
+    }
+
+    public void ActivateLevel() {
+        is_level_active = true;
+        SetActive(true);
+        Debug.Log("New level activated: " + levelName);
     }
 
     public void AddScore(int score_change)
@@ -61,6 +77,11 @@ public class LevelMapManager : MonoBehaviour {
             LevelLayer newLayer = mapLayerRegister[newZLevel];
             activeLayer = newLayer;
         }
+    }
+     public void DeactivateLevel() {
+        is_level_active = false;
+        SetActive(false);
+        Debug.Log("Level deactivated! (" + levelName + ")");
     }
 
     // doesn't rely on cell existing in layer
@@ -169,7 +190,7 @@ public class LevelMapManager : MonoBehaviour {
             Debug.Log("No config data found to save level metrics to!");
             return;
         }
-        
+
         //TODO implement saving level metrics to configData on level completion, called from completion screen
 
         // overwrite level name in configData as complete

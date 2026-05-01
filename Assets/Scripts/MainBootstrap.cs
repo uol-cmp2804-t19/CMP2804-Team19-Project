@@ -45,7 +45,7 @@ public class main_bootstrap : MonoBehaviour
             cb_ui_instance.SetActive(true);
             
             if (level_instance != null) {
-                level_instance.SetActive(true);
+                level_instance.ActivateLevel();
             }
             else
             {
@@ -69,7 +69,8 @@ public class main_bootstrap : MonoBehaviour
         if (main_menu_ui_instance != null)
         {
             cb_ui_instance.SetActive(false);
-            if (level_instance != null) { level_instance.SetActive(false); }
+            // this does not complete level or output metrics!!
+            if (level_instance != null) { level_instance.deactivateLevel(); }
             TogglePause(false);
             ToggleSettings(false);
             GameManager.Main.current_game_state = GameManager.GAME_STATE.TITLE_MENU;
