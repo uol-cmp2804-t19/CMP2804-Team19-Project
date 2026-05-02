@@ -39,6 +39,9 @@ public class CBLogic : MonoBehaviour
 
     // assign through bootstrap/gamecontroller on load
     public PlayerController activePlayer = null;
+    // Time control for block queue execution
+    [SerializeField] private float actionDelay = 0.5f;
+    private bool isExecutingQueue = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
