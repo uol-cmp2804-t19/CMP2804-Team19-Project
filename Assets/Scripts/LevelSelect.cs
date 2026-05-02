@@ -44,7 +44,7 @@ public class LevelSelectManager : MonoBehaviour {
         // name displays on button, other metrics on info panel (time stored as processed ticks, needs to be converted for display)
         public string levelName;
         public int bestScore;
-        public int bestTime;
+        public float bestTime;
         public int bestQueueSize;
     }
 
@@ -55,11 +55,15 @@ public class LevelSelectManager : MonoBehaviour {
     // -    container is the left-most field container buttons
     // -    prefab is the testing button prefab, should be set inactive, will be duplicated to make level buttons
     // -        (this button requires child with text component)
-    // -    info panel is the right-most field displaying level metrics, will be updated when level button clicked
+    // -    info panel refs are for text labels in the right-most field displaying level metrics
+    //          (these text labels will be updated when level button clicked)
 
     public GameObject level_button_container = null;
     public GameObject level_button_prefab = null;
-    public GameObject level_info_panel = null;
+    // info panel text labels
+    public GameObject level_info_score = null;
+    public GameObject level_info_time = null;
+    public GameObject level_info_queue = null;
 
     // scene buttons need to be connected to onStartButtonPressed & onExitButtonPressed respectively
     public GameObject button_start_level = null;
@@ -73,7 +77,7 @@ public class LevelSelectManager : MonoBehaviour {
         resourcePath = "",
         levelName = "",
         bestScore = 0,
-        bestTime = 0,
+        bestTime = 0.0f,
         bestQueueSize = 0
     };
 
@@ -100,6 +104,26 @@ public class LevelSelectManager : MonoBehaviour {
     private void updateLevelInfo() {
         //TODO update level info panel with metrics from active_level_selected
         //TODO convert ticks to time format for display
+        if (level_info_score != null) { level_info_score.GetComponent<Text>().text = "Best Score: " + active_level_selected.bestScore.ToString(); }
+        if (level_info_time != null) { level_info_time.GetComponent<Text>().text = "Best Time: " + active_level_selected.bestTime.ToString("F2") + "s"; }
+        if (level_info_queue != null) { level_info_queue.GetComponent<Text>().text = "Best Queue Size: " + active_level_selected.bestQueueSize.ToString(); }
+    }
+
+    //TODO move to Config or utility? any library to support this?
+    //convert game ticks for level record to HH:MM:SS
+    //TODO show level timer
+    private string convertToTimeStamp(float ticks)
+    {
+        int seconds = (int)(ticks % 60);
+        int minutes = (int)((ticks / 60) % 60);
+        int hours = (int)((ticks / 3600) % 24);
+        string output = "";
+
+        output = (seconds % 60).ToString("00");
+        output = ((minutes % 60)).ToString("00") + ":" + output;
+        output = (hours).ToString("00") + ":" + output;
+
+        return output;
     }
 
     private void buildLevelSelectButtons()
