@@ -28,7 +28,7 @@ public class LevelMapManager : MonoBehaviour {
     // metrics fed back to configData
     public string levelName = "undefined_level";
     int levelScore = 0;
-    int levelTime = 0;
+    float levelTimeSeconds = 0f;
     int blockQueueSize = 0;
 
     /// <summary>
@@ -43,8 +43,7 @@ public class LevelMapManager : MonoBehaviour {
 
     void Update() {
         if (is_level_active) {
-            //TODO implement level timer, feeding into levelTime for config saving on completion
-            levelTime += 1;
+            levelTimeSeconds += Time.deltaTime; // seconds
         }
     }
 
@@ -198,12 +197,12 @@ public class LevelMapManager : MonoBehaviour {
         
         // overwrite level best time if new time is better or no existing time
         if (gamemanager.Main.configData.LevelBestTimes.ContainsKey(levelName)) {
-            int recorded_best_time = gamemanager.Main.configData.LevelBestTimes[levelName];
-            if (levelTime < recorded_best_time || recorded_best_time == 0) {
-                gamemanager.Main.configData.LevelBestTimes[levelName] = levelTime;
+            float recorded_best_time = gamemanager.Main.configData.LevelBestTimes[levelName];
+            if (levelTimeSeconds < recorded_best_time || recorded_best_time == 0) {
+                gamemanager.Main.configData.LevelBestTimes[levelName] = levelTimeSeconds;
             }
         } else {
-            gamemanager.Main.configData.LevelBestTimes[levelName] = levelTime;
+            gamemanager.Main.configData.LevelBestTimes[levelName] = levelTimeSeconds;
         }
 
         // overwrite level best score if new score is better or no existing score
