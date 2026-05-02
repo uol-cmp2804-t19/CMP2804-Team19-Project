@@ -105,6 +105,43 @@ public class CBLogic : MonoBehaviour
         StartCoroutine(ExecuteActionsWithDelay(actions));
     }
 
+    private IEnumerator ExecuteActionsWithDelay(List<CBActionTypes> actions)
+    {
+        isExecutingQueue = true;
+
+        foreach (CBActionTypes action in actions)
+        {
+            switch (action)
+            {
+                case CBActionTypes.MOVE:
+                    Debug.Log("CBLogic performed the 'move' action");
+                    CBAction(CBActionTypes.MOVE);
+                    break;
+
+                case CBActionTypes.TURNLEFT:
+                    Debug.Log("CBLogic performed the 'turn left' action");
+                    CBAction(CBActionTypes.TURNLEFT);
+                    break;
+
+                case CBActionTypes.TURNRIGHT:
+                    Debug.Log("CBLogic performed the 'turn right' action");
+                    CBAction(CBActionTypes.TURNRIGHT);
+                    break;
+
+                case CBActionTypes.NONE:
+                    break;
+
+                default:
+                    Debug.LogError("CBLogic: Failed to identify action: " + action);
+                    break;
+            }
+
+            yield return new WaitForSeconds(actionDelay);
+        }
+
+        isExecutingQueue = false;
+    }
+
     /// <summary>
     /// reads action blocks and returns a list of actions
     /// When adding a new action needs to be updated here.
