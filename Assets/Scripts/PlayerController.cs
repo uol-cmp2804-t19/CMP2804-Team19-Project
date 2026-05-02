@@ -1,3 +1,4 @@
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -69,17 +70,17 @@ public class PlayerController : MonoBehaviour
             Debug.Log("You forgot to assign a player and/or map!");
             return;
         }
-        //TODO add handling for falling down if no tile exists at new position after jump
-        //TODO add handling for jumping into non-existing block if block at existing layer is okay
-        //TODO add animation trigger for jump during the movement
-        zLevel += 1;
-        MovePlayerByFacing();
+        
+        // player zLevel only updated if jump is successful or during jump
+        MovePlayerByFacing(isJump: true);
+        //TODO add return to confirm if animation needed, or call player animation method from grid
+        //TODO (add animation trigger for jump during the movement)
     }
 
     /// <summary>
     /// moves the player in the direction they are currently facing using previous movement code
     /// </summary>
-    public void MovePlayerByFacing()
+    public void MovePlayerByFacing(bool isJump = false)
     {
         if (level == null)
         {
@@ -103,7 +104,8 @@ public class PlayerController : MonoBehaviour
                 dir = Vector2.right;
                 break;
         }
-        level.MovePlayerInDirection(dir);
+        int z_change = isJump ? 1 : 0;
+        level.MovePlayerOnGrid(new Vector3(dir.x, dir.y, z_change));
     }
 
     //TODO move to playerAudioController?
@@ -264,7 +266,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        level.MovePlayerInDirection(move_direction);
+        level.MovePlayerOnGrid(new Vector3(move_direction.x, move_direction.y, zLevel));
 
         // Vector3 movement = new Vector3(x, y, 0);
         // transform.position += movement * speed * Time.deltaTime;
