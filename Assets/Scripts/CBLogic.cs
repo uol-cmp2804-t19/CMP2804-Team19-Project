@@ -86,40 +86,23 @@ public class CBLogic : MonoBehaviour
     /// </summary>
     public void PerformActions()
     {
-        // currently just moves the character around to debug movement
-        Debug.Log("'PerformActions' called");
+        if (isExecutingQueue)
+        {
+            Debug.LogWarning("CBLogic: Action queue is already running.");
+            return;
+        }
+
+        Debug.Log("CBLogic: PerformActions called");
+
         List<CBActionTypes> actions = GetActions();
 
         if (actions.Count == 0)
         {
-            Debug.LogError("'GetActions' in CBLogic did not return a list of actions");
+            Debug.LogWarning("CBLogic: No actions found in queue.");
+            return;
         }
-        else
-        {
-            foreach (CBActionTypes action in actions)
-            {
-                switch (action)
-                {
-                    case CBActionTypes.MOVE:
-                        Debug.Log("CBLogics performed the 'move' action");
-                        CBAction(CBActionTypes.MOVE);
-                        break;
-                    case CBActionTypes.TURNLEFT:
-                        Debug.Log("CBLogics performed the 'turn left' action");
-                        CBAction(CBActionTypes.TURNLEFT);
-                        break;
-                    case CBActionTypes.TURNRIGHT:
-                        Debug.Log("CBLogics performed the 'turn right' action");
-                        CBAction(CBActionTypes.TURNRIGHT);
-                        break;
-                    case CBActionTypes.NONE:
-                        break;
-                    default:
-                        Debug.LogError("'PerformActions' in CBLogic failed to identify: " + action);
-                        break;
-                }
-            }
-        }
+
+        StartCoroutine(ExecuteActionsWithDelay(actions));
     }
 
     /// <summary>
