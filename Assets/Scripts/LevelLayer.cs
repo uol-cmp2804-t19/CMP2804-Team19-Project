@@ -11,6 +11,14 @@ public class LevelLayer : MonoBehaviour
     public Tilemap tilemap = null;
     public int zLevel = 0;
 
+    public void Start()
+    {
+        if (tilemap == null)
+        {
+            Debug.LogError("You forgot to assign a tilemap to the level layer at " + zLevel + "(aka " + gameObject.name + ")!");
+        }
+    }
+
     // disabled for release build
     // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
     // void OnDrawGizmos()
