@@ -58,6 +58,25 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// jumps the player in the direction they are currently facing using previous movement code
+    /// This increments z level then moves - used for jump blocks
+    /// </summary>
+    public void JumpPlayerByFacing()
+    {
+        if (level == null)
+        {
+            //TODO add error handling
+            Debug.Log("You forgot to assign a player and/or map!");
+            return;
+        }
+        //TODO add handling for falling down if no tile exists at new position after jump
+        //TODO add handling for jumping into non-existing block if block at existing layer is okay
+        //TODO add animation trigger for jump during the movement
+        zLevel += 1;
+        MovePlayerByFacing();
+    }
+
+    /// <summary>
     /// moves the player in the direction they are currently facing using previous movement code
     /// </summary>
     public void MovePlayerByFacing()

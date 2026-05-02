@@ -31,6 +31,7 @@ public class CBLogic : MonoBehaviour
         MOVE,
         TURNLEFT,
         TURNRIGHT,
+        JUMP,
         NONE
     }
 
@@ -107,6 +108,10 @@ public class CBLogic : MonoBehaviour
                         Debug.Log("CBLogics performed the 'turn right' action");
                         CBAction(CBActionTypes.TURNRIGHT);
                         break;
+                    case CBActionTypes.JUMP:
+                        Debug.Log("CBLogics performed the 'jump' action");
+                        CBAction(CBActionTypes.JUMP);
+                        break;
                     case CBActionTypes.NONE:
                         break;
                     default:
@@ -150,6 +155,10 @@ public class CBLogic : MonoBehaviour
                         actionList.Add(CBActionTypes.TURNRIGHT);
                         Debug.Log("Code Block at position:" + blockCount + " contained: Action Turn Right");
                         break;
+                    case "Jump":
+                        actionList.Add(CBActionTypes.JUMP);
+                        Debug.Log("Code Block at position:" + blockCount + " contained: Action Jump");
+                        break;
                     default:
                         Debug.LogError("Code Block at position:" + blockCount + " contains a erroneous action at point: " + actionCount);
                         break;
@@ -189,6 +198,10 @@ public class CBLogic : MonoBehaviour
             case CBActionTypes.TURNRIGHT:
                 //TODO implement this function (arg is true as .x is +1 for right)
                 activePlayer.TurnPlayer(true);
+                break;
+            case CBActionTypes.JUMP:
+                //TODO implement this function
+                activePlayer.JumpPlayerByFacing();
                 break;
             default:
                 Debug.LogError("Something went wrong in CBAction in Game Controller - CBLogic.");
