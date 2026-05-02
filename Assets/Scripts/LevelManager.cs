@@ -21,7 +21,7 @@ public class LevelMapManager : MonoBehaviour {
     public LevelLayer activeLayer = null;
     public PlayerController player = null;
 
-    public is_level_active = false;
+    public bool is_level_active = false;
 
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
     
@@ -197,7 +197,7 @@ public class LevelMapManager : MonoBehaviour {
         gamemanager.Main.configData.LevelsCompleted[levelName] = true;
         
         // overwrite level best time if new time is better or no existing time
-        if (gamemanager.Main.configData.LevelBestTimes.ContainsKey(levelName) {
+        if (gamemanager.Main.configData.LevelBestTimes.ContainsKey(levelName)) {
             int recorded_best_time = gamemanager.Main.configData.LevelBestTimes[levelName];
             if (levelTime < recorded_best_time || recorded_best_time == 0) {
                 gamemanager.Main.configData.LevelBestTimes[levelName] = levelTime;
@@ -207,7 +207,7 @@ public class LevelMapManager : MonoBehaviour {
         }
 
         // overwrite level best score if new score is better or no existing score
-        if (gamemanager.Main.configData.LevelBestScores.ContainsKey(levelName) {
+        if (gamemanager.Main.configData.LevelBestScores.ContainsKey(levelName)) {
             int recorded_best_score = gamemanager.Main.configData.LevelBestScores[levelName];
             if (levelScore > recorded_best_score || recorded_best_score == 0) {
                 gamemanager.Main.configData.LevelBestScores[levelName] = levelScore;
@@ -217,7 +217,7 @@ public class LevelMapManager : MonoBehaviour {
         }
 
         // overwrite level best actions if new action count is better or no existing action count
-        if (gamemanager.Main.configData.LevelBestActions.ContainsKey(levelName) {
+        if (gamemanager.Main.configData.LevelBestActions.ContainsKey(levelName)) {
             int recorded_best_blocks = gamemanager.Main.configData.LevelBestActions[levelName];
             if (blockQueueSize < recorded_best_blocks || recorded_best_blocks == 0) {
                 gamemanager.Main.configData.LevelBestActions[levelName] = blockQueueSize;
@@ -225,11 +225,6 @@ public class LevelMapManager : MonoBehaviour {
         } else {
             gamemanager.Main.configData.LevelBestActions[levelName] = blockQueueSize;
         }
-    }
-    
-    public void SetBlockQueueSize(int count)
-    {
-        blockQueueSize = count;
     }
 
     //TODO this is duplicated by playerController, one or the other needs to own this
