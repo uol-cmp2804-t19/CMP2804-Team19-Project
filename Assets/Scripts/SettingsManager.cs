@@ -16,13 +16,8 @@ public class SettingsManager : MonoBehaviour
 		AudioListener.pause = isMuted;
 	}
 
-	// this method must be called to save user setting preferences
 	public void CloseSettings()
 	{
 		gameObject.SetActive(false);
-		// update config on exit to prevent unnecessary file writes when adjusting settings
-		gamemanager.Main.Config.setting_volume = volume;
-		gamemanager.Main.Config.setting_isMuted = isMuted;
-		gamemanager.Main.SaveConfig();
 	}
 }
