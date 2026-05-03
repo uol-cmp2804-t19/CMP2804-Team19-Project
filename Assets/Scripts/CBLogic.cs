@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 // causing build error - temporary removed
@@ -38,6 +39,9 @@ public class CBLogic : MonoBehaviour
 
     // assign through bootstrap/gamecontroller on load
     public PlayerController activePlayer = null;
+    // Time control for block queue execution
+    [SerializeField] private float actionDelay = 0.5f;
+    private bool isExecutingQueue = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -81,40 +85,60 @@ public class CBLogic : MonoBehaviour
     /// </summary>
     public void PerformActions()
     {
-        // currently just moves the character around to debug movement
-        Debug.Log("'PerformActions' called");
+        if (isExecutingQueue)
+        {
+            Debug.LogWarning("CBLogic: Action queue is already running.");
+            return;
+        }
+
+        Debug.Log("CBLogic: PerformActions called");
+
         List<CBActionTypes> actions = GetActions();
 
         if (actions.Count == 0)
         {
-            Debug.LogError("'GetActions' in CBLogic did not return a list of actions");
+            Debug.LogWarning("CBLogic: No actions found in queue.");
+            return;
         }
-        else
+
+        StartCoroutine(ExecuteActionsWithDelay(actions));
+    }
+
+    private IEnumerator ExecuteActionsWithDelay(List<CBActionTypes> actions)
+    {
+        isExecutingQueue = true;
+
+        foreach (CBActionTypes action in actions)
         {
-            foreach (CBActionTypes action in actions)
+            switch (action)
             {
-                switch (action)
-                {
-                    case CBActionTypes.MOVE:
-                        Debug.Log("CBLogics performed the 'move' action");
-                        CBAction(CBActionTypes.MOVE);
-                        break;
-                    case CBActionTypes.TURNLEFT:
-                        Debug.Log("CBLogics performed the 'turn left' action");
-                        CBAction(CBActionTypes.TURNLEFT);
-                        break;
-                    case CBActionTypes.TURNRIGHT:
-                        Debug.Log("CBLogics performed the 'turn right' action");
-                        CBAction(CBActionTypes.TURNRIGHT);
-                        break;
-                    case CBActionTypes.NONE:
-                        break;
-                    default:
-                        Debug.LogError("'PerformActions' in CBLogic failed to identify: " + action);
-                        break;
-                }
+                case CBActionTypes.MOVE:
+                    Debug.Log("CBLogic performed the 'move' action");
+                    CBAction(CBActionTypes.MOVE);
+                    break;
+
+                case CBActionTypes.TURNLEFT:
+                    Debug.Log("CBLogic performed the 'turn left' action");
+                    CBAction(CBActionTypes.TURNLEFT);
+                    break;
+
+                case CBActionTypes.TURNRIGHT:
+                    Debug.Log("CBLogic performed the 'turn right' action");
+                    CBAction(CBActionTypes.TURNRIGHT);
+                    break;
+
+                case CBActionTypes.NONE:
+                    break;
+
+                default:
+                    Debug.LogError("CBLogic: Failed to identify action: " + action);
+                    break;
             }
+
+            yield return new WaitForSeconds(actionDelay);
         }
+
+        isExecutingQueue = false;
     }
 
     /// <summary>
@@ -172,7 +196,7 @@ public class CBLogic : MonoBehaviour
         // move player
         if (activePlayer == null)
         {
-            Debug.Log("player controller not assigned in Game Controller - CBLogic! - Please Assign Manually/check it exists!");
+            Debug.LogError("CBLogic: Active player is not assigned!");
             return;
         }
 
