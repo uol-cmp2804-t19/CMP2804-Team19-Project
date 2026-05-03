@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public GameObject sprite_up = null;
     public GameObject sprite_left = null;
     public GameObject sprite_right = null;
+    public Vector3Int startCell;
 
     public enum FACING
     {
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         turnPlayer(FACING.DOWN);
+        startCell = GetPlayerCell();
     }
 
     void Update()
