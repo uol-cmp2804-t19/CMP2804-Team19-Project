@@ -36,7 +36,7 @@ namespace Config
         //TODO implement game recording level time & score on level completion, feeding back to completion screen/config
         //TODO make sure levels have a key for config (use prefab filename?) to indicate completion
         //TODO may need to have a levelData class to track with level select, or use configData?
-        public Dictionary<string, int> LevelBestTimes = new Dictionary<string, int>();
+        public Dictionary<string, float> LevelBestTimes = new Dictionary<string, float>();
         public Dictionary<string, int> LevelBestScores = new Dictionary<string, int>();
         public Dictionary<string, int> LevelBestActions = new Dictionary<string, int>();
 
@@ -49,7 +49,7 @@ namespace Config
 
         // constructor
         public ConfigData(
-            Dictionary<string, int> newLevelBestTimes = null,
+            Dictionary<string, float> newLevelBestTimes = null,
             Dictionary<string, int> newLevelBestScores = null,
             Dictionary<string, int> newLevelBestActions = null,
             Dictionary<string, bool> newLevelsCompleted = null,
@@ -57,7 +57,7 @@ namespace Config
             float newSettingVolume = 1.0f
             )
         {
-            LevelBestTimes = newLevelBestTimes ?? new Dictionary<string, int>();
+            LevelBestTimes = newLevelBestTimes ?? new Dictionary<string, float>();
             LevelBestScores = newLevelBestScores ?? new Dictionary<string, int>();
             LevelBestActions = newLevelBestActions ?? new Dictionary<string, int>();
             LevelsCompleted = newLevelsCompleted ?? new Dictionary<string, bool>();
@@ -69,9 +69,7 @@ namespace Config
     public class ConfigReader
     {
         // Reads a JSON string and converts to ConfigData object - create default if invalid
-            public static ConfigData FromJson(string jsonString)
-        // Reads a JSON string and converts to ConfigData object - create default if invalid
-            public static ConfigData FromJson(string jsonString)
+        public static ConfigData FromJson(string jsonString)
         {
             try
             {
@@ -82,11 +80,9 @@ namespace Config
             {
                 Debug.LogError("Config Reader could not read the JSON");
                 return new ConfigData();
-                return new ConfigData();
             }
         }
 
-        // Converts ConfigData to JSON
         // Converts ConfigData to JSON
         public static string ToJson(ConfigData data)
         {
