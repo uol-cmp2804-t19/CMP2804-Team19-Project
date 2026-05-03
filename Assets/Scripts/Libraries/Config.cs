@@ -1,9 +1,8 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Linq.Expressions;
 
+/// <summary>
 /// Config class library to manage metrics and configuration settings for the player.
 /// Used alongside FileIO class library to save and load metrics for the game.
 /// Usage:
@@ -11,36 +10,67 @@ using System.Linq.Expressions;
 ///    string json = FileIO.ReadFile("config.json");
 ///    ConfigData config = ConfigReader.FromJson(json);
 ///  Access/Update:
-///    config.LevelsCompleted += 1;
-///    config.BestTimes["Level1"] = 300;
-///    Debug.Log(config.LevelsCompleted);
-///    Debug.Log(config.BestTimes["Level1"]);
+///    config.TotalLevelsCompleted += 1;
+///    config.LevelBestTimes["Level1"] = 300;
+///    Debug.Log(config.TotalLevelsCompleted);
+///    Debug.Log(config.LevelBestTimes["Level1"]);
 ///  Write:
 ///   string json = JsonConvert.SerializeObject(config);
 ///   FileIO.WriteFile("config.json", json);
+/// </summary>
 
+// TODO is configData saved on crash/force exit? saving at intervals may be necessary to prevent loss
 namespace Config
 {
-    [Serializable]
     public class ConfigData
     {
-        // basic metrics recorded including collection of level name/best time in ticks
-        public int LevelsCompleted = 0;
-        public Dictionary<string, int> BestTimes = new Dictionary<string, int>();
+
+        // basic metrics recorded including:
+        //  - level name/best time in ticks
+        //  - level name/best score
+        //  - level name/best actions (total blocks in queue to complete level)
+ 
+        //TODO implement game recording level time & score on level completion, feeding back to completion screen/config
+        //TODO make sure levels have a key for config (use prefab filename?) to indicate completion
+        //TODO may need to have a levelData class to track with level select, or use configData?
+        //TODO - totalLevelsCompleted can be gotten with .size() on LevelsCompleted - remove?
+        public int TotalLevelsCompleted = 0;
+        public Dictionary<string, int> LevelBestTimes = new Dictionary<string, int>();
+        public Dictionary<string, int> LevelBestScores = new Dictionary<string, int>();
+        public Dictionary<string, int> LevelBestActions = new Dictionary<string, int>();
+
+        public Dictionary<string, bool> LevelsCompleted = new Dictionary<string, bool>();
+
+
+        // settings/player preferences
+        public bool setting_isMuted = false;
+        public float setting_volume = 1.0f;
 
         // constructor
         public ConfigData(
-            int newLevelsCompleted = 0,
-            Dictionary<string, int> newBestTimes = null)
+            int newTotalLevelsCompleted = 0,
+            Dictionary<string, int> newLevelBestTimes = null,
+            Dictionary<string, int> newLevelBestScores = null,
+            Dictionary<string, int> newLevelBestActions = null,
+            Dictionary<string, bool> newLevelsCompleted = null,
+            bool newSettingIsMuted = false,
+            float newSettingVolume = 1.0f
+            )
         {
-            LevelsCompleted = newLevelsCompleted;
-            BestTimes = newBestTimes ?? new Dictionary<string, int>();
+            TotalLevelsCompleted = newTotalLevelsCompleted;
+            LevelBestTimes = newLevelBestTimes ?? new Dictionary<string, int>();
+            LevelBestScores = newLevelBestScores ?? new Dictionary<string, int>();
+            LevelBestActions = newLevelBestActions ?? new Dictionary<string, int>();
+            LevelsCompleted = newLevelsCompleted ?? new Dictionary<string, bool>();
+            setting_isMuted = newSettingIsMuted;
+            setting_volume = newSettingVolume;
         }
     }
 
     public class ConfigReader
     {
-        public static ConfigData FromJson(string jsonString)
+        // Reads a JSON string and converts to ConfigData object - create default if invalid
+            public static ConfigData FromJson(string jsonString)
         {
             try
             {
@@ -50,10 +80,11 @@ namespace Config
             catch
             {
                 Debug.LogError("Config Reader could not read the JSON");
-                return null;
+                return new ConfigData();
             }
         }
 
+        // Converts ConfigData to JSON
         public static string ToJson(ConfigData data)
         {
             return JsonConvert.SerializeObject(data);
