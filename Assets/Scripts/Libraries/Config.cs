@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
+/// <summary>
 /// Config class library to manage metrics and configuration settings for the player.
 /// Used alongside FileIO class library to save and load metrics for the game.
 /// Usage:
@@ -16,6 +17,7 @@ using Newtonsoft.Json;
 ///  Write:
 ///   string json = JsonConvert.SerializeObject(config);
 ///   FileIO.WriteFile("config.json", json);
+/// </summary>
 
 // TODO is configData saved on crash/force exit? saving at intervals may be necessary to prevent loss
 namespace Config
