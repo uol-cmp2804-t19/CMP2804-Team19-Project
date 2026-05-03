@@ -20,7 +20,8 @@ namespace GoalCollectable
             if (GameManager != null && !is_collected)
             {
                 is_collected = true;
-                GameManager.ChangeGameState_TitleMenu();
+                GameManager.CompleteLevel();
+                //TODO destroy level on return to title?
             }
             else
             {

@@ -13,9 +13,9 @@ using Newtonsoft.Json;
 ///    string json = FileIO.ReadFile("config.json");
 ///    ConfigData config = ConfigReader.FromJson(json);
 ///  Access/Update:
-///    config.TotalLevelsCompleted += 1;
 ///    config.LevelBestTimes["Level1"] = 300;
-///    Debug.Log(config.TotalLevelsCompleted);
+///    Debug.Log(config.LevelBestTimes["Level1"]);
+///    config.LevelBestTimes["Level1"] = 300;
 ///    Debug.Log(config.LevelBestTimes["Level1"]);
 ///  Write:
 ///   string json = JsonConvert.SerializeObject(config);
@@ -36,8 +36,6 @@ namespace Config
         //TODO implement game recording level time & score on level completion, feeding back to completion screen/config
         //TODO make sure levels have a key for config (use prefab filename?) to indicate completion
         //TODO may need to have a levelData class to track with level select, or use configData?
-        //TODO - totalLevelsCompleted can be gotten with .size() on LevelsCompleted - remove?
-        public int TotalLevelsCompleted = 0;
         public Dictionary<string, int> LevelBestTimes = new Dictionary<string, int>();
         public Dictionary<string, int> LevelBestScores = new Dictionary<string, int>();
         public Dictionary<string, int> LevelBestActions = new Dictionary<string, int>();
@@ -51,7 +49,6 @@ namespace Config
 
         // constructor
         public ConfigData(
-            int newTotalLevelsCompleted = 0,
             Dictionary<string, int> newLevelBestTimes = null,
             Dictionary<string, int> newLevelBestScores = null,
             Dictionary<string, int> newLevelBestActions = null,
@@ -60,7 +57,6 @@ namespace Config
             float newSettingVolume = 1.0f
             )
         {
-            TotalLevelsCompleted = newTotalLevelsCompleted;
             LevelBestTimes = newLevelBestTimes ?? new Dictionary<string, int>();
             LevelBestScores = newLevelBestScores ?? new Dictionary<string, int>();
             LevelBestActions = newLevelBestActions ?? new Dictionary<string, int>();
@@ -74,6 +70,8 @@ namespace Config
     {
         // Reads a JSON string and converts to ConfigData object - create default if invalid
             public static ConfigData FromJson(string jsonString)
+        // Reads a JSON string and converts to ConfigData object - create default if invalid
+            public static ConfigData FromJson(string jsonString)
         {
             try
             {
@@ -84,9 +82,11 @@ namespace Config
             {
                 Debug.LogError("Config Reader could not read the JSON");
                 return new ConfigData();
+                return new ConfigData();
             }
         }
 
+        // Converts ConfigData to JSON
         // Converts ConfigData to JSON
         public static string ToJson(ConfigData data)
         {

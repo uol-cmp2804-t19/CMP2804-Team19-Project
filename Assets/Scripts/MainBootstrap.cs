@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 
 /// <summary>
@@ -44,7 +45,7 @@ public class main_bootstrap : MonoBehaviour
             cb_ui_instance.SetActive(true);
             
             if (level_instance != null) {
-                level_instance.SetActive(true);
+                level_instance.ActivateLevel();
             }
             else
             {
@@ -68,7 +69,8 @@ public class main_bootstrap : MonoBehaviour
         if (main_menu_ui_instance != null)
         {
             cb_ui_instance.SetActive(false);
-            if (level_instance != null) { level_instance.SetActive(false); }
+            // this does not complete level or output metrics!!
+            if (level_instance != null) { level_instance.deactivateLevel(); }
             TogglePause(false);
             ToggleSettings(false);
             GameManager.Main.current_game_state = GameManager.GAME_STATE.TITLE_MENU;
@@ -79,6 +81,30 @@ public class main_bootstrap : MonoBehaviour
             Debug.Log("Main menu not set cannot enable!");
         }
 
+    }
+
+    // pass level stats 
+    public void CompleteLevel()
+    {
+        if (level_instance == null)
+        {
+            Debug.Log("Set level before changing to active game state!");
+            return;
+        }
+
+        level_instance.score = 0; //TODO get actual score from level manager
+
+        //TODO transition state will stop gameplay execution and hotkey control
+        GameManager.Main.current_game_state = GameManager.GAME_STATE.TRANSITION;
+        
+        //TODO open level metric screen, open and have transition between game, level metric, and title
+        
+        // store and log (for debug) level metrics - remove log when level metric implemented
+        level_instance.saveLevelMetricsToConfig();
+        Debug.Log("Level completed with score: " + level_instance.score + " in time: " + level_instance.time + " and block queue size: " + level_instance.blockQueueSize);
+
+        // when level metric screen is implemented remove this and allow the level metric to control transition to title menu
+        ChangeGameState_TitleMenu();
     }
 
     // change gameState back to title after reporting victory (//TODO this is where to add the level metric screen)
