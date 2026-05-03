@@ -97,7 +97,7 @@ public class LevelSelectManager : MonoBehaviour {
         buildLevelSelectButtons();
         updateLevelInfo();
         // set the menu active, //TODO can't confirm syntax here test in unity
-        GameObject.SetActive(true);
+        gameObject.SetActive(true);
     }
 
     //TODO whenever button 
@@ -181,9 +181,9 @@ public class LevelSelectManager : MonoBehaviour {
             string prefabName = levelPrefabs[i].name;
 
             // set to default values if level not found in configData
-            int bestTime = GameManager.Main.configData.LevelBestTimes.ContainsKey(prefabName) ? GameManager.Main.configData.LevelBestTimes[prefabName] : 0;
-            int bestScore = GameManager.Main.configData.LevelBestScores.ContainsKey(prefabName) ? GameManager.Main.configData.LevelBestScores[prefabName] : 0;
-            int bestQueueSize = GameManager.Main.configData.LevelBestActions.ContainsKey(prefabName) ? GameManager.Main.configData.LevelBestActions[prefabName] : 0;
+            float bestTime = GameManager.Main.Config.LevelBestTimes.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestTimes[prefabName] : 0f;
+            int bestScore = GameManager.Main.Config.LevelBestScores.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestScores[prefabName] : 0;
+            int bestQueueSize = GameManager.Main.Config.LevelBestActions.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestActions[prefabName] : 0;
             // when level is played and exited it will resave to config
 
             //TODO load metrics from config and add to level data struct
@@ -239,7 +239,7 @@ public class LevelSelectManager : MonoBehaviour {
     {
         clearLevels();
         // set the menu inactive, //TODO can't confirm syntax here test in unity
-        GameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     // clear data to prevent duplicates, called at startup and on exit to confirm - no behaviour if already empty

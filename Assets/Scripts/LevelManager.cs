@@ -26,9 +26,9 @@ public class LevelMapManager : MonoBehaviour {
     
     // metrics fed back to configData
     public string levelName = "undefined_level";
-    int levelScore = 0;
-    float levelTimeSeconds = 0f;
-    int blockQueueSize = 0;
+    public int levelScore = 0;
+    public float levelTimeSeconds = 0f;
+    public int blockQueueSize = 0;
 
     /// <summary>
     /// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -48,13 +48,18 @@ public class LevelMapManager : MonoBehaviour {
 
     public void ActivateLevel() {
         is_level_active = true;
-        SetActive(true);
+        gameObject.SetActive(true);
         Debug.Log("New level activated: " + levelName);
     }
 
     public void AddScore(int score_change)
     {
         levelScore += score_change;
+    }
+
+    public void SetBlockQueueSize(int newSize)
+    {
+        blockQueueSize = newSize;
     }
 
     /// <summary>
@@ -81,7 +86,7 @@ public class LevelMapManager : MonoBehaviour {
     }
      public void DeactivateLevel() {
         is_level_active = false;
-        SetActive(false);
+        gameObject.SetActive(false);
         Debug.Log("Level deactivated! (" + levelName + ")");
     }
 
@@ -273,7 +278,7 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
     // }
 
     public void saveLevelMetricsToConfig() {
-        if (gamemanager.Main.configData == null) {
+        if (GameManager.Main.Config == null) {
             Debug.Log("No config data found to save level metrics to!");
             return;
         }
@@ -281,36 +286,36 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
         //TODO implement saving level metrics to configData on level completion, called from completion screen
 
         // overwrite level name in configData as complete
-        gamemanager.Main.configData.LevelsCompleted[levelName] = true;
+        GameManager.Main.Config.LevelsCompleted[levelName] = true;
         
         // overwrite level best time if new time is better or no existing time
-        if (gamemanager.Main.configData.LevelBestTimes.ContainsKey(levelName)) {
-            float recorded_best_time = gamemanager.Main.configData.LevelBestTimes[levelName];
+        if (GameManager.Main.Config.LevelBestTimes.ContainsKey(levelName)) {
+            float recorded_best_time = GameManager.Main.Config.LevelBestTimes[levelName];
             if (levelTimeSeconds < recorded_best_time || recorded_best_time == 0) {
-                gamemanager.Main.configData.LevelBestTimes[levelName] = levelTimeSeconds;
+                GameManager.Main.Config.LevelBestTimes[levelName] = levelTimeSeconds;
             }
         } else {
-            gamemanager.Main.configData.LevelBestTimes[levelName] = levelTimeSeconds;
+            GameManager.Main.Config.LevelBestTimes[levelName] = levelTimeSeconds;
         }
 
         // overwrite level best score if new score is better or no existing score
-        if (gamemanager.Main.configData.LevelBestScores.ContainsKey(levelName)) {
-            int recorded_best_score = gamemanager.Main.configData.LevelBestScores[levelName];
+        if (GameManager.Main.Config.LevelBestScores.ContainsKey(levelName)) {
+            int recorded_best_score = GameManager.Main.Config.LevelBestScores[levelName];
             if (levelScore > recorded_best_score || recorded_best_score == 0) {
-                gamemanager.Main.configData.LevelBestScores[levelName] = levelScore;
+                GameManager.Main.Config.LevelBestScores[levelName] = levelScore;
             }
         } else {
-            gamemanager.Main.configData.LevelBestScores[levelName] = levelScore;
+            GameManager.Main.Config.LevelBestScores[levelName] = levelScore;
         }
 
         // overwrite level best actions if new action count is better or no existing action count
-        if (gamemanager.Main.configData.LevelBestActions.ContainsKey(levelName)) {
-            int recorded_best_blocks = gamemanager.Main.configData.LevelBestActions[levelName];
+        if (GameManager.Main.Config.LevelBestActions.ContainsKey(levelName)) {
+            int recorded_best_blocks = GameManager.Main.Config.LevelBestActions[levelName];
             if (blockQueueSize < recorded_best_blocks || recorded_best_blocks == 0) {
-                gamemanager.Main.configData.LevelBestActions[levelName] = blockQueueSize;
+                GameManager.Main.Config.LevelBestActions[levelName] = blockQueueSize;
             }
         } else {
-            gamemanager.Main.configData.LevelBestActions[levelName] = blockQueueSize;
+            GameManager.Main.Config.LevelBestActions[levelName] = blockQueueSize;
         }
     }
 
