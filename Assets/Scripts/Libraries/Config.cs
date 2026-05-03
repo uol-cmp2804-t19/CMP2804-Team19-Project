@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
+// (On Windows) Config is saved to C:\Users\<YourName>\AppData\LocalLow\<CompanyName>\<ProductName>\config.json
+// In Unity you can find <CompanyName> under edit/project_settings/player
+
 /// <summary>
 /// Config class library to manage metrics and configuration settings for the player.
 /// Used alongside FileIO class library to save and load metrics for the game.
