@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class CodeBlockUI : MonoBehaviour
 {
@@ -13,9 +14,10 @@ public class CodeBlockUI : MonoBehaviour
     [SerializeField] private Transform paletteContainer;
     [SerializeField] private Transform queueContainer;
     [SerializeField] private Button buttonPlay;
-    public GameObject codeBlockRight;
-    public GameObject codeBlockLeft;
-    public GameObject codeBlockMove;
+    public GameObject codeBlock;
+    public Texture2D codeBlockRight;
+    public Texture2D codeBlockLeft;
+    public Texture2D codeBlockMove;
     // find on cb_prefab/GameController
     [SerializeField] private CBLogic codeBlockLogic;
 
@@ -151,21 +153,21 @@ public class CodeBlockUI : MonoBehaviour
         CreateBlockButton parent setting can produce incorrect local scale/anchoring under UI layout groups.
         Use SetParent(parent, false) so RectTransform local values are preserved.
          */
-        GameObject buttonObj;
-        Debug.LogError("Action Label: " + label);
+        GameObject buttonObj = Instantiate(codeBlock);
+        Sprite buttonImg;
         switch (label)
         {
             case "TURNLEFT":
-                buttonObj = Instantiate(codeBlockLeft);
+                buttonImg = Sprite.Create(codeBlockLeft, new Rect(0.0f, 0.0f, codeBlockLeft.height, codeBlockLeft.width), new Vector2(0.5f, 0.5f), 100.0f);
                 break;
             case "TURNRIGHT":
-                buttonObj = Instantiate(codeBlockRight);
+                buttonImg = Sprite.Create(codeBlockRight, new Rect(0.0f, 0.0f, codeBlockRight.height, codeBlockRight.width), new Vector2(0.5f, 0.5f), 100.0f);
                 break;
             case "MOVE":
-                buttonObj = Instantiate(codeBlockMove);
+                buttonImg = Sprite.Create(codeBlockMove, new Rect(0.0f, 0.0f, codeBlockMove.height, codeBlockMove.width), new Vector2(0.5f, 0.5f), 100.0f);
                 break;
             default:
-                buttonObj = Instantiate(codeBlockMove);
+                buttonImg = Sprite.Create(codeBlockMove, new Rect(0.0f, 0.0f, codeBlockMove.height, codeBlockMove.width), new Vector2(0.5f, 0.5f), 100.0f);
                 break;
         }
 
@@ -179,6 +181,8 @@ public class CodeBlockUI : MonoBehaviour
         Button button = buttonObj.AddComponent<Button>();
         // set hierarchy
         buttonObj.transform.SetParent(parent);
+
+        button_visual.sprite = buttonImg;
 
         // add hover & click colours
         button.transition = Selectable.Transition.ColorTint;

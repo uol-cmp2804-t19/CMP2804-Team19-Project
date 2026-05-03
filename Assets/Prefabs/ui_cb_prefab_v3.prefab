@@ -859,7 +859,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &5652337600587861433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -895,6 +895,9 @@ MonoBehaviour:
   paletteContainer: {fileID: 343548177049691894}
   queueContainer: {fileID: 6087122512779795437}
   buttonPlay: {fileID: 7105500329890479570}
+  codeBlockRight: {fileID: 0}
+  codeBlockLeft: {fileID: 0}
+  codeBlockMove: {fileID: 0}
   codeBlockLogic: {fileID: 0}
   softMaxQueueSize: 60
 --- !u!1 &9203793891982504905
