@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine;
 
 /// <summary>
@@ -15,8 +14,11 @@ public class main_bootstrap : MonoBehaviour
     public GameObject pause_menu_reference = null;
     public GameObject settings_menu_reference = null;
 
-    // actual instances in use
+    // level prefab & attached script component
     private GameObject level_instance = null;
+    private LevelMapManager levelManager = null;
+
+    // references
     private GameObject cb_parser_instance = null;
     private GameObject cb_ui_instance = null;
     private GameObject main_menu_ui_instance = null;
@@ -37,40 +39,55 @@ public class main_bootstrap : MonoBehaviour
         ChangeGameState_TitleMenu();
     }
 
-    // before changing state to GAME_ACTIVE make sure the level instance is set
-    public void ChangeGameState_ActiveGame()
+    private LevelMapManager GetCurrentLevelManager()
     {
-        if (main_menu_ui_instance != null && level_instance != null) {
-            main_menu_ui_instance.SetActive(false);
-            cb_ui_instance.SetActive(true);
-            
-            if (level_instance != null) {
-                level_instance.ActivateLevel();
+        if (level_instance != null)
+        {
+            LevelMapManager levelManager = level_instance.GetComponent<LevelMapManager>();
+            if (levelManager != null)
+            {
+                return levelManager;
             }
             else
             {
-                Debug.Log("Set level before changing to active game state!");
+                Debug.LogError("Current level instance does not have a LevelMapManager component!");
+                return null;
             }
-
-            TogglePause(false);
-            ToggleSettings(false);
-            level_instance.SetActive(true);
-            GameManager.Main.current_game_state = GameManager.GAME_STATE.GAME_ACTIVE;
         }
         else
         {
-            Debug.Log("Main menu not set cannot disable!");
+            Debug.LogError("No current level instance found!");
+            return null;
+        }
+    }
+
+    // before changing state to GAME_ACTIVE make sure the level instance is set
+    public void ChangeGameState_ActiveGame()
+    {
+        if (main_menu_ui_instance != null && level_instance != null && levelManager != null)
+        {
+            main_menu_ui_instance.SetActive(false);
+            cb_ui_instance.SetActive(true);
+            TogglePause(false);
+            ToggleSettings(false);
+            level_instance.SetActive(true);
+            GameManager.Main.current_game_state = GameManager.GAME_STATE.GAME_ACTIVE;           
+            levelManager.ActivateLevel();
+        }
+        else
+        {
+            Debug.Log("Cannot change to active game state, check boostrap referneces in editor inspector!");
         }
     }
 
 
     public void ChangeGameState_TitleMenu()
     {
-        if (main_menu_ui_instance != null)
+        if (main_menu_ui_instance != null && cb_ui_instance != null && level_instance != null && levelManager != null)
         {
+            levelManager.DeactivateLevel();
             cb_ui_instance.SetActive(false);
             // this does not complete level or output metrics!!
-            if (level_instance != null) { level_instance.deactivateLevel(); }
             TogglePause(false);
             ToggleSettings(false);
             GameManager.Main.current_game_state = GameManager.GAME_STATE.TITLE_MENU;
@@ -92,7 +109,11 @@ public class main_bootstrap : MonoBehaviour
             return;
         }
 
-        level_instance.score = 0; //TODO get actual score from level manager
+        if (levelManager == null)
+        {
+            Debug.Log("Level instance missing LevelMapManager component!");
+            return;
+        }
 
         //TODO transition state will stop gameplay execution and hotkey control
         GameManager.Main.current_game_state = GameManager.GAME_STATE.TRANSITION;
@@ -100,8 +121,8 @@ public class main_bootstrap : MonoBehaviour
         //TODO open level metric screen, open and have transition between game, level metric, and title
         
         // store and log (for debug) level metrics - remove log when level metric implemented
-        level_instance.saveLevelMetricsToConfig();
-        Debug.Log("Level completed with score: " + level_instance.score + " in time: " + level_instance.time + " and block queue size: " + level_instance.blockQueueSize);
+        levelManager.saveLevelMetricsToConfig();
+        Debug.Log("Level completed with score: " + levelManager.levelScore + " in time: " + levelManager.levelTimeSeconds + " and block queue size: " + levelManager.blockQueueSize);
 
         // when level metric screen is implemented remove this and allow the level metric to control transition to title menu
         ChangeGameState_TitleMenu();
@@ -233,13 +254,37 @@ public class main_bootstrap : MonoBehaviour
             {
                 level_instance = debug_level;
                 level_instance.SetActive(false);
+                levelManager = GetCurrentLevelManager();
             }
             else
             {
                 level_instance = Instantiate(debug_level, transform);
                 level_instance.SetActive(false);
+                levelManager = GetCurrentLevelManager();
             }
         }
+    }
+
+    // loads a level from the given resource path
+    public void LoadLevel(string resourcePath)
+    {
+        // unload previous level if it exists
+        if (level_instance != null)
+        {
+            Destroy(level_instance);
+        }
+
+        // load the new level from resources
+        GameObject levelPrefab = Resources.Load<GameObject>(resourcePath);
+        if (levelPrefab == null)
+        {
+            Debug.LogError("Failed to load level from path: " + resourcePath);
+            return;
+        }
+
+        level_instance = Instantiate(levelPrefab, transform);
+        level_instance.SetActive(false);
+        levelManager = GetCurrentLevelManager();
     }
 
 }
