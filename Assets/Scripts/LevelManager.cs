@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 //TODO add an audio manager to choose sound effect based on terrain and modulate pitch/choose from sound array
 // ambient level sound - https://freesound.org/search/?q=ambient+forest
@@ -21,15 +20,8 @@ public class LevelMapManager : MonoBehaviour {
     public LevelLayer activeLayer = null;
     public PlayerController player = null;
 
-    public is_level_active = false;
-
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
-    
-    // metrics fed back to configData
-    public string levelName = "undefined_level";
     int levelScore = 0;
-    int levelTime = 0;
-    int blockQueueSize = 0;
 
     /// <summary>
     /// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -39,19 +31,6 @@ public class LevelMapManager : MonoBehaviour {
     {
         _setupMapLayer();
         _setupPlayerOnMap();
-    }
-
-    void Update() {
-        if (is_level_active) {
-            //TODO implement level timer, feeding into levelTime for config saving on completion
-            levelTime += 1;
-        }
-    }
-
-    public void ActivateLevel() {
-        is_level_active = true;
-        SetActive(true);
-        Debug.Log("New level activated: " + levelName);
     }
 
     public void AddScore(int score_change)
@@ -77,11 +56,6 @@ public class LevelMapManager : MonoBehaviour {
             LevelLayer newLayer = mapLayerRegister[newZLevel];
             activeLayer = newLayer;
         }
-    }
-     public void DeactivateLevel() {
-        is_level_active = false;
-        SetActive(false);
-        Debug.Log("Level deactivated! (" + levelName + ")");
     }
 
     // doesn't rely on cell existing in layer
@@ -174,62 +148,14 @@ public class LevelMapManager : MonoBehaviour {
         }
     }
 
-    // disabled for release build
-    // // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
-    // void OnDrawGizmos() {
-    //     // silently fail, debug handling only
-    //     if (player == null || activeLayer == null || activeLayer.tilemap == null) return;
-    //     Vector3Int cell = activeLayer.tilemap.WorldToCell(player.transform.position);
-    //     Vector3 center = activeLayer.tilemap.GetCellCenterWorld(cell);
-    //     Gizmos.color = Color.red;
-    //     Gizmos.DrawWireCube(center, activeLayer.tilemap.cellSize);
-    // }
-
-    public void saveLevelMetricsToConfig() {
-        if (gamemanager.Main.configData == null) {
-            Debug.Log("No config data found to save level metrics to!");
-            return;
-        }
-
-        //TODO implement saving level metrics to configData on level completion, called from completion screen
-
-        // overwrite level name in configData as complete
-        gamemanager.Main.configData.LevelsCompleted[levelName] = true;
-        
-        // overwrite level best time if new time is better or no existing time
-        if (gamemanager.Main.configData.LevelBestTimes.ContainsKey(levelName) {
-            int recorded_best_time = gamemanager.Main.configData.LevelBestTimes[levelName];
-            if (levelTime < recorded_best_time || recorded_best_time == 0) {
-                gamemanager.Main.configData.LevelBestTimes[levelName] = levelTime;
-            }
-        } else {
-            gamemanager.Main.configData.LevelBestTimes[levelName] = levelTime;
-        }
-
-        // overwrite level best score if new score is better or no existing score
-        if (gamemanager.Main.configData.LevelBestScores.ContainsKey(levelName) {
-            int recorded_best_score = gamemanager.Main.configData.LevelBestScores[levelName];
-            if (levelScore > recorded_best_score || recorded_best_score == 0) {
-                gamemanager.Main.configData.LevelBestScores[levelName] = levelScore;
-            }
-        } else {
-            gamemanager.Main.configData.LevelBestScores[levelName] = levelScore;
-        }
-
-        // overwrite level best actions if new action count is better or no existing action count
-        if (gamemanager.Main.configData.LevelBestActions.ContainsKey(levelName) {
-            int recorded_best_blocks = gamemanager.Main.configData.LevelBestActions[levelName];
-            if (blockQueueSize < recorded_best_blocks || recorded_best_blocks == 0) {
-                gamemanager.Main.configData.LevelBestActions[levelName] = blockQueueSize;
-            }
-        } else {
-            gamemanager.Main.configData.LevelBestActions[levelName] = blockQueueSize;
-        }
-    }
-    
-    public void SetBlockQueueSize(int count)
-    {
-        blockQueueSize = count;
+    // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
+    void OnDrawGizmos() {
+        // silently fail, debug handling only
+        if (player == null || activeLayer == null || activeLayer.tilemap == null) return;
+        Vector3Int cell = activeLayer.tilemap.WorldToCell(player.transform.position);
+        Vector3 center = activeLayer.tilemap.GetCellCenterWorld(cell);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(center, activeLayer.tilemap.cellSize);
     }
 
     //TODO this is duplicated by playerController, one or the other needs to own this

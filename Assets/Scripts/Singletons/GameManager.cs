@@ -48,10 +48,7 @@ public class GameManager : MonoBehaviour
         }
         catch
         {
-            // if config doesn't exist create and save a default config to prevent errors
-            Debug.LogError("No config.json found. Creating default config.");
-            Config = new ConfigData();
-            SaveConfig();
+            Debug.LogError("LoadConfig in GameManager called with no config.json file present");
         }
     }
 
