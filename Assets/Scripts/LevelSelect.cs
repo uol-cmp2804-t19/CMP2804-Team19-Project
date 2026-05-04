@@ -50,6 +50,7 @@ public class LevelSelectManager : MonoBehaviour {
 
     // bootstrap is the scene controller handling prefab loading
     public GameObject bootstrap_scene = null;
+    private main_bootstrap bootstrap_script = null;
 
     // following references must be set in editor
     // -    container is the left-most field container buttons
@@ -84,6 +85,11 @@ public class LevelSelectManager : MonoBehaviour {
     // store all loaded levels
     LevelData[] all_levels = new LevelData[0];
 
+    private void Start()
+    {
+        getBootstrapScriptComponent();
+    }
+
     public void openMenu()
     {
         // populate level select buttons from Resources/GameLevels
@@ -101,7 +107,7 @@ public class LevelSelectManager : MonoBehaviour {
     }
 
     //TODO whenever button 
-    private void updateLevelInfo() {
+    public void updateLevelInfo() {
         //TODO update level info panel with metrics from active_level_selected
         //TODO convert ticks to time format for display
         if (level_info_score != null) { level_info_score.GetComponent<Text>().text = "Best Score: " + active_level_selected.bestScore.ToString(); }
@@ -164,6 +170,17 @@ public class LevelSelectManager : MonoBehaviour {
             }
         }
     }
+    private void getBootstrapScriptComponent()
+    {
+        if (bootstrap_scene != null)
+        {
+            bootstrap_script = bootstrap_scene.GetComponent<main_bootstrap>();
+        }
+        else
+        {
+            Debug.Log("bootstrap scene not set in editor!");
+        }
+    }
 
     // levels currently exist in ./Assets/Prefabs/GameLevels/
     // TODO the editor path doesn't exist at runtime -- move to Assets/Resources/GameLevels/
@@ -204,6 +221,8 @@ public class LevelSelectManager : MonoBehaviour {
             all_levels[all_levels.Length - 1] = levelData;
         }
 
+        Debug.Log("Loaded " + all_levels.Length + " levels!");
+
     }
 
     // connect start button to this
@@ -218,19 +237,25 @@ public class LevelSelectManager : MonoBehaviour {
         }
         // else
         // pass the file path of the chosen level
-        if (bootstrap_scene == null)
+        if (bootstrap_scene == null || bootstrap_script == null)
         {
-            Debug.LogError("LevelSelectManager: bootstrap_scene reference not set.");
+            Debug.LogError("LevelSelectManager: bootstrap scene or script reference not set.");
             return;
         }
-        bootstrap_scene.LoadLevel(active_level_selected.resourcePath);
+        bootstrap_script.LoadLevel(active_level_selected.resourcePath);
         closeMenu();
     }
 
     // connect exit button to this
     // levelSelect is not part of game state it is a submenu of title menu, so it controls own state to avoid confusion
-    public void onExitButtonPressed() {
-        bootstrap_scene.ChangeGameState_TitleMenu();
+    public void onExitButtonPressed()
+    {
+        if (bootstrap_scene == null || bootstrap_script == null)
+        {
+            Debug.LogError("LevelSelectManager: bootstrap scene (" + bootstrap_scene + ") or script reference (" + bootstrap_script + ") not set.");
+            return;
+        }
+        bootstrap_script.ChangeGameState_TitleMenu();
         closeMenu();
     }
 
