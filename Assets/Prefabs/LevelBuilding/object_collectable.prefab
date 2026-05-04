@@ -219,11 +219,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4488100705847621545}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57c1202214d8e5146a835494f5d27ee5, type: 3}
+  m_Script: {fileID: 11500000, guid: 8382503168316204a954c88c6a21d1d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   owning_level: {fileID: 0}
-  score: 0
+  score: 1
 --- !u!222 &4628735137238889506
 CanvasRenderer:
   m_ObjectHideFlags: 0

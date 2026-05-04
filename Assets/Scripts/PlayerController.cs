@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -101,7 +102,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         int z_change = isJump ? 1 : 0;
-        level.MovePlayerOnGrid(new Vector3(dir.x, dir.y, z_change));
+        level.MovePlayerOnGrid(new Vector3Int((int)dir.x, (int)dir.y, (int)z_change));
     }
 
     public void PlayWalkSound()
@@ -260,7 +261,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        level.MovePlayerOnGrid(new Vector3(move_direction.x, move_direction.y, zLevel));
+        level.MovePlayerOnGrid(new Vector3Int((int)move_direction.x, (int)move_direction.y, zLevel));
 
         // Vector3 movement = new Vector3(x, y, 0);
         // transform.position += movement * speed * Time.deltaTime;

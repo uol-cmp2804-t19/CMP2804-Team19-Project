@@ -38,6 +38,19 @@ public class GameManager : MonoBehaviour
 
     void LoadConfig()
     {
+        if (FileIO.VerifyFileExists("config.json"))
+        {
+            string json = FileIO.ReadFile("config.json");
+            Config = ConfigReader.FromJson(json);
+        }
+        else
+        {
+            Debug.Log("No config.json found. Creating default config.");
+            Config = new ConfigData();
+            SaveConfig();
+        }
+
+        /*
         try
         {
             string json = FileIO.ReadFile("config.json");
@@ -50,6 +63,7 @@ public class GameManager : MonoBehaviour
             Config = new ConfigData();
             SaveConfig();
         }
+        */
     }
 
     public void SaveConfig()
