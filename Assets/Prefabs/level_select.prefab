@@ -256,7 +256,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2022036358841338386}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 600285360137686118}
+        m_TargetAssemblyTypeName: LevelSelectManager, Assembly-CSharp
+        m_MethodName: onExitButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5890662188793806643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,6 +534,7 @@ GameObject:
   - component: {fileID: 1172115538000061507}
   - component: {fileID: 9206619901280624925}
   - component: {fileID: 5524971924187256539}
+  - component: {fileID: 600285360137686118}
   m_Layer: 5
   m_Name: level_select
   m_TagString: Untagged
@@ -588,6 +601,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &600285360137686118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2814702436676047659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b7f9b955335564db928bc1cb9f229e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bootstrap_scene: {fileID: 0}
+  level_button_container: {fileID: 1965942650085307217}
+  level_button_prefab: {fileID: 6425712237964560504}
+  level_info_score: {fileID: 2506726891637219491}
+  level_info_time: {fileID: 3092027261008811239}
+  level_info_queue: {fileID: 1282054370877865716}
+  button_start_level: {fileID: 3264881975949133487}
+  button_exit_menu: {fileID: 1581260663463766744}
 --- !u!1 &2827055915003742031
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,7 +983,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9149935500206675345}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 600285360137686118}
+        m_TargetAssemblyTypeName: LevelSelectManager, Assembly-CSharp
+        m_MethodName: onStartButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5872232094625431257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1063,7 +1108,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6347033869321233265
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1078,10 +1123,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3620689247469439997}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 500, y: -667.7309}
+  m_SizeDelta: {x: 880, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3092323480976715583
 CanvasRenderer:
@@ -1164,7 +1209,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 567066581034570732}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: LevelSelectManager, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 0
 --- !u!114 &5381523933269715403
 MonoBehaviour:
   m_ObjectHideFlags: 0
