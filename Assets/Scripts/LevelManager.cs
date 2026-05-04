@@ -2,15 +2,11 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
-//TODO add an audio manager to choose sound effect based on terrain and modulate pitch/choose from sound array
 // ambient level sound - https://freesound.org/search/?q=ambient+forest
 // first level bgm - https://opengameart.org/content/music-for-your-first-level
 // research game soundtracks like BabaIsYou
-
-//TODO animate player walk
-//TODO make player move/jump to cell gradually rather than snap to - replace moveDelay check with 'is player animating' and queue actions?
-//TODO look at separation of concerns - should player move/jump-to cell be a palyer method?
 
 /// <summary>
 /// Level manager controls the separate tilemap z-levels and player movement
@@ -66,7 +62,6 @@ public class LevelMapManager : MonoBehaviour {
     /// Changes the active map layer to the one corresponding to the given z-level, if it exists in the register
     /// Called during player jump behaviour
     /// </summary>
-    //TODO changeActiveMap should only change the layer? switch to private include in movement validation method?
     public void changeActiveMap(int newZLevel)
     {
         if (!mapLayerRegister.ContainsKey(newZLevel))
@@ -76,8 +71,6 @@ public class LevelMapManager : MonoBehaviour {
         }
         else
         {
-            //TODO check if valid beforehand
-            //TODO add transition animation effect (level fade?)
             LevelLayer newLayer = mapLayerRegister[newZLevel];
             activeLayer = newLayer;
         }
@@ -95,7 +88,6 @@ public class LevelMapManager : MonoBehaviour {
     {
         if (player == null || activeLayer == null)
         {
-            //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
             return new Vector3Int(0, 0, 0);
         }
@@ -158,7 +150,6 @@ public bool isBlockedByElevation(Vector3Int cellPosition) {
         {
             if (value.tilemap.HasTile(tileCell))
             {
-                // TODO remove all the temporary move logs and spammy stuff in gameplay or at least made dev option toggleable
                 Debug.Log("Move blocked by tile on higher layer " + value.name + " at z-level " + key);
                 return true;
             }
@@ -215,7 +206,6 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
 
     /// <summary>
     /// Moves the player in the specified direction.
-    /// TODO - if jumping call alongside changeActiveMap to move between layers, as player z-level is not automatically updated by this function
     /// </summary>
     /// <param name="direction">
     /// The direction to move the player, where (0, 1) is up, (0, -1) is down, (-1, 0) is left, and (1, 0) is right. Handled by facing logic.
@@ -236,13 +226,11 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
         
         if (player == null || activeLayer == null)
         {
-            //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
             return;
         }
         else
         {
-            //TODO - currently player can move diagonally, this will not be possible with coding block calls - does it need to be captured here?
             // add nil z because not updating zLayer here
             Vector3Int targetCell = GetPlayerCell() + new Vector3Int(
                 Mathf.RoundToInt(position_change.x),
@@ -250,7 +238,6 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
                 Mathf.RoundToInt(position_change.z)
             );
 
-            //TODO remove testing checks in teleportPlayerToCell, logic now called beforehand
             int targetLayer = getHighestValidLayer(targetCell);
             if (targetLayer == -1) {
                 Debug.Log("No valid target layer found for move to cell " + targetCell);
@@ -282,8 +269,6 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
             Debug.Log("No config data found to save level metrics to!");
             return;
         }
-
-        //TODO implement saving level metrics to configData on level completion, called from completion screen
 
         // overwrite level name in configData as complete
         GameManager.Main.Config.LevelsCompleted[levelName] = true;
@@ -319,33 +304,21 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
         }
     }
 
-    //TODO this is duplicated by playerController, one or the other needs to own this
-    //TODO - this is currently a teleport, needs to be replaced with gradual movement and animation (especially for jumping) eventually
-    //TODO is this respecting levelLayer Z Levels?
+    // plays sound & snaps player to cell
     void TeleportPlayerToCell(Vector3Int targetCell)
     {
-        if (player == null || activeLayer == null)
-        {
-            //TODO add error handling
+        if (player == null || activeLayer == null) {
             Debug.Log("You forgot to assign a player and/or map!");
             return;
         }
 
-        // validation moved outside this function
-        // if (!isValidMove(targetCell) && !overrideChecks)
-        // {
-        //     Debug.Log("Invalid move attempted to cell " + targetCell + " on z-level " + targetCell.z);
-        //     return;
-        // }
+        // snap to grid based on target cell, not player cell, to avoid compounding errors from multiple moves
+        Vector3Int tileCell = new Vector3Int(targetCell.x, targetCell.y, 0);
+        Vector3Int player_cell = activeLayer.tilemap.WorldToCell(player.transform.position);
+        Vector3 cell_half_size = activeLayer.tilemap.cellSize / 2f;
+        Vector3 player_pos = activeLayer.tilemap.CellToWorld(tileCell) + cell_half_size;
 
-        // snap to grid
-        player.transform.position =
-        activeLayer.tilemap.GetCellCenterWorld(activeLayer.tilemap.WorldToCell(player.transform.position)
-        );
-        //player.transform.position = activeLayer.tilemap.GetCellCenterWorld(targetCell);
-        // move player to center of tile
-        player.transform.position = activeLayer.tilemap.CellToWorld(new Vector3Int(targetCell.x, targetCell.y, 0)) + activeLayer.tilemap.cellSize / 2f;
-        Debug.Log("on map");
+        player.transform.position = player_pos;
         player.PlayWalkSound();
 
     }
@@ -435,5 +408,3 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
             TeleportPlayerToCell(GetPlayerCell());
         }
     }
-
-}
