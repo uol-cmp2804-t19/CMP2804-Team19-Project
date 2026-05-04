@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -101,18 +102,61 @@ public class LevelSelectManager : MonoBehaviour {
         // load levels, set buttons, update metric display to initial option
         populateLevelsFromDisk();
         buildLevelSelectButtons();
-        updateLevelInfo();
+        if (getIfInitialLevel() == true)
+        {
+            updateLevelInfo();
+        }
         // set the menu active, //TODO can't confirm syntax here test in unity
         gameObject.SetActive(true);
     }
 
-    //TODO whenever button 
+    private bool getIfInitialLevel()
+    {
+        if (all_levels.Length > 0) {
+            active_level_selected = (LevelData)all_levels[0];
+
+            // for confidence
+            level_info_score.SetActive(true);
+            level_info_queue.SetActive(true);
+            level_info_time.SetActive(true);
+
+            return true;
+        }
+        else
+        {
+            Debug.LogError("No levels loaded cannot set level info, disabling levelInfo!");
+            level_info_score.SetActive(false);
+            level_info_queue.SetActive(false);
+            level_info_time.SetActive(false);
+
+            return false;
+        }
+    }
+
     public void updateLevelInfo() {
-        //TODO update level info panel with metrics from active_level_selected
-        //TODO convert ticks to time format for display
+
+        if (active_level_selected.levelName == "")
+        {
+            Debug.LogError("Active level not set cannot update info!");
+            return;
+        }
+
+        if (level_info_queue == null ||
+            level_info_score == null ||
+            level_info_time == null)
+        {
+            Debug.LogError("Refs not set for UpdateLevelInfo;" +
+                " queue (" + level_info_queue + "), " +
+                " score (" + level_info_score + "), " +
+                " time (" + level_info_time + ")."
+                );
+            return;
+        }
+
         if (level_info_score != null) { level_info_score.GetComponent<Text>().text = "Best Score: " + active_level_selected.bestScore.ToString(); }
         if (level_info_time != null) { level_info_time.GetComponent<Text>().text = "Best Time: " + active_level_selected.bestTime.ToString("F2") + "s"; }
         if (level_info_queue != null) { level_info_queue.GetComponent<Text>().text = "Best Queue Size: " + active_level_selected.bestQueueSize.ToString(); }
+        
     }
 
     //TODO move to Config or utility? any library to support this?
@@ -147,14 +191,20 @@ public class LevelSelectManager : MonoBehaviour {
                 // clone the debug button as child of button container
                 GameObject button = Instantiate(level_button_prefab, level_button_container.transform);
 
+                Debug.Log("attempting to set buttons for " + levelData.levelName);
+
                 // confirm structure, edit this code if changes are made
-                Text buttonText = button.GetComponentInChildren<Text>();
                 Button buttonComponent = button.GetComponent<Button>();
+                TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>(true);
                 
                 if (buttonText == null || buttonComponent == null)
                 {
-                    Debug.LogError("Level button prefab is missing Text and/or Button component.");
-                    Destroy(button);
+                    Debug.LogError("Level button prefab is missing Text and/or Button component;"
+                        + " LevelButtonObject = " + button + " "
+                        + " LevelButtonComponent = " + buttonComponent + " "
+                        + " LevelButtonText = " + buttonText
+                        );
+                        //Destroy(button);
                     continue;
                 }
 
@@ -164,6 +214,8 @@ public class LevelSelectManager : MonoBehaviour {
                     active_level_selected = levelData;
                     updateLevelInfo();
                 });
+
+                Debug.Log("I have added " + buttonComponent + " to " + buttonComponent.transform.parent.name);
                 
                 // debug button is set inactive, toggle
                 button.SetActive(true);
