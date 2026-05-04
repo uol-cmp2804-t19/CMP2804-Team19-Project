@@ -94,14 +94,12 @@ public class LevelSelectManager : MonoBehaviour {
         gameObject.SetActive(true);
     }
 
-    //TODO whenever button 
     private void updateLevelInfo() {
         if (level_info_score != null) { level_info_score.GetComponent<Text>().text = "Best Score: " + active_level_selected.bestScore.ToString(); }
         if (level_info_time != null) { level_info_time.GetComponent<Text>().text = "Best Time: " + active_level_selected.bestTime.ToString("F2") + "s"; }
         if (level_info_queue != null) { level_info_queue.GetComponent<Text>().text = "Best Queue Size: " + active_level_selected.bestQueueSize.ToString(); }
     }
 
-    //TODO move to Config or utility? any library to support this?
     //convert game ticks for level record to HH:MM:SS
     private string convertToTimeStamp(float ticks)
     {

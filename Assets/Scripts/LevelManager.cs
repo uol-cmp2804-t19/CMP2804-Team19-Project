@@ -403,8 +403,6 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
         {
             // Immediately lock player to their current grid cell
             // WARNING - this has no validation for cell existing
-            // TODO add logic to find nearest valid cell instead
-            // TODO this is temporary because player is offset from editor positioning
             TeleportPlayerToCell(GetPlayerCell());
         }
     }
