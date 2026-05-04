@@ -144,16 +144,12 @@ public class CodeBlockUI : MonoBehaviour
         }
     }
 
-    // not yet implemented, need to confirm CBUI update & integration with @Masa before integrating with world
+    /// <summary>
+    /// calls CBLogic Perform Actions
+    /// </summary>
     private void ExecuteQueue()
     {
-        Debug.Log("This button runs the code blocks but this isn't implemented yet!");
-
-        foreach (CBLogic.CBActionTypes action in actionQueue)
-        {
-            Debug.Log("actiontype "+action+" was called");
-            codeBlockLogic.CBAction(action);
-        }
+        codeBlockLogic.PerformActions(actionQueue);
     }
 
     // create button object & set fixed size
