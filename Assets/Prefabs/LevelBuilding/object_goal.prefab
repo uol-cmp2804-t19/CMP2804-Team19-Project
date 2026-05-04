@@ -210,10 +210,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4488100705847621545}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8100184587a6da943a9afbadeb129a98, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a7ef93ef783cf94f8df0d3c57aaf85c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   owning_level: {fileID: 0}
+  GameManager: {fileID: 0}
 --- !u!95 &6589291038767059003
 Animator:
   serializedVersion: 7

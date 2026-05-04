@@ -84,7 +84,7 @@ public class CBLogic : MonoBehaviour
     /// Gets the actions to be performed, converts them to a in code output and sends to CBAction
     /// When adding a new action needs to be updated here.
     /// </summary>
-    public void PerformActions()
+    public void PerformActions(List<CBActionTypes> actions)
     {
         if (isExecutingQueue)
         {
@@ -93,8 +93,6 @@ public class CBLogic : MonoBehaviour
         }
 
         Debug.Log("CBLogic: PerformActions called");
-
-        List<CBActionTypes> actions = GetActions();
 
         if (actions.Count == 0)
         {
@@ -132,10 +130,6 @@ public class CBLogic : MonoBehaviour
                     Debug.Log("CBLogic performed the 'jump' action");
                     CBAction(CBActionTypes.JUMP);
                     break;
-
-                case CBActionTypes.NONE:
-                    break;
-
                 default:
                     Debug.LogError("CBLogic: Failed to identify action: " + action);
                     break;
