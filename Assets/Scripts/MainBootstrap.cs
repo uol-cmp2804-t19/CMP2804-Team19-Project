@@ -43,7 +43,7 @@ public class main_bootstrap : MonoBehaviour
     {
         if (level_instance != null)
         {
-            LevelMapManager levelManager = level_instance.GetComponent<LevelMapManager>();
+            LevelMapManager levelManager = level_instance.GetComponentInChildren<LevelMapManager>(true);
             if (levelManager != null)
             {
                 return levelManager;
