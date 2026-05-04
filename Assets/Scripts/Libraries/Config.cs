@@ -22,7 +22,6 @@ using Newtonsoft.Json;
 ///   FileIO.WriteFile("config.json", json);
 /// </summary>
 
-// TODO is configData saved on crash/force exit? saving at intervals may be necessary to prevent loss
 namespace Config
 {
     public class ConfigData
@@ -32,10 +31,6 @@ namespace Config
         //  - level name/best time in ticks
         //  - level name/best score
         //  - level name/best actions (total blocks in queue to complete level)
- 
-        //TODO implement game recording level time & score on level completion, feeding back to completion screen/config
-        //TODO make sure levels have a key for config (use prefab filename?) to indicate completion
-        //TODO may need to have a levelData class to track with level select, or use configData?
         public Dictionary<string, float> LevelBestTimes = new Dictionary<string, float>();
         public Dictionary<string, int> LevelBestScores = new Dictionary<string, int>();
         public Dictionary<string, int> LevelBestActions = new Dictionary<string, int>();

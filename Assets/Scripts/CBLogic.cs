@@ -25,7 +25,6 @@ public class CBLogic : MonoBehaviour
     /// Used in CBAction to determine what action to perform
     /// When adding a new action it needs to be specified here.
     /// </summary>
-    //TODO - add a wait action, interact, pickup/drop
     //Move to CBClass? Add a getString/printer method there? Why are we using strings?
     public enum CBActionTypes
     {
@@ -154,7 +153,6 @@ public class CBLogic : MonoBehaviour
     /// <returns>
     /// the list of actions to be performed
     /// </returns>
-    //TODO - can the string approach be removed/return enum?
     List<CBActionTypes> GetActions()
     {
         List<CBActionTypes> actionList = new List<CBActionTypes>();
@@ -213,19 +211,15 @@ public class CBLogic : MonoBehaviour
         switch (CBActionType)
         {
             case CBActionTypes.MOVE:
-                //TODO implement this function
                 activePlayer.MovePlayerByFacing();
                 break;
             case CBActionTypes.TURNLEFT:
-                //TODO implement this function (arg is false as .x is -1 for left)
                 activePlayer.TurnPlayer(false);
                 break;
             case CBActionTypes.TURNRIGHT:
-                //TODO implement this function (arg is true as .x is +1 for right)
                 activePlayer.TurnPlayer(true);
                 break;
             case CBActionTypes.JUMP:
-                //TODO implement this function
                 activePlayer.JumpPlayerByFacing();
                 break;
             default:

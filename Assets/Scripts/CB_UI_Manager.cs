@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class CodeBlockUI : MonoBehaviour
 {
-    //TODO fixed size for queue button, may not scale well with UI, to be re-evaluated
     public Vector2 queueButtonSize = new Vector2(100, 50);
 
     // refernece to LevelMapManager for updating block queue count
@@ -83,8 +82,6 @@ public class CodeBlockUI : MonoBehaviour
     }
 
 
-    // performance concerns should be minimal due to limited process competition in the game loop,
-    // however, (//TODO) it may be worthwhile to introduce a click delay to the button
     private void UpdateQueueDisplay()
     {
         // update the block queue size on level manager
@@ -119,8 +116,7 @@ public class CodeBlockUI : MonoBehaviour
     {
         if (actionQueue.Count >= softMaxQueueSize && actionQueue.Count >= maxQueueSize)
         {
-            //TODO - add user feedback for trying to add blocks when queue is full
-            Debug.LogWarning("Queue full! TODO - add user feedback!");
+            Debug.LogWarning("Queue full!");
             return;
         }
         actionQueue.Add(actionType);
@@ -155,14 +151,8 @@ public class CodeBlockUI : MonoBehaviour
     }
 
     // create button object & set fixed size
-    //TODO would this be easier with a prefab instantation and property update rather than manually building in code?
     private Button CreateBlockButton(string label, Transform parent)
     {
-        /*
-         TODO
-        CreateBlockButton parent setting can produce incorrect local scale/anchoring under UI layout groups.
-        Use SetParent(parent, false) so RectTransform local values are preserved.
-         */
         GameObject buttonObj;
         Debug.LogError("Action Label: " + label);
         switch (label)

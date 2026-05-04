@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour
     {
         if (level == null)
         {
-            //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
             return new Vector3Int(0, 0, 0);
         }
@@ -67,15 +66,12 @@ public class PlayerController : MonoBehaviour
     {
         if (level == null)
         {
-            //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
             return;
         }
         
         // player zLevel only updated if jump is successful or during jump
         MovePlayerByFacing(isJump: true);
-        //TODO add return to confirm if animation needed, or call player animation method from grid
-        //TODO (add animation trigger for jump during the movement)
     }
 
     /// <summary>
@@ -85,7 +81,6 @@ public class PlayerController : MonoBehaviour
     {
         if (level == null)
         {
-            //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
             return;
         }
@@ -109,7 +104,6 @@ public class PlayerController : MonoBehaviour
         level.MovePlayerOnGrid(new Vector3(dir.x, dir.y, z_change));
     }
 
-    //TODO move to playerAudioController?
     public void PlayWalkSound()
     {
         if (sound_walk != null)
@@ -227,7 +221,6 @@ public class PlayerController : MonoBehaviour
         }
 
         // testing behaviour only
-        // TODO remove
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
         Vector2 dir = new Vector2(x, y);
