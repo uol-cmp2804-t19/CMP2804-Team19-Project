@@ -859,7 +859,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &5652337600587861433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,6 +890,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   queueButtonSize: {x: 100, y: 50}
+  levelManager: {fileID: 0}
   buttonToggleInterface: {fileID: 6540260639603552871}
   mainInterfacePanel: {fileID: 5543569768395388936}
   paletteContainer: {fileID: 343548177049691894}

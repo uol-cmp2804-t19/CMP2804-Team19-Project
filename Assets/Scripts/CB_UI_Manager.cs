@@ -29,6 +29,9 @@ public class CodeBlockUI : MonoBehaviour
     private int maxQueueSize = 60; // visual limit to prevent overflow
     public int softMaxQueueSize = 60;
 
+    // holds the compiled console logs from block execution
+    private string consoleStr = "";
+
     private void Awake()
     {
         // disable interface before shown, does not default to open
@@ -150,6 +153,32 @@ public class CodeBlockUI : MonoBehaviour
     private void ExecuteQueue()
     {
         codeBlockLogic.PerformActions(actionQueue);
+    }
+
+    /// <summary>
+    /// Connects to logging on block execution
+    /// </summary>
+    public void UpdateConsole(string newStr)
+    {
+        if (consoleStr == "")
+        {
+            consoleStr = newStr;
+        }
+        else
+        {
+            consoleStr += ", " + newStr;
+        }
+        
+        // Optional visual debug for confirmation while working on true UI text updates
+        // Debug.Log("Execution Console Updated: " + consoleStr);
+    }
+
+    /// <summary>
+    /// Wipes the console logs. Generally on a new execution string starts
+    /// </summary>
+    public void ClearConsole()
+    {
+        consoleStr = "";
     }
 
     // create button object & set fixed size

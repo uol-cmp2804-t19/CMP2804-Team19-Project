@@ -40,6 +40,8 @@ public class CBLogic : MonoBehaviour
 
     // assign through bootstrap/gamecontroller on load
     public PlayerController activePlayer = null;
+    public CodeBlockUI cbUI = null;
+    
     // Time control for block queue execution
     [SerializeField] private float actionDelay = 0.5f;
     private bool isExecutingQueue = false;
@@ -70,6 +72,10 @@ public class CBLogic : MonoBehaviour
         }
         else { Debug.Log("Active Player Manually Assigned to CBLogic."); }
 
+        if (cbUI == null)
+        {
+            cbUI = UnityEngine.Object.FindAnyObjectByType<CodeBlockUI>();
+        }
     }
 
     // Update is called once per frame
@@ -99,6 +105,8 @@ public class CBLogic : MonoBehaviour
             Debug.LogWarning("CBLogic: No actions found in queue.");
             return;
         }
+
+        if (cbUI != null) cbUI.ClearConsole();
 
         StartCoroutine(ExecuteActionsWithDelay(actions));
     }
@@ -209,18 +217,22 @@ public class CBLogic : MonoBehaviour
             case CBActionTypes.MOVE:
                 //TODO implement this function
                 activePlayer.MovePlayerByFacing();
+                if (cbUI != null) cbUI.UpdateConsole("MOVE");
                 break;
             case CBActionTypes.TURNLEFT:
                 //TODO implement this function (arg is false as .x is -1 for left)
                 activePlayer.TurnPlayer(false);
+                if (cbUI != null) cbUI.UpdateConsole("TURN LEFT");
                 break;
             case CBActionTypes.TURNRIGHT:
                 //TODO implement this function (arg is true as .x is +1 for right)
                 activePlayer.TurnPlayer(true);
+                if (cbUI != null) cbUI.UpdateConsole("TURN RIGHT");
                 break;
             case CBActionTypes.JUMP:
                 //TODO implement this function
                 activePlayer.JumpPlayerByFacing();
+                if (cbUI != null) cbUI.UpdateConsole("JUMP");
                 break;
             default:
                 Debug.LogError("Something went wrong in CBAction in Game Controller - CBLogic.");
