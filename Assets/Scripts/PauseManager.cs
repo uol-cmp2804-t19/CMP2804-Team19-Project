@@ -46,7 +46,6 @@ public class PauseManager : MonoBehaviour
 	public void LoadMainMenu()
 	{
 		Time.timeScale = 1f;
-		Debug.Log("TODO - You need to revert to main menu by pressing this, tell GameLoader to unload active level etc.");
 		//SceneManager.LoadScene("MainMenu");
 	}
     public void OpenSettings()
