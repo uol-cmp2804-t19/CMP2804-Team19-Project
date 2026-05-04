@@ -172,7 +172,7 @@ PrefabInstance:
     - target: {fileID: 1366739347633409303, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: ActivePlayer
       value: 
-      objectReference: {fileID: 671488706}
+      objectReference: {fileID: 0}
     - target: {fileID: 1366739347633409303, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: activePlayer
       value: 
@@ -276,7 +276,7 @@ PrefabInstance:
     - target: {fileID: 8552355718556627009, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: PlayerCharacter
       value: 
-      objectReference: {fileID: 218210244}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 630090318993586437, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
@@ -2414,11 +2414,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!4 &671488710 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8740150183880199152, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
-  m_PrefabInstance: {fileID: 671488704}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &822137879 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7350699385373622223, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
@@ -3137,7 +3132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 219309f068718684ba0098a74ab51f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 671488710}
+  target: {fileID: 0}
 --- !u!114 &1581251976
 MonoBehaviour:
   m_ObjectHideFlags: 0
