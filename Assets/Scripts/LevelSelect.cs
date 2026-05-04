@@ -39,7 +39,7 @@ public class LevelSelectManager : MonoBehaviour {
     // button list is loaded when menu is opened, performance not a concern as this doesn't happen frequently
     struct LevelData
     {
-        // for loading level_instance in main_bootstrap, add to scene and set inactive then pass ref to main
+        // for loading level_instance, add to scene and set inactive then pass ref to bootstrap_scene
         public string resourcePath;
         // name displays on button, other metrics on info panel (time stored as processed ticks, needs to be converted for display)
         public string levelName;
@@ -48,8 +48,8 @@ public class LevelSelectManager : MonoBehaviour {
         public int bestQueueSize;
     }
 
-    // bootstrap is the main game scene controller handling prefab loading
-    public main_bootstrap main = null;
+    // bootstrap is the scene controller handling prefab loading
+    public GameObject bootstrap_scene = null;
 
     // following references must be set in editor
     // -    container is the left-most field container buttons
@@ -218,19 +218,19 @@ public class LevelSelectManager : MonoBehaviour {
         }
         // else
         // pass the file path of the chosen level
-        if (main == null)
+        if (bootstrap_scene == null)
         {
-            Debug.LogError("LevelSelectManager: main bootstrap reference not set.");
+            Debug.LogError("LevelSelectManager: bootstrap_scene reference not set.");
             return;
         }
-        main.LoadLevel(active_level_selected.resourcePath);
+        bootstrap_scene.LoadLevel(active_level_selected.resourcePath);
         closeMenu();
     }
 
     // connect exit button to this
     // levelSelect is not part of game state it is a submenu of title menu, so it controls own state to avoid confusion
     public void onExitButtonPressed() {
-        main.ChangeGameState_TitleMenu();
+        bootstrap_scene.ChangeGameState_TitleMenu();
         closeMenu();
     }
 
