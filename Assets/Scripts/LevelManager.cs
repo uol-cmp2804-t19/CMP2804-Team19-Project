@@ -20,8 +20,15 @@ public class LevelMapManager : MonoBehaviour {
     public LevelLayer activeLayer = null;
     public PlayerController player = null;
 
+    public bool is_level_active = false;
+
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
-    int levelScore = 0;
+    
+    // metrics fed back to configData
+    public string levelName = "undefined_level";
+    public int levelScore = 0;
+    public float levelTimeSeconds = 0f;
+    public int blockQueueSize = 0;
 
     /// <summary>
     /// Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -33,15 +40,33 @@ public class LevelMapManager : MonoBehaviour {
         _setupPlayerOnMap();
     }
 
+    void Update() {
+        if (is_level_active) {
+            levelTimeSeconds += Time.deltaTime; // seconds
+        }
+    }
+
+    public void ActivateLevel() {
+        is_level_active = true;
+        gameObject.SetActive(true);
+        Debug.Log("New level activated: " + levelName);
+    }
+
     public void AddScore(int score_change)
     {
         levelScore += score_change;
     }
 
+    public void SetBlockQueueSize(int newSize)
+    {
+        blockQueueSize = newSize;
+    }
+
     /// <summary>
     /// Changes the active map layer to the one corresponding to the given z-level, if it exists in the register
-    /// TODO - this should be called with jump before movePlayerInDirection, as player z-level is not automatically updated by that function
+    /// Called during player jump behaviour
     /// </summary>
+    //TODO changeActiveMap should only change the layer? switch to private include in movement validation method?
     public void changeActiveMap(int newZLevel)
     {
         if (!mapLayerRegister.ContainsKey(newZLevel))
@@ -56,6 +81,13 @@ public class LevelMapManager : MonoBehaviour {
             LevelLayer newLayer = mapLayerRegister[newZLevel];
             activeLayer = newLayer;
         }
+        
+
+    }
+     public void DeactivateLevel() {
+        is_level_active = false;
+        gameObject.SetActive(false);
+        Debug.Log("Level deactivated! (" + levelName + ")");
     }
 
     // doesn't rely on cell existing in layer
@@ -84,40 +116,102 @@ public class LevelMapManager : MonoBehaviour {
     /// <returns>
     /// True if the move is valid, false otherwise
     /// </returns>
-    public bool isValidMove(Vector3Int cellPosition)
+    public bool hasTileAtCell(Vector3Int cellPosition)
+{
+    if (player == null)
     {
-        if (player == null)
+        Debug.Log("You forgot to assign a player and/or map!");
+        return false;
+    }
+
+    // x/y for tilemap lookup, z is nil because not storing z layer by tilemap
+    Vector3Int tileCell = new Vector3Int(cellPosition.x, cellPosition.y, 0);
+
+    if (mapLayerRegister.ContainsKey(cellPosition.z))
+    {
+        if (mapLayerRegister[cellPosition.z].tilemap.HasTile(tileCell))
         {
-            //TODO add error handling
-            Debug.Log("You forgot to assign a player and/or map!");
-            return false;
-        }
-        // check if tile exists on current layer
-        // if jumping layer should be updated first (call before movePlayerInDirection) so player z-level is correct for this check
-        if (mapLayerRegister.ContainsKey(cellPosition.z)) {
-            LevelLayer checkLayer = mapLayerRegister[cellPosition.z];
-            if (checkLayer.tilemap.HasTile(cellPosition)) {
-                // tile exists, now check if we're blocked by higher layers
-                // check all layers in MapLayerRegister with higher z-levels than the target cell for a tile at the same x,y position, if any exist then move is invalid
-                foreach (var (key, value) in mapLayerRegister) {
-                    if (key > cellPosition.z) {
-                        if (value.tilemap.HasTile(cellPosition)) {
-                            Debug.Log("Move blocked by tile on higher layer " + value.name + " at z-level " + key);
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            Debug.Log("No map layer registered for z-level " + player.zLevel);
-            return false;
+            return true;
         }
     }
+
+    // else
+    Debug.Log("No tile found at cell " + tileCell + " on z-level " + cellPosition.z);
+    return false;
+}
+
+// confirm is movement is blocked by cell on higher layer
+public bool isBlockedByElevation(Vector3Int cellPosition) {
+    if (player == null)
+    {
+        Debug.Log("You forgot to assign a player and/or map!");
+        return true;
+    }
+
+    // x/y for tilemap lookup, z is nil because not storing z layer by tilemap
+    Vector3Int tileCell = new Vector3Int(cellPosition.x, cellPosition.y, 0);
+
+    // blocked if any layer ABOVE intended z has a tile at target x/y
+    foreach (var (key, value) in mapLayerRegister)
+    {
+        if (key > cellPosition.z)
+        {
+            if (value.tilemap.HasTile(tileCell))
+            {
+                // TODO remove all the temporary move logs and spammy stuff in gameplay or at least made dev option toggleable
+                Debug.Log("Move blocked by tile on higher layer " + value.name + " at z-level " + key);
+                return true;
+            }
+        }
+    }
+
+    // else
+    return false;
+}
+
+public int getHighestValidLayer(Vector3Int cellPosition) {
+    // find highest tile at or below intended z
+    int highestLayer = -1;
+
+    // start at highest layer work down, if above the target layer then ignore it
+    // call hasTileAtCell on each layer, then get highest existing
+    // once highest existing found at or below target layer, check if anything higher with isBlockedByElevation
+    // If not then return that layer as valid move, if so return -1 (invalid move)
+
+    foreach (var (key, value) in mapLayerRegister)
+    {
+        if (key > cellPosition.z)
+        {
+            continue;
+        }
+        else
+        {
+            if (hasTileAtCell(new Vector3Int(cellPosition.x, cellPosition.y, key)) && key > highestLayer)
+            {
+                highestLayer = key;
+            }
+        }
+    }
+
+    if (highestLayer == -1)
+    {
+        Debug.Log("No valid layers found at or below target layer " + cellPosition.z + " for cell " + cellPosition);
+        return -1;
+    }
+    else
+    {
+        if (isBlockedByElevation(new Vector3Int(cellPosition.x, cellPosition.y, highestLayer)))
+        {
+            Debug.Log("Move blocked by tile on higher layer at z-level " + cellPosition.z);
+            return -1;
+        }
+        else
+        {
+            return highestLayer;
+        }
+    }
+
+}
 
     /// <summary>
     /// Moves the player in the specified direction.
@@ -125,9 +219,21 @@ public class LevelMapManager : MonoBehaviour {
     /// </summary>
     /// <param name="direction">
     /// The direction to move the player, where (0, 1) is up, (0, -1) is down, (-1, 0) is left, and (1, 0) is right. Handled by facing logic.
-    /// </param>    
-    public void MovePlayerInDirection(Vector2 direction)
+    /// </param>
+    public void MovePlayerOnGrid(Vector3Int position_change)
     {
+        // 'position_change' was 'direction', now represents 3d change in cell, z is 0 if walking or 1 if jumping
+
+        // BEHAVIOUR
+        // Check player/layer valid
+        // Get target cell from player cell
+        // note - Check if tile exists behaviour currently in 'teleport to cell' func but should be moved out
+        // FLOW FOR VALIDITY
+        // if new z == current z, is valid if tile exists on z level or at lower level & no tile exists on higher levels
+        // if new z > current z, is valid if tile exists on higher z level, current z level, lower z level... & no tile exists on higher than new z levels
+        // this is effectively the same
+        // just get the highest valid layer, move there, update player z level
+        
         if (player == null || activeLayer == null)
         {
             //TODO add error handling
@@ -139,23 +245,78 @@ public class LevelMapManager : MonoBehaviour {
             //TODO - currently player can move diagonally, this will not be possible with coding block calls - does it need to be captured here?
             // add nil z because not updating zLayer here
             Vector3Int targetCell = GetPlayerCell() + new Vector3Int(
-                Mathf.RoundToInt(direction.x),
-                Mathf.RoundToInt(direction.y),
-                0
+                Mathf.RoundToInt(position_change.x),
+                Mathf.RoundToInt(position_change.y),
+                Mathf.RoundToInt(position_change.z)
             );
-            // temporary teleport/snapping behaviour, to animate gradually eventually
-            TeleportPlayerToCell(targetCell);
+
+            //TODO remove testing checks in teleportPlayerToCell, logic now called beforehand
+            int targetLayer = getHighestValidLayer(targetCell);
+            if (targetLayer == -1) {
+                Debug.Log("No valid target layer found for move to cell " + targetCell);
+                return;
+            }
+            else
+            {
+                player.zLevel = targetLayer;
+                changeActiveMap(player.zLevel);
+                // temporary teleport/snapping behaviour, to animate gradually eventually
+                TeleportPlayerToCell(new Vector3Int(targetCell.x, targetCell.y, player.zLevel));
+            }
         }
     }
 
-    // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
-    void OnDrawGizmos() {
-        // silently fail, debug handling only
-        if (player == null || activeLayer == null || activeLayer.tilemap == null) return;
-        Vector3Int cell = activeLayer.tilemap.WorldToCell(player.transform.position);
-        Vector3 center = activeLayer.tilemap.GetCellCenterWorld(cell);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(center, activeLayer.tilemap.cellSize);
+    // disabled for release build
+    // // draw a red square around the player current cell, for debugging purposes - will appear in origin position until player first move
+    // void OnDrawGizmos() {
+    //     // silently fail, debug handling only
+    //     if (player == null || activeLayer == null || activeLayer.tilemap == null) return;
+    //     Vector3Int cell = activeLayer.tilemap.WorldToCell(player.transform.position);
+    //     Vector3 center = activeLayer.tilemap.GetCellCenterWorld(cell);
+    //     Gizmos.color = Color.red;
+    //     Gizmos.DrawWireCube(center, activeLayer.tilemap.cellSize);
+    // }
+
+    public void saveLevelMetricsToConfig() {
+        if (GameManager.Main.Config == null) {
+            Debug.Log("No config data found to save level metrics to!");
+            return;
+        }
+
+        //TODO implement saving level metrics to configData on level completion, called from completion screen
+
+        // overwrite level name in configData as complete
+        GameManager.Main.Config.LevelsCompleted[levelName] = true;
+        
+        // overwrite level best time if new time is better or no existing time
+        if (GameManager.Main.Config.LevelBestTimes.ContainsKey(levelName)) {
+            float recorded_best_time = GameManager.Main.Config.LevelBestTimes[levelName];
+            if (levelTimeSeconds < recorded_best_time || recorded_best_time == 0) {
+                GameManager.Main.Config.LevelBestTimes[levelName] = levelTimeSeconds;
+            }
+        } else {
+            GameManager.Main.Config.LevelBestTimes[levelName] = levelTimeSeconds;
+        }
+
+        // overwrite level best score if new score is better or no existing score
+        if (GameManager.Main.Config.LevelBestScores.ContainsKey(levelName)) {
+            int recorded_best_score = GameManager.Main.Config.LevelBestScores[levelName];
+            if (levelScore > recorded_best_score || recorded_best_score == 0) {
+                GameManager.Main.Config.LevelBestScores[levelName] = levelScore;
+            }
+        } else {
+            GameManager.Main.Config.LevelBestScores[levelName] = levelScore;
+        }
+
+        // overwrite level best actions if new action count is better or no existing action count
+        if (GameManager.Main.Config.LevelBestActions.ContainsKey(levelName)) {
+            int recorded_best_blocks = GameManager.Main.Config.LevelBestActions[levelName];
+            if (blockQueueSize < recorded_best_blocks || recorded_best_blocks == 0) {
+                GameManager.Main.Config.LevelBestActions[levelName] = blockQueueSize;
+            }
+        } else {
+            GameManager.Main.Config.LevelBestActions[levelName] = blockQueueSize;
+        }
     }
 
     //TODO this is duplicated by playerController, one or the other needs to own this
@@ -170,11 +331,12 @@ public class LevelMapManager : MonoBehaviour {
             return;
         }
 
-        if (!isValidMove(targetCell))
-        {
-            Debug.Log("Invalid move attempted to cell " + targetCell + " on z-level " + targetCell.z);
-            return;
-        }
+        // validation moved outside this function
+        // if (!isValidMove(targetCell) && !overrideChecks)
+        // {
+        //     Debug.Log("Invalid move attempted to cell " + targetCell + " on z-level " + targetCell.z);
+        //     return;
+        // }
 
         // snap to grid
         player.transform.position =
@@ -182,7 +344,7 @@ public class LevelMapManager : MonoBehaviour {
         );
         //player.transform.position = activeLayer.tilemap.GetCellCenterWorld(targetCell);
         // move player to center of tile
-        player.transform.position = activeLayer.tilemap.CellToWorld(targetCell) + activeLayer.tilemap.cellSize / 2f;
+        player.transform.position = activeLayer.tilemap.CellToWorld(new Vector3Int(targetCell.x, targetCell.y, 0)) + activeLayer.tilemap.cellSize / 2f;
         Debug.Log("on map");
         player.PlayWalkSound();
 
@@ -267,6 +429,8 @@ public class LevelMapManager : MonoBehaviour {
         else
         {
             // Immediately lock player to their current grid cell
+            // WARNING - this has no validation for cell existing
+            // TODO add logic to find nearest valid cell instead
             // TODO this is temporary because player is offset from editor positioning
             TeleportPlayerToCell(GetPlayerCell());
         }
