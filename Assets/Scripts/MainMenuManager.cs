@@ -7,13 +7,23 @@ public class MainMenuManager : MonoBehaviour
 	public GameObject settingsPanel;
 	public int totalLevels;
 
-	public void OpenSettings()
+
+    public GameObject levelSelectPrefab;
+	private LevelSelectManager levelSelectScript;
+
+    private void Start()
+    {
+        GetLevelSelectComponent();
+    }
+
+    public void OpenSettings()
 	{
 		if (settingsPanel == null)
 		{
 			Debug.Log("settings menu not assigned in inspector!");
 			return;
 		}
+
         Debug.Log("Opening settings menu");
         settingsPanel.SetActive(true);
         //GameManager.Main.current_game_state = GameManager.GAME_STATE.SETTINGS_MENU_FROM_TITLE;
@@ -29,6 +39,17 @@ public class MainMenuManager : MonoBehaviour
         Debug.Log("Closing settings menu");
         settingsPanel.SetActive(false);
         //GameManager.Main.current_game_state = GameManager.GAME_STATE.TITLE_MENU;
+    }
+    private void GetLevelSelectComponent()
+    {
+        if (levelSelectPrefab != null)
+        {
+            levelSelectScript = levelSelectPrefab.GetComponent<LevelSelectManager>();
+        }
+        else
+        {
+            Debug.Log("levelSelectPrefab not set in editor!");
+        }
     }
 
     // defunct function
@@ -51,8 +72,13 @@ public class MainMenuManager : MonoBehaviour
 
     // play game now level select
     public void PlayGame()
-	{
-		Debug.Log("Implement the start game functionality! Pass to LevelManager tracking last level");
+    {
+        if (levelSelectPrefab != null || levelSelectScript != null)
+        {
+            levelSelectScript.openMenu();
+        }
+
+        //Debug.Log("Implement the start game functionality! Pass to LevelManager tracking last level");
 
 		//to review 'play next level functionality' as looking at just having level select
 		/*
