@@ -102,12 +102,44 @@ public class LevelSelectManager : MonoBehaviour {
         // load levels, set buttons, update metric display to initial option
         populateLevelsFromDisk();
         buildLevelSelectButtons();
-        updateLevelInfo();
+        if (getIfInitialLevel() == true)
+        {
+            updateLevelInfo();
+        }
         // set the menu active, //TODO can't confirm syntax here test in unity
         gameObject.SetActive(true);
     }
 
+    private bool getIfInitialLevel()
+    {
+        if (all_levels.Length > 0) {
+            active_level_selected = (LevelData)all_levels[0];
+
+            // for confidence
+            level_info_score.SetActive(true);
+            level_info_queue.SetActive(true);
+            level_info_time.SetActive(true);
+
+            return true;
+        }
+        else
+        {
+            Debug.LogError("No levels loaded cannot set level info, disabling levelInfo!");
+            level_info_score.SetActive(false);
+            level_info_queue.SetActive(false);
+            level_info_time.SetActive(false);
+
+            return false;
+        }
+    }
+
     public void updateLevelInfo() {
+
+        if (active_level_selected.levelName == "")
+        {
+            Debug.LogError("Active level not set cannot update info!");
+            return;
+        }
 
         if (level_info_queue == null ||
             level_info_score == null ||
@@ -121,15 +153,10 @@ public class LevelSelectManager : MonoBehaviour {
             return;
         }
 
-        //TODO re-enable
-
-        /*
-        //TODO update level info panel with metrics from active_level_selected
-        //TODO convert ticks to time format for display
         if (level_info_score != null) { level_info_score.GetComponent<Text>().text = "Best Score: " + active_level_selected.bestScore.ToString(); }
         if (level_info_time != null) { level_info_time.GetComponent<Text>().text = "Best Time: " + active_level_selected.bestTime.ToString("F2") + "s"; }
         if (level_info_queue != null) { level_info_queue.GetComponent<Text>().text = "Best Queue Size: " + active_level_selected.bestQueueSize.ToString(); }
-        */
+        
     }
 
     //TODO move to Config or utility? any library to support this?
