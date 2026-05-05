@@ -2,6 +2,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+//TODO
+// this work split of front-end and back-end is a different approach to rest of project
+// should be reviewed for effectiveness in sprint reviews
+
 /// <summary>
 /// Public Methods
 /// onStartButtonPressed() - for start button, tells bootstrap to load level from resource path
@@ -69,6 +73,7 @@ public class LevelSelectManager : MonoBehaviour {
 
     // this is the level most recently clicked, should default to topmost or null if no levels exist (error)
     // is changed when the respective level button is clicked
+    // instantiates as blank - //TODO add validation for blank path
     LevelData active_level_selected = new LevelData
     {
         resourcePath = "",
@@ -154,7 +159,9 @@ public class LevelSelectManager : MonoBehaviour {
         
     }
 
+    //TODO move to Config or utility? any library to support this?
     //convert game ticks for level record to HH:MM:SS
+    //TODO show level timer
     private string convertToTimeStamp(float ticks)
     {
         int seconds = (int)(ticks % 60);
@@ -172,6 +179,7 @@ public class LevelSelectManager : MonoBehaviour {
     private void buildLevelSelectButtons()
     {
         // create buttons with listeners for each level, duplicating from the prefab
+        // TODO (adjust for button structure when known)
         if (level_button_container == null || level_button_prefab == null)
         {
             Debug.LogError("LevelSelectManager: level button container and/or prefab not set in inspector!");
@@ -227,11 +235,13 @@ public class LevelSelectManager : MonoBehaviour {
     }
 
     // levels currently exist in ./Assets/Prefabs/GameLevels/
+    // TODO the editor path doesn't exist at runtime -- move to Assets/Resources/GameLevels/
     private void populateLevelsFromDisk()
     {
         // make sure starting from clear slate
         all_levels = new LevelData[0];
         // build array of level data
+        // TODO confirm this does not load debug level prefab and folder empty of other prefabs
         GameObject[] levelPrefabs = Resources.LoadAll<GameObject>("GameLevels");
 
         for (int i = 0; i < levelPrefabs.Length; i++)
@@ -244,8 +254,11 @@ public class LevelSelectManager : MonoBehaviour {
             int bestScore = GameManager.Main.Config.LevelBestScores.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestScores[prefabName] : 0;
             int bestQueueSize = GameManager.Main.Config.LevelBestActions.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestActions[prefabName] : 0;
             // when level is played and exited it will resave to config
+
+            //TODO load metrics from config and add to level data struct
             LevelData levelData = new LevelData
             {
+                //TODO confirm this path works at runtime to pass to level_instance
                 resourcePath = "GameLevels/" + prefabName,
                 levelName = prefabName,
                 bestScore = bestScore,
@@ -302,6 +315,7 @@ public class LevelSelectManager : MonoBehaviour {
     private void closeMenu()
     {
         clearLevels();
+        // set the menu inactive, //TODO can't confirm syntax here test in unity
         gameObject.SetActive(false);
     }
 

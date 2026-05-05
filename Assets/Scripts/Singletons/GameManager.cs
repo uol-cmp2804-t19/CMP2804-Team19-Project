@@ -15,6 +15,9 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
+    //TODO track game state
+    //public enum GAME_STATE { INITIAL, TITLE_MENU, PAUSE_MENU, SETTINGS_MENU_FROM_TITLE, SETTINGS_MENU_FROM_PAUSE, GAME_ACTIVE}
+    
     // removed extraneous game states to avoid pause/settings state confusion - we only care whether we're at title menu or in active game
     public enum GAME_STATE { INITIAL, TITLE_MENU, GAME_ACTIVE, TRANSITION}
     public GAME_STATE current_game_state = GAME_STATE.INITIAL;

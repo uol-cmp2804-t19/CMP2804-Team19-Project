@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class CodeBlockUI : MonoBehaviour
 {
+    //TODO fixed size for queue button, may not scale well with UI, to be re-evaluated
     public Vector2 queueButtonSize = new Vector2(100, 50);
 
     // refernece to LevelMapManager for updating block queue count
@@ -15,9 +17,10 @@ public class CodeBlockUI : MonoBehaviour
     [SerializeField] private Transform paletteContainer;
     [SerializeField] private Transform queueContainer;
     [SerializeField] private Button buttonPlay;
-    [SerializeField] private  GameObject codeBlockRight;
-    [SerializeField] private GameObject codeBlockLeft;
-    [SerializeField] private GameObject codeBlockMove;
+    public GameObject codeBlock;
+    public Texture2D codeBlockRight;
+    public Texture2D codeBlockLeft;
+    public Texture2D codeBlockMove;
     // find on cb_prefab/GameController
     [SerializeField] private CBLogic codeBlockLogic;
 
@@ -82,6 +85,8 @@ public class CodeBlockUI : MonoBehaviour
     }
 
 
+    // performance concerns should be minimal due to limited process competition in the game loop,
+    // however, (//TODO) it may be worthwhile to introduce a click delay to the button
     private void UpdateQueueDisplay()
     {
         // update the block queue size on level manager
@@ -116,7 +121,8 @@ public class CodeBlockUI : MonoBehaviour
     {
         if (actionQueue.Count >= softMaxQueueSize && actionQueue.Count >= maxQueueSize)
         {
-            Debug.LogWarning("Queue full!");
+            //TODO - add user feedback for trying to add blocks when queue is full
+            Debug.LogWarning("Queue full! TODO - add user feedback!");
             return;
         }
         actionQueue.Add(actionType);
@@ -138,36 +144,38 @@ public class CodeBlockUI : MonoBehaviour
         }
     }
 
-    // not yet implemented, need to confirm CBUI update & integration with @Masa before integrating with world
+    /// <summary>
+    /// calls CBLogic Perform Actions
+    /// </summary>
     private void ExecuteQueue()
     {
-        Debug.Log("This button runs the code blocks but this isn't implemented yet!");
-
-        foreach (CBLogic.CBActionTypes action in actionQueue)
-        {
-            Debug.Log("actiontype "+action+" was called");
-            codeBlockLogic.CBAction(action);
-        }
+        codeBlockLogic.PerformActions(actionQueue);
     }
 
     // create button object & set fixed size
+    //TODO would this be easier with a prefab instantation and property update rather than manually building in code?
     private Button CreateBlockButton(string label, Transform parent)
     {
-        GameObject buttonObj;
-        Debug.LogError("Action Label: " + label);
+        /*
+         TODO
+        CreateBlockButton parent setting can produce incorrect local scale/anchoring under UI layout groups.
+        Use SetParent(parent, false) so RectTransform local values are preserved.
+         */
+        GameObject buttonObj = Instantiate(codeBlock);
+        Sprite buttonImg;
         switch (label)
         {
             case "TURNLEFT":
-                buttonObj = Instantiate(codeBlockLeft);
+                buttonImg = Sprite.Create(codeBlockLeft, new Rect(0.0f, 0.0f, codeBlockLeft.height, codeBlockLeft.width), new Vector2(0.5f, 0.5f), 100.0f);
                 break;
             case "TURNRIGHT":
-                buttonObj = Instantiate(codeBlockRight);
+                buttonImg = Sprite.Create(codeBlockRight, new Rect(0.0f, 0.0f, codeBlockRight.height, codeBlockRight.width), new Vector2(0.5f, 0.5f), 100.0f);
                 break;
             case "MOVE":
-                buttonObj = Instantiate(codeBlockMove);
+                buttonImg = Sprite.Create(codeBlockMove, new Rect(0.0f, 0.0f, codeBlockMove.height, codeBlockMove.width), new Vector2(0.5f, 0.5f), 100.0f);
                 break;
             default:
-                buttonObj = Instantiate(codeBlockMove);
+                buttonImg = Sprite.Create(codeBlockMove, new Rect(0.0f, 0.0f, codeBlockMove.height, codeBlockMove.width), new Vector2(0.5f, 0.5f), 100.0f);
                 break;
         }
 
@@ -181,6 +189,8 @@ public class CodeBlockUI : MonoBehaviour
         Button button = buttonObj.AddComponent<Button>();
         // set hierarchy
         buttonObj.transform.SetParent(parent);
+
+        button_visual.sprite = buttonImg;
 
         // add hover & click colours
         button.transition = Selectable.Transition.ColorTint;

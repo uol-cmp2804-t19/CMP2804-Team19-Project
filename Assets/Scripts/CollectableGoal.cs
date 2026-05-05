@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using LevelObjects;
 
+//TODO need to find the level without being assigned for ease of use by team
 namespace GoalCollectable
 {
 
@@ -20,6 +21,7 @@ namespace GoalCollectable
             {
                 is_collected = true;
                 GameManager.CompleteLevel();
+                //TODO destroy level on return to title?
             }
             else
             {
