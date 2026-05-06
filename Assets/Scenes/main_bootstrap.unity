@@ -145,6 +145,11 @@ Tilemap:
   m_CorrespondingSourceObject: {fileID: 6362772328088779657, guid: e6c6146c0d5038e48bb1f8c85f194990, type: 3}
   m_PrefabInstance: {fileID: 671488704}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &359457548 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2814702436676047659, guid: 2be494d46fb1bd446ab77edad88466f0, type: 3}
+  m_PrefabInstance: {fileID: 558305791}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &408880636
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -705,6 +710,10 @@ PrefabInstance:
       propertyPath: settingsPanel
       value: 
       objectReference: {fileID: 1057180900}
+    - target: {fileID: 3201822418863038239, guid: e6a4cc02c679ef848932033cbd1ce345, type: 3}
+      propertyPath: levelSelectPrefab
+      value: 
+      objectReference: {fileID: 359457548}
     - target: {fileID: 5684350735921124467, guid: e6a4cc02c679ef848932033cbd1ce345, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

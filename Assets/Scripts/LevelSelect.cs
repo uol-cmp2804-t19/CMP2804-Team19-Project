@@ -153,10 +153,20 @@ public class LevelSelectManager : MonoBehaviour {
             return;
         }
 
-        if (level_info_score != null) { level_info_score.GetComponent<Text>().text = "Best Score: " + active_level_selected.bestScore.ToString(); }
-        if (level_info_time != null) { level_info_time.GetComponent<Text>().text = "Best Time: " + active_level_selected.bestTime.ToString("F2") + "s"; }
-        if (level_info_queue != null) { level_info_queue.GetComponent<Text>().text = "Best Queue Size: " + active_level_selected.bestQueueSize.ToString(); }
-        
+        TextMeshProUGUI scoreText = level_info_score.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI timeText = level_info_time.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI queueText = level_info_queue.GetComponent<TextMeshProUGUI>();
+
+        if (scoreText == null || timeText == null || queueText == null)
+        {
+            Debug.LogError("One or more level info objects is missing a TextMeshProUGUI component.");
+            return;
+        }
+
+        scoreText.text = "Best Score: " + active_level_selected.bestScore;
+        timeText.text = "Best Time: " + active_level_selected.bestTime.ToString("F2") + "s";
+        queueText.text = "Best Queue Size: " + active_level_selected.bestQueueSize;
+
     }
 
     //TODO move to Config or utility? any library to support this?
