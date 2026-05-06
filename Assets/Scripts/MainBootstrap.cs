@@ -1,3 +1,4 @@
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +14,10 @@ public class main_bootstrap : MonoBehaviour
     public GameObject main_menu_reference = null;
     public GameObject pause_menu_reference = null;
     public GameObject settings_menu_reference = null;
+    public GameObject main_camera = null;
+
+    public GameObject level_1_1 = null;
+    public GameObject level_1_2 = null;
 
     // level prefab & attached script component
     private GameObject level_instance = null;
@@ -24,6 +29,28 @@ public class main_bootstrap : MonoBehaviour
     private GameObject main_menu_ui_instance = null;
     private GameObject pause_menu_ui_instance = null;
     private GameObject settings_menu_ui_instance = null;
+
+
+
+    // to fix the dynamic instantaion problems from level select
+    //TODO this should be unnessecary
+    public void startHardcodedLevel(string level_name)
+    {
+        if (level_name == "Level 1-1" && level_1_1 != null)
+        {
+            level_instance = level_1_1;
+            startLevel();
+        }
+        else if (level_name == "Level 1-2" && level_1_2 != null)
+        {
+            level_instance = level_1_2;
+            startLevel();
+        }
+        else
+        {
+            Debug.Log("Could not startHardcodedLevel with arg " + level_name);
+        }
+    }
 
     // called before start
     void Awake()
@@ -84,6 +111,7 @@ public class main_bootstrap : MonoBehaviour
     {
         if (main_menu_ui_instance != null && cb_ui_instance != null && level_instance != null && levelManager != null)
         {
+            level_instance.SetActive(false);
             levelManager.DeactivateLevel();
             cb_ui_instance.SetActive(false);
             // this does not complete level or output metrics!!
@@ -278,8 +306,44 @@ public class main_bootstrap : MonoBehaviour
         }
 
         level_instance = Instantiate(levelPrefab, transform);
-        level_instance.SetActive(false);
+        startLevel();
+    }
+
+    private void startLevel()
+    {
+        level_instance.SetActive(true);
         levelManager = GetCurrentLevelManager();
+        levelManager.InitialiseLevel();
+
+        // setup references to level, player, and camera (code blocks/ui connection)
+        CodeBlockUI codeBlockUI = cb_ui_instance.GetComponent<CodeBlockUI>();
+        codeBlockUI.levelManager = levelManager;
+        CBLogic cbParser = cb_parser_instance.GetComponentInChildren<CBLogic>();
+
+        PlayerController player = levelManager.getPlayer();
+
+        //TODO remove this logspam and other logspam
+        //Debug.Log("BIG LOGSPAM");
+        //Debug.Log("cb_ui_instance is " + cb_ui_instance);
+        //Debug.Log("cb_parser_instance is " + cb_parser_instance);
+        //Debug.Log("codeBlockUI is " + codeBlockUI);
+
+        //Debug.Log("levelManager is " + levelManager);
+        //Debug.Log("levelMgr player is " + player);
+
+        cbParser.activePlayer = player;
+        player.level = levelManager;
+
+        //Debug.Log("cbParser is " + cbParser.activePlayer);
+
+        CameraFollow cameraFollow = main_camera.GetComponent<CameraFollow>();
+        cameraFollow.target = levelManager.player.transform;
+
+        //Debug.Log("camera is " + main_camera);
+        //Debug.Log("cameraComp is " + cameraFollow);
+
+        ChangeGameState_ActiveGame();
+
     }
 
 }

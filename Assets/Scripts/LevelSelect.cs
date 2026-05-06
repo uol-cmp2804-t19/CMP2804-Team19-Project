@@ -1,5 +1,10 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+//TODO
+// this work split of front-end and back-end is a different approach to rest of project
+// should be reviewed for effectiveness in sprint reviews
 
 /// <summary>
 /// Public Methods
@@ -15,6 +20,7 @@ using UnityEngine.UI;
 // populateLevelsFromDisk() - loading function part 1, builds levelData from config & resourcePath prefab level names
 // buildLevelSelectButtons() - loading function part 2, builds tree objects
 // updateLevelInfo() - called whenever button clicked to update info panel
+// ensureLevelConfigExists() - called to populate config with default values
 /// </summary>
 
 // Script Behaviour
@@ -35,7 +41,7 @@ public class LevelSelectManager : MonoBehaviour {
     // button list is loaded when menu is opened, performance not a concern as this doesn't happen frequently
     struct LevelData
     {
-        // for loading level_instance in main_bootstrap, add to scene and set inactive then pass ref to main
+        // for loading level_instance, add to scene and set inactive then pass ref to bootstrap_scene
         public string resourcePath;
         // name displays on button, other metrics on info panel (time stored as processed ticks, needs to be converted for display)
         public string levelName;
@@ -44,8 +50,9 @@ public class LevelSelectManager : MonoBehaviour {
         public int bestQueueSize;
     }
 
-    // bootstrap is the main game scene controller handling prefab loading
-    public main_bootstrap main = null;
+    // bootstrap is the scene controller handling prefab loading
+    public GameObject bootstrap_scene = null;
+    private main_bootstrap bootstrap_script = null;
 
     // following references must be set in editor
     // -    container is the left-most field container buttons
@@ -57,6 +64,7 @@ public class LevelSelectManager : MonoBehaviour {
     public GameObject level_button_container = null;
     public GameObject level_button_prefab = null;
     // info panel text labels
+    public GameObject level_info_name = null;
     public GameObject level_info_score = null;
     public GameObject level_info_time = null;
     public GameObject level_info_queue = null;
@@ -67,6 +75,7 @@ public class LevelSelectManager : MonoBehaviour {
 
     // this is the level most recently clicked, should default to topmost or null if no levels exist (error)
     // is changed when the respective level button is clicked
+    // instantiates as blank - //TODO add validation for blank path
     LevelData active_level_selected = new LevelData
     {
         resourcePath = "",
@@ -79,8 +88,18 @@ public class LevelSelectManager : MonoBehaviour {
     // store all loaded levels
     LevelData[] all_levels = new LevelData[0];
 
+    private void Start()
+    {
+        getBootstrapScriptComponent();
+    }
+
     public void openMenu()
     {
+        // set the menu active
+        gameObject.SetActive(true);
+        // confirm exists
+        getBootstrapScriptComponent();
+
         // populate level select buttons from Resources/GameLevels
         // -    for each prefab, load level name from config and display on button
         // -    for each prefab, load level metrics from config and display on info panel on button hover
@@ -90,17 +109,83 @@ public class LevelSelectManager : MonoBehaviour {
         // load levels, set buttons, update metric display to initial option
         populateLevelsFromDisk();
         buildLevelSelectButtons();
-        updateLevelInfo();
-        gameObject.SetActive(true);
+        if (getIfInitialLevel() == true)
+        {
+            updateLevelInfo();
+        }
     }
 
-    private void updateLevelInfo() {
-        if (level_info_score != null) { level_info_score.GetComponent<Text>().text = "Best Score: " + active_level_selected.bestScore.ToString(); }
-        if (level_info_time != null) { level_info_time.GetComponent<Text>().text = "Best Time: " + active_level_selected.bestTime.ToString("F2") + "s"; }
-        if (level_info_queue != null) { level_info_queue.GetComponent<Text>().text = "Best Queue Size: " + active_level_selected.bestQueueSize.ToString(); }
+    private bool getIfInitialLevel()
+    {
+        if (all_levels.Length > 0) {
+            active_level_selected = (LevelData)all_levels[0];
+
+            // for confidence
+            level_info_name.SetActive(true);
+            level_info_score.SetActive(true);
+            level_info_queue.SetActive(true);
+            level_info_time.SetActive(true);
+
+            return true;
+        }
+        else
+        {
+            Debug.LogError("No levels loaded cannot set level info, disabling levelInfo!");
+            level_info_name.SetActive(false);
+            level_info_score.SetActive(false);
+            level_info_queue.SetActive(false);
+            level_info_time.SetActive(false);
+
+            return false;
+        }
     }
 
+    public void updateLevelInfo() {
+
+        Debug.Log("updateLevelInfo called for: " + active_level_selected.levelName);
+        Debug.Log("Level name: " + active_level_selected.levelName + "Level info - score: " + active_level_selected.bestScore + " time: " + active_level_selected.bestTime + " queue: " + active_level_selected.bestQueueSize);
+
+        if (active_level_selected.levelName == "")
+        {
+            Debug.LogError("Active level not set cannot update info!");
+            return;
+        }
+
+        if (level_info_name == null ||
+            level_info_queue == null ||
+            level_info_score == null ||
+            level_info_time == null)
+        {
+            Debug.LogError("Refs not set for UpdateLevelInfo;" +
+                " name (" + level_info_name + "), " +
+                " queue (" + level_info_queue + "), " +
+                " score (" + level_info_score + "), " +
+                " time (" + level_info_time + ")."
+                );
+            return;
+        }
+
+        TextMeshProUGUI nameText = level_info_name.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI scoreText = level_info_score.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI timeText = level_info_time.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI queueText = level_info_queue.GetComponent<TextMeshProUGUI>();
+
+        if (nameText == null || scoreText == null || timeText == null || queueText == null)
+        {
+            Debug.LogError("One or more level info objects is missing a TextMeshProUGUI component.");
+            return;
+        }
+
+        nameText.text = active_level_selected.levelName;
+        scoreText.text = "Best Score: " + active_level_selected.bestScore;
+        timeText.text = "Best Time: " + active_level_selected.bestTime.ToString("F2") + "s";
+        queueText.text = "Best Queue Size: " + active_level_selected.bestQueueSize;
+
+    }
+
+    //TODO move to Config or utility? any library to support this?
     //convert game ticks for level record to HH:MM:SS
+    //TODO show level timer
     private string convertToTimeStamp(float ticks)
     {
         int seconds = (int)(ticks % 60);
@@ -118,6 +203,7 @@ public class LevelSelectManager : MonoBehaviour {
     private void buildLevelSelectButtons()
     {
         // create buttons with listeners for each level, duplicating from the prefab
+        // TODO (adjust for button structure when known)
         if (level_button_container == null || level_button_prefab == null)
         {
             Debug.LogError("LevelSelectManager: level button container and/or prefab not set in inspector!");
@@ -129,50 +215,77 @@ public class LevelSelectManager : MonoBehaviour {
                 // clone the debug button as child of button container
                 GameObject button = Instantiate(level_button_prefab, level_button_container.transform);
 
+                Debug.Log("attempting to set buttons for " + levelData.levelName);
+
                 // confirm structure, edit this code if changes are made
-                Text buttonText = button.GetComponentInChildren<Text>();
                 Button buttonComponent = button.GetComponent<Button>();
+                TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>(true);
                 
                 if (buttonText == null || buttonComponent == null)
                 {
-                    Debug.LogError("Level button prefab is missing Text and/or Button component.");
-                    Destroy(button);
+                    Debug.LogError("Level button prefab is missing Text and/or Button component;"
+                        + " LevelButtonObject = " + button + " "
+                        + " LevelButtonComponent = " + buttonComponent + " "
+                        + " LevelButtonText = " + buttonText
+                        );
+                        //Destroy(button);
                     continue;
                 }
 
                 // button name (displayed as text) will be level name, clicking will update info panel/selected level
                 buttonText.text = levelData.levelName;
                 buttonComponent.onClick.AddListener(() => {
+                    //for debugging click error
+                    Debug.Log("Level button clicked: " + levelData.levelName + " path: " + levelData.resourcePath);
                     active_level_selected = levelData;
                     updateLevelInfo();
                 });
+
+                Debug.Log("I have added " + buttonComponent + " to " + buttonComponent.transform.parent.name);
                 
                 // debug button is set inactive, toggle
                 button.SetActive(true);
             }
         }
     }
+    private void getBootstrapScriptComponent()
+    {
+        if (bootstrap_scene != null)
+        {
+            bootstrap_script = bootstrap_scene.GetComponent<main_bootstrap>();
+        }
+        else
+        {
+            Debug.Log("bootstrap scene not set in editor!");
+        }
+    }
 
     // levels currently exist in ./Assets/Prefabs/GameLevels/
+    // TODO the editor path doesn't exist at runtime -- move to Assets/Resources/GameLevels/
     private void populateLevelsFromDisk()
     {
         // make sure starting from clear slate
         all_levels = new LevelData[0];
         // build array of level data
+        // TODO confirm this does not load debug level prefab and folder empty of other prefabs
         GameObject[] levelPrefabs = Resources.LoadAll<GameObject>("GameLevels");
 
         for (int i = 0; i < levelPrefabs.Length; i++)
         {
             // load level data from config using prefab name as key
             string prefabName = levelPrefabs[i].name;
+            ensureLevelConfigExists(prefabName);
 
             // set to default values if level not found in configData
             float bestTime = GameManager.Main.Config.LevelBestTimes.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestTimes[prefabName] : 0f;
             int bestScore = GameManager.Main.Config.LevelBestScores.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestScores[prefabName] : 0;
             int bestQueueSize = GameManager.Main.Config.LevelBestActions.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestActions[prefabName] : 0;
             // when level is played and exited it will resave to config
+
+            //TODO load metrics from config and add to level data struct
             LevelData levelData = new LevelData
             {
+                //TODO confirm this path works at runtime to pass to level_instance
                 resourcePath = "GameLevels/" + prefabName,
                 levelName = prefabName,
                 bestScore = bestScore,
@@ -187,33 +300,53 @@ public class LevelSelectManager : MonoBehaviour {
             all_levels[all_levels.Length - 1] = levelData;
         }
 
+        Debug.Log("Loaded " + all_levels.Length + " levels!");
+
     }
 
     // connect start button to this
     // when level is selected (start pressed) need to tell bootstrap to actually load the level prefab (wait for it) & close this menu
     // bootstrap will handle transition to game state as this behaviour is owned by that
-    public void onStartButtonPressed() {
+    public void onStartButtonPressed()
+    {
+        Debug.Log("Start button pressed. Selected path: " + active_level_selected.resourcePath);
+        Debug.Log("go to part 1");//TODO remove me
         // check if valid path
         if (string.IsNullOrEmpty(active_level_selected.resourcePath))
         {
+            Debug.Log("go to part 2a"); //TODO remove me
             Debug.LogError("No level selected!");
             return;
         }
         // else
         // pass the file path of the chosen level
-        if (main == null)
+        if (bootstrap_scene == null || bootstrap_script == null)
         {
-            Debug.LogError("LevelSelectManager: main bootstrap reference not set.");
+            Debug.Log("go to part 2b"); //TODO remove me
+            Debug.LogError("LevelSelectManager: bootstrap scene or script reference not set.");
             return;
         }
-        main.LoadLevel(active_level_selected.resourcePath);
+        Debug.Log("go to part 3"); //TODO remove me
+        
+        //removed dynamic instanation
+        //TODO if fixed would be nice to use this again
+        //bootstrap_script.LoadLevel(active_level_selected.resourcePath);
+
+        // level name should correspond to hardcoded if block
+        bootstrap_script.startHardcodedLevel(active_level_selected.levelName);
         closeMenu();
     }
 
     // connect exit button to this
     // levelSelect is not part of game state it is a submenu of title menu, so it controls own state to avoid confusion
-    public void onExitButtonPressed() {
-        main.ChangeGameState_TitleMenu();
+    public void onExitButtonPressed()
+    {
+        if (bootstrap_scene == null || bootstrap_script == null)
+        {
+            Debug.LogError("LevelSelectManager: bootstrap scene (" + bootstrap_scene + ") or script reference (" + bootstrap_script + ") not set.");
+            return;
+        }
+        bootstrap_script.ChangeGameState_TitleMenu();
         closeMenu();
     }
 
@@ -221,6 +354,7 @@ public class LevelSelectManager : MonoBehaviour {
     private void closeMenu()
     {
         clearLevels();
+        // set the menu inactive, //TODO can't confirm syntax here test in unity
         gameObject.SetActive(false);
     }
 
@@ -236,6 +370,32 @@ public class LevelSelectManager : MonoBehaviour {
                 Destroy(child.gameObject);
             }
         }
+    }
+
+    // configData needs to have these values stored
+    private void ensureLevelConfigExists(string levelName)
+    {
+        if (!GameManager.Main.Config.LevelBestTimes.ContainsKey(levelName))
+        {
+            GameManager.Main.Config.LevelBestTimes[levelName] = 0f;
+        }
+
+        if (!GameManager.Main.Config.LevelBestScores.ContainsKey(levelName))
+        {
+            GameManager.Main.Config.LevelBestScores[levelName] = 0;
+        }
+
+        if (!GameManager.Main.Config.LevelBestActions.ContainsKey(levelName))
+        {
+            GameManager.Main.Config.LevelBestActions[levelName] = 0;
+        }
+
+        if (!GameManager.Main.Config.LevelsCompleted.ContainsKey(levelName))
+        {
+            GameManager.Main.Config.LevelsCompleted[levelName] = false;
+        }
+
+        GameManager.Main.SaveConfig();
     }
 
 }
