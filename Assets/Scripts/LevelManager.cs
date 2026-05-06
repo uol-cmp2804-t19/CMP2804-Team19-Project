@@ -283,6 +283,9 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
     // }
 
     public void saveLevelMetricsToConfig() {
+
+        Debug.Log("Attempting to save config after a level!")
+
         if (GameManager.Main.Config == null) {
             Debug.Log("No config data found to save level metrics to!");
             return;
