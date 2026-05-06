@@ -22,6 +22,7 @@ public class CodeBlockUI : MonoBehaviour
     public Texture2D codeBlockRight;
     public Texture2D codeBlockLeft;
     public Texture2D codeBlockMove;
+    public Texture2D codeBlockJump;
     // find on cb_prefab/GameController
     [SerializeField] private CBLogic codeBlockLogic;
 
@@ -204,6 +205,9 @@ public class CodeBlockUI : MonoBehaviour
                 break;
             case "MOVE":
                 buttonImg = Sprite.Create(codeBlockMove, new Rect(0.0f, 0.0f, codeBlockMove.height, codeBlockMove.width), new Vector2(0.5f, 0.5f), 100.0f);
+                break;
+            case "JUMP":
+                buttonImg = Sprite.Create(codeBlockJump, new Rect(0.0f, 0.0f, codeBlockMove.height, codeBlockMove.width), new Vector2(0.5f, 0.5f), 100.0f);
                 break;
             default:
                 buttonImg = Sprite.Create(codeBlockMove, new Rect(0.0f, 0.0f, codeBlockMove.height, codeBlockMove.width), new Vector2(0.5f, 0.5f), 100.0f);
