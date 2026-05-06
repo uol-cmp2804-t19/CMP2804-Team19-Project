@@ -37,7 +37,7 @@ namespace LevelObjects
             if (other.CompareTag("Player"))
             {
                 if (is_collected == true) { return; }
-                //Debug.Log("Collected!");
+                Debug.Log("Collected!");
                 Collected();
                 if (destroy_on_collect)
                 {
