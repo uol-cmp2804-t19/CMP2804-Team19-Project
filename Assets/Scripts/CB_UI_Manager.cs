@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using TMPro;
 
 public class CodeBlockUI : MonoBehaviour
 {
@@ -29,10 +30,14 @@ public class CodeBlockUI : MonoBehaviour
     private int maxQueueSize = 60; // visual limit to prevent overflow
     public int softMaxQueueSize = 60;
 
+    // holds the compiled console logs from block execution
+    public TMP_Text consoleStr;
+
     private void Awake()
     {
         // disable interface before shown, does not default to open
         mainInterfacePanel.SetActive(!mainInterfacePanel.activeSelf);
+        consoleStr.text = "";
     }
 
     private void Start()
@@ -150,6 +155,32 @@ public class CodeBlockUI : MonoBehaviour
     private void ExecuteQueue()
     {
         codeBlockLogic.PerformActions(actionQueue);
+    }
+
+    /// <summary>
+    /// Connects to logging on block execution
+    /// </summary>
+    public void UpdateConsole(string newStr)
+    {
+        if (consoleStr.text == "")
+        {
+            consoleStr.text = newStr;
+        }
+        else
+        {
+            consoleStr.text += ", " + newStr;
+        }
+        
+        // Optional visual debug for confirmation while working on true UI text updates
+        // Debug.Log("Execution Console Updated: " + consoleStr.text);
+    }
+
+    /// <summary>
+    /// Wipes the console logs. Generally on a new execution string starts
+    /// </summary>
+    public void ClearConsole()
+    {
+        consoleStr.text = "";
     }
 
     // create button object & set fixed size

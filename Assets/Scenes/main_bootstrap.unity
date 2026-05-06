@@ -256,6 +256,10 @@ PrefabInstance:
       value: 763
       objectReference: {fileID: 0}
     - target: {fileID: 1366739347633409303, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
+      propertyPath: cbUI
+      value: 
+      objectReference: {fileID: 1407089196}
+    - target: {fileID: 1366739347633409303, guid: 5526eab520d3e164f87ff8b6c378fa66, type: 3}
       propertyPath: ActivePlayer
       value: 
       objectReference: {fileID: 671488706}
@@ -1369,6 +1373,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 412866613145397299, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
   m_PrefabInstance: {fileID: 1217070502}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1407089196 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3121265786907604556, guid: 80e3a74e44c2b7f4e86481d3b84e5306, type: 3}
+  m_PrefabInstance: {fileID: 1217070502}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407089190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f2e6ac167414bd46a7216230d35bc76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1474098881
 GameObject:
   m_ObjectHideFlags: 0
