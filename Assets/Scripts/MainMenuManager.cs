@@ -80,7 +80,6 @@ public class MainMenuManager : MonoBehaviour
         #endif
     }
 
-
     // play game now level select
     public void PlayGame()
     {
@@ -114,5 +113,4 @@ public class MainMenuManager : MonoBehaviour
 		SceneManager.LoadScene("Level" + nextLevel);
 		*/
 	}
-}
 }
