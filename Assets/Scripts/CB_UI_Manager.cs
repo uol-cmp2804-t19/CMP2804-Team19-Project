@@ -66,6 +66,11 @@ public class CodeBlockUI : MonoBehaviour
         PopulatePalette();
     }
 
+    public void openMenu()
+    {
+        mainInterfacePanel.SetActive(true);
+    }
+
     private void ToggleInterface()
     {
         //Debug.Log("toggle interface clicked!!");

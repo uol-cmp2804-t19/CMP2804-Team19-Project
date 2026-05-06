@@ -343,6 +343,9 @@ public class main_bootstrap : MonoBehaviour
         CameraFollow cameraFollow = main_camera.GetComponent<CameraFollow>();
         cameraFollow.target = levelManager.player.transform;
 
+        // OPEN CB UI
+        codeBlockUI.openMenu();
+
         ChangeGameState_ActiveGame();
 
     }
