@@ -79,7 +79,7 @@ public class MainMenuManager : MonoBehaviour
             Application.Quit();
         #endif
     }
-}
+
 
     // play game now level select
     public void PlayGame()
@@ -114,4 +114,5 @@ public class MainMenuManager : MonoBehaviour
 		SceneManager.LoadScene("Level" + nextLevel);
 		*/
 	}
+}
 }
