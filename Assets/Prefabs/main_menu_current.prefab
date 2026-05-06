@@ -277,8 +277,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be35fa43f883cef49bc6abe4b3312280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  main_game: {fileID: 0}
   settingsPanel: {fileID: 0}
   totalLevels: 0
+  levelSelectPrefab: {fileID: 0}
 --- !u!1 &3376537136853865153
 GameObject:
   m_ObjectHideFlags: 0
@@ -558,12 +560,12 @@ GameObject:
   - component: {fileID: 221763187859533896}
   - component: {fileID: 8554945722511709859}
   m_Layer: 5
-  m_Name: LevelButton
+  m_Name: ExitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &9128384611472056032
 RectTransform:
   m_ObjectHideFlags: 0
@@ -668,7 +670,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3201822418863038239}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: LoadLevelSelect
+        m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -781,12 +783,12 @@ GameObject:
   - component: {fileID: 7776797783196309156}
   - component: {fileID: 763036156583358198}
   m_Layer: 5
-  m_Name: LevelSelectButtonText
+  m_Name: ExitButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1994959500533953280
 RectTransform:
   m_ObjectHideFlags: 0
@@ -834,7 +836,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level Select
+  m_text: Exit Game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}

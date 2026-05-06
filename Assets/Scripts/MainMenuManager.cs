@@ -40,6 +40,7 @@ public class MainMenuManager : MonoBehaviour
         settingsPanel.SetActive(false);
         //GameManager.Main.current_game_state = GameManager.GAME_STATE.TITLE_MENU;
     }
+
     private void GetLevelSelectComponent()
     {
         if (levelSelectPrefab != null)
@@ -69,6 +70,11 @@ public class MainMenuManager : MonoBehaviour
         //SceneManager.LoadScene("LevelSelect");
 	}
 	*/
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 
     // play game now level select
     public void PlayGame()
