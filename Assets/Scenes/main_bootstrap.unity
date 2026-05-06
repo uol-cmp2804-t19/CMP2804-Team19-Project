@@ -1832,6 +1832,7 @@ MonoBehaviour:
   main_menu_reference: {fileID: 432300265}
   pause_menu_reference: {fileID: 972411416}
   settings_menu_reference: {fileID: 1057180900}
+  main_camera: {fileID: 1581251974}
 --- !u!114 &1872493046
 MonoBehaviour:
   m_ObjectHideFlags: 0

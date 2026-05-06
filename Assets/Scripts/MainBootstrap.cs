@@ -13,6 +13,7 @@ public class main_bootstrap : MonoBehaviour
     public GameObject main_menu_reference = null;
     public GameObject pause_menu_reference = null;
     public GameObject settings_menu_reference = null;
+    public GameObject main_camera = null;
 
     // level prefab & attached script component
     private GameObject level_instance = null;
@@ -283,8 +284,20 @@ public class main_bootstrap : MonoBehaviour
         }
 
         level_instance = Instantiate(levelPrefab, transform);
-        level_instance.SetActive(false);
+        //level_instance.SetActive(false);
         levelManager = GetCurrentLevelManager();
+        levelManager.InitialiseLevel();
+
+        // setup references to level, player, and camera (code blocks/ui connection)
+        CodeBlockUI codeBlockUI = cb_ui_instance.GetComponent<CodeBlockUI>();
+        codeBlockUI.levelManager = levelManager;
+        CBLogic cbParser = cb_parser_instance.GetComponent<CBLogic>();
+
+        cbParser.activePlayer = levelManager.getPlayer();
+        CameraFollow cameraFollow = main_camera.GetComponent<CameraFollow>();
+        cameraFollow.target = levelManager.player.transform;
+
+        ChangeGameState_ActiveGame();
     }
 
 }

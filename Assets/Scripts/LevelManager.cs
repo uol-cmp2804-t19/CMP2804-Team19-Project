@@ -19,6 +19,7 @@ public class LevelMapManager : MonoBehaviour {
 
     public LevelLayer activeLayer = null;
     public PlayerController player = null;
+    public GameObject playerObject = null;
 
     public bool is_level_active = false;
 
@@ -36,6 +37,14 @@ public class LevelMapManager : MonoBehaviour {
     /// </summary>
     void Start()
     {
+        if (player == null || activeLayer == null)
+        {
+            InitialiseLevel();
+        }
+    }
+
+    public void InitialiseLevel()
+    {
         _setupMapLayer();
         _setupPlayerOnMap();
     }
@@ -50,6 +59,20 @@ public class LevelMapManager : MonoBehaviour {
         is_level_active = true;
         gameObject.SetActive(true);
         Debug.Log("New level activated: " + levelName);
+    }
+
+    // return the level player
+    public PlayerController getPlayer()
+    {
+        if (player != null)
+        {
+            return player;
+        }
+        else
+        {
+            Debug.Log("No player assigned to LevelMapManager, cannot fetch!");
+            return null;
+        }
     }
 
     public void AddScore(int score_change)
@@ -405,18 +428,26 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
         Debug.Log("MLR=\n"+mapLayerRegister);
     }
 
-    private void _setupPlayerOnMap() {
+    private void _setupPlayerOnMap()
+    {
         // Initial player setup within the level if not manually assigned
-        if (player == null)
+        if (player == null || playerObject == null)
         {
-            // search for child with tag player, player gets reloaded with level
-            player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-            if (player != null) {
-                Debug.Log("Player successfully added to LevelMapManager via automated find");
-            } else {
-                Debug.Log("Player must be manually assigned to LevelMapManager as cannot be found - does it exist within level scene?"); 
+            Debug.Log("Player/playerObject not assigned to LevelMapManager, attempting automated find in level children...");
+
+            // search for child player, player gets reloaded with level
+            player = GetComponentInChildren<PlayerController>(true);
+
+            if (player == null)
+            {
+                Debug.LogError("No PlayerController found inside this level prefab.");
                 return;
             }
+
+            playerObject = player.gameObject;
+
+            // else
+            Debug.Log("Player successfully added to LevelMapManager via automated find");
         }
 
         // Player startup
@@ -435,5 +466,6 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
             TeleportPlayerToCell(GetPlayerCell());
         }
     }
+
 
 }

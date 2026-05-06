@@ -20,6 +20,7 @@ using UnityEngine.UI;
 // populateLevelsFromDisk() - loading function part 1, builds levelData from config & resourcePath prefab level names
 // buildLevelSelectButtons() - loading function part 2, builds tree objects
 // updateLevelInfo() - called whenever button clicked to update info panel
+// ensureLevelConfigExists() - called to populate config with default values
 /// </summary>
 
 // Script Behaviour
@@ -306,10 +307,14 @@ public class LevelSelectManager : MonoBehaviour {
     // connect start button to this
     // when level is selected (start pressed) need to tell bootstrap to actually load the level prefab (wait for it) & close this menu
     // bootstrap will handle transition to game state as this behaviour is owned by that
-    public void onStartButtonPressed() {
+    public void onStartButtonPressed()
+    {
+        Debug.Log("Start button pressed. Selected path: " + active_level_selected.resourcePath);
+        Debug.Log("go to part 1");//TODO remove me
         // check if valid path
         if (string.IsNullOrEmpty(active_level_selected.resourcePath))
         {
+            Debug.Log("go to part 2a"); //TODO remove me
             Debug.LogError("No level selected!");
             return;
         }
@@ -317,9 +322,11 @@ public class LevelSelectManager : MonoBehaviour {
         // pass the file path of the chosen level
         if (bootstrap_scene == null || bootstrap_script == null)
         {
+            Debug.Log("go to part 2b"); //TODO remove me
             Debug.LogError("LevelSelectManager: bootstrap scene or script reference not set.");
             return;
         }
+        Debug.Log("go to part 3"); //TODO remove me
         bootstrap_script.LoadLevel(active_level_selected.resourcePath);
         closeMenu();
     }
