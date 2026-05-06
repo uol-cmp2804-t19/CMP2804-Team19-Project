@@ -174,6 +174,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeLayer: {fileID: 3382907721119347950}
   player: {fileID: 4189240206977729794}
+  playerObject: {fileID: 0}
   is_level_active: 0
   levelName: 1-3
   levelScore: 0

@@ -284,7 +284,7 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
 
     public void saveLevelMetricsToConfig() {
 
-        Debug.Log("Attempting to save config after a level!")
+        Debug.Log("Attempting to save config after a level!");
 
         if (GameManager.Main.Config == null) {
             Debug.Log("No config data found to save level metrics to!");
@@ -323,6 +323,7 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
         } else {
             GameManager.Main.Config.LevelBestActions[levelName] = blockQueueSize;
         }
+        GameManager.Main.SaveConfig();
     }
 
     // Currently a teleport, needs to be replaced with gradual movement and animation (especially for jumping) eventually
