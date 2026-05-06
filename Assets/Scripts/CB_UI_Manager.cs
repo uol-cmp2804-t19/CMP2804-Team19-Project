@@ -9,7 +9,7 @@ public class CodeBlockUI : MonoBehaviour
     public Vector2 queueButtonSize = new Vector2(100, 50);
 
     // refernece to LevelMapManager for updating block queue count
-    [SerializeField] private LevelMapManager levelManager;
+    [SerializeField] public LevelMapManager levelManager;
 
     // references to UI objects
     [SerializeField] private Button buttonToggleInterface;

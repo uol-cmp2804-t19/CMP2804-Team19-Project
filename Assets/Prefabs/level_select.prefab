@@ -752,6 +752,7 @@ MonoBehaviour:
   bootstrap_scene: {fileID: 0}
   level_button_container: {fileID: 1965942650085307217}
   level_button_prefab: {fileID: 6425712237964560504}
+  level_info_name: {fileID: 8540030078699958363}
   level_info_score: {fileID: 2506726891637219491}
   level_info_time: {fileID: 3092027261008811239}
   level_info_queue: {fileID: 1282054370877865716}
