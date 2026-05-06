@@ -9,7 +9,7 @@ public class PauseManager : MonoBehaviour
 	private bool isPaused = false;
     public GameObject settingsPanel;
 
-	void start()
+	void Start()
 	{
 		getBootstrapScriptComponent();
 	}

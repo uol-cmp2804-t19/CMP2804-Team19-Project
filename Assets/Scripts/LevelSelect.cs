@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,6 +69,9 @@ public class LevelSelectManager : MonoBehaviour {
     // scene buttons need to be connected to onStartButtonPressed & onExitButtonPressed respectively
     public GameObject button_start_level = null;
     public GameObject button_exit_menu = null;
+
+    // for removing the button due to a resetting levels bug
+    private GameObject active_level_button_selected = null;
 
     // this is the level most recently clicked, should default to topmost or null if no levels exist (error)
     // is changed when the respective level button is clicked
@@ -177,54 +181,56 @@ public class LevelSelectManager : MonoBehaviour {
         queueText.text = "Best Queue Size: " + active_level_selected.bestQueueSize;
 
     }
-
     private void buildLevelSelectButtons()
     {
-        // create buttons with listeners for each level, duplicating from the prefab
         if (level_button_container == null || level_button_prefab == null)
         {
             Debug.LogError("LevelSelectManager: level button container and/or prefab not set in inspector!");
             return;
         }
-        else {
-            foreach (LevelData levelData in all_levels)
+
+        foreach (LevelData levelData in all_levels)
+        {
+            GameObject button = Instantiate(level_button_prefab, level_button_container.transform);
+
+            Debug.Log("attempting to set buttons for " + levelData.levelName);
+
+            Button buttonComponent = button.GetComponent<Button>();
+            TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>(true);
+
+            if (buttonText == null || buttonComponent == null)
             {
-                // clone the debug button as child of button container
-                GameObject button = Instantiate(level_button_prefab, level_button_container.transform);
-
-                Debug.Log("attempting to set buttons for " + levelData.levelName);
-
-                // confirm structure, edit this code if changes are made
-                Button buttonComponent = button.GetComponent<Button>();
-                TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>(true);
-                
-                if (buttonText == null || buttonComponent == null)
-                {
-                    Debug.LogError("Level button prefab is missing Text and/or Button component;"
-                        + " LevelButtonObject = " + button + " "
-                        + " LevelButtonComponent = " + buttonComponent + " "
-                        + " LevelButtonText = " + buttonText
-                        );
-                        //Destroy(button);
-                    continue;
-                }
-
-                // button name (displayed as text) will be level name, clicking will update info panel/selected level
-                buttonText.text = levelData.levelName;
-                buttonComponent.onClick.AddListener(() => {
-                    //for debugging click error
-                    Debug.Log("Level button clicked: " + levelData.levelName + " path: " + levelData.resourcePath);
-                    active_level_selected = levelData;
-                    updateLevelInfo();
-                });
-
-                Debug.Log("I have added " + buttonComponent + " to " + buttonComponent.transform.parent.name);
-                
-                // debug button is set inactive, toggle
-                button.SetActive(true);
+                Debug.LogError("Level button prefab is missing Text and/or Button component;"
+                    + " LevelButtonObject = " + button + " "
+                    + " LevelButtonComponent = " + buttonComponent + " "
+                    + " LevelButtonText = " + buttonText
+                );
+                Destroy(button);
+                continue;
             }
+
+            buttonText.text = levelData.levelName;
+
+            buttonComponent.onClick.AddListener(() => {
+                Debug.Log("Level button clicked: " + levelData.levelName + " path: " + levelData.resourcePath);
+                active_level_selected = levelData;
+                active_level_button_selected = button;
+                updateLevelInfo();
+            });
+
+            button.SetActive(true);
+
+            // set first generated button as initial selected button
+            if (active_level_button_selected == null)
+            {
+                active_level_selected = levelData;
+                active_level_button_selected = button;
+            }
+
+            Debug.Log("I have added " + buttonComponent + " to " + buttonComponent.transform.parent.name);
         }
     }
+
     private void getBootstrapScriptComponent()
     {
         if (bootstrap_scene != null)
@@ -266,8 +272,6 @@ public class LevelSelectManager : MonoBehaviour {
                 bestQueueSize = bestQueueSize
             };
             
-            // set active level to top of list by default, can change when button clicked
-            if (i == 0) { active_level_selected = levelData; }
             // resize array to add new level data, add to array
             System.Array.Resize(ref all_levels, all_levels.Length + 1);
             all_levels[all_levels.Length - 1] = levelData;
@@ -282,6 +286,8 @@ public class LevelSelectManager : MonoBehaviour {
     // bootstrap will handle transition to game state as this behaviour is owned by that
     public void onStartButtonPressed()
     {
+
+
         Debug.Log("Start button pressed. Selected path: " + active_level_selected.resourcePath);
         // check if valid path
         if (string.IsNullOrEmpty(active_level_selected.resourcePath))
@@ -296,9 +302,18 @@ public class LevelSelectManager : MonoBehaviour {
             Debug.LogError("LevelSelectManager: bootstrap scene or script reference not set.");
             return;
         }
-        
+
         //removed dynamic instanation due to race condition bug with player referencing
         //bootstrap_script.LoadLevel(active_level_selected.resourcePath);
+
+        // to fix level replayability bug
+        if (active_level_button_selected != null)
+        {
+            Debug.Log("disabling button for " + active_level_selected.levelName);
+            active_level_button_selected.SetActive(false);
+            //Destroy(active_level_button_selected);
+            active_level_button_selected = null;
+        }
 
         // level name should correspond to hardcoded if block
         bootstrap_script.startHardcodedLevel(active_level_selected.levelName);
