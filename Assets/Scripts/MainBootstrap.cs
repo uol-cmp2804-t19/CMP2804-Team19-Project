@@ -34,7 +34,6 @@ public class main_bootstrap : MonoBehaviour
 
 
     // to fix the dynamic instantaion problems from level select
-    //TODO this should be unnessecary
     public void startHardcodedLevel(string level_name)
     {
         if (level_name == "Level 1-1" && level_1_1 != null)
@@ -69,28 +68,6 @@ public class main_bootstrap : MonoBehaviour
     private void Start()
     {
         ChangeGameState_TitleMenu();
-    }
-
-    private LevelMapManager GetCurrentLevelManager()
-    {
-        if (level_instance != null)
-        {
-            LevelMapManager levelManager = level_instance.GetComponentInChildren<LevelMapManager>(true);
-            if (levelManager != null)
-            {
-                return levelManager;
-            }
-            else
-            {
-                Debug.LogError("Current level instance does not have a LevelMapManager component!");
-                return null;
-            }
-        }
-        else
-        {
-            Debug.LogError("No current level instance found!");
-            return null;
-        }
     }
 
     // before changing state to GAME_ACTIVE make sure the level instance is set
@@ -163,6 +140,27 @@ public class main_bootstrap : MonoBehaviour
     {
         GameManager.Main.current_game_state = GameManager.GAME_STATE.TRANSITION;
         ChangeGameState_TitleMenu();
+    }
+
+    // loads a level from the given resource path
+    public void LoadLevel(string resourcePath)
+    {
+        // unload previous level if it exists
+        if (level_instance != null)
+        {
+            Destroy(level_instance);
+        }
+
+        // load the new level from resources
+        GameObject levelPrefab = Resources.Load<GameObject>(resourcePath);
+        if (levelPrefab == null)
+        {
+            Debug.LogError("Failed to load level from path: " + resourcePath);
+            return;
+        }
+
+        level_instance = Instantiate(levelPrefab, transform);
+        startLevel();
     }
 
     private void LoadInstances()
@@ -246,6 +244,27 @@ public class main_bootstrap : MonoBehaviour
         }
     }
 
+    private LevelMapManager GetCurrentLevelManager()
+    {
+        if (level_instance != null)
+        {
+            LevelMapManager levelManager = level_instance.GetComponentInChildren<LevelMapManager>(true);
+            if (levelManager != null)
+            {
+                return levelManager;
+            }
+            else
+            {
+                Debug.LogError("Current level instance does not have a LevelMapManager component!");
+                return null;
+            }
+        }
+        else
+        {
+            Debug.LogError("No current level instance found!");
+            return null;
+        }
+    }
 
     // does not update game state, DRY function to use with actual game state functions
     private void ToggleSettings(bool toggle)
@@ -292,27 +311,6 @@ public class main_bootstrap : MonoBehaviour
                 levelManager = GetCurrentLevelManager();
             }
         }
-    }
-
-    // loads a level from the given resource path
-    public void LoadLevel(string resourcePath)
-    {
-        // unload previous level if it exists
-        if (level_instance != null)
-        {
-            Destroy(level_instance);
-        }
-
-        // load the new level from resources
-        GameObject levelPrefab = Resources.Load<GameObject>(resourcePath);
-        if (levelPrefab == null)
-        {
-            Debug.LogError("Failed to load level from path: " + resourcePath);
-            return;
-        }
-
-        level_instance = Instantiate(levelPrefab, transform);
-        startLevel();
     }
 
     private void startLevel()
