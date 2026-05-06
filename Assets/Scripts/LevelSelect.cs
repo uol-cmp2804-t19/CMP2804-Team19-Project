@@ -63,6 +63,7 @@ public class LevelSelectManager : MonoBehaviour {
     public GameObject level_button_container = null;
     public GameObject level_button_prefab = null;
     // info panel text labels
+    public GameObject level_info_name = null;
     public GameObject level_info_score = null;
     public GameObject level_info_time = null;
     public GameObject level_info_queue = null;
@@ -93,6 +94,11 @@ public class LevelSelectManager : MonoBehaviour {
 
     public void openMenu()
     {
+        // set the menu active
+        gameObject.SetActive(true);
+        // confirm exists
+        getBootstrapScriptComponent();
+
         // populate level select buttons from Resources/GameLevels
         // -    for each prefab, load level name from config and display on button
         // -    for each prefab, load level metrics from config and display on info panel on button hover
@@ -106,8 +112,6 @@ public class LevelSelectManager : MonoBehaviour {
         {
             updateLevelInfo();
         }
-        // set the menu active, //TODO can't confirm syntax here test in unity
-        gameObject.SetActive(true);
     }
 
     private bool getIfInitialLevel()
@@ -116,6 +120,7 @@ public class LevelSelectManager : MonoBehaviour {
             active_level_selected = (LevelData)all_levels[0];
 
             // for confidence
+            level_info_name.SetActive(true);
             level_info_score.SetActive(true);
             level_info_queue.SetActive(true);
             level_info_time.SetActive(true);
@@ -125,6 +130,7 @@ public class LevelSelectManager : MonoBehaviour {
         else
         {
             Debug.LogError("No levels loaded cannot set level info, disabling levelInfo!");
+            level_info_name.SetActive(false);
             level_info_score.SetActive(false);
             level_info_queue.SetActive(false);
             level_info_time.SetActive(false);
@@ -135,17 +141,22 @@ public class LevelSelectManager : MonoBehaviour {
 
     public void updateLevelInfo() {
 
+        Debug.Log("updateLevelInfo called for: " + active_level_selected.levelName);
+        Debug.Log("Level name: " + active_level_selected.levelName + "Level info - score: " + active_level_selected.bestScore + " time: " + active_level_selected.bestTime + " queue: " + active_level_selected.bestQueueSize);
+
         if (active_level_selected.levelName == "")
         {
             Debug.LogError("Active level not set cannot update info!");
             return;
         }
 
-        if (level_info_queue == null ||
+        if (level_info_name == null ||
+            level_info_queue == null ||
             level_info_score == null ||
             level_info_time == null)
         {
             Debug.LogError("Refs not set for UpdateLevelInfo;" +
+                " name (" + level_info_name + "), " +
                 " queue (" + level_info_queue + "), " +
                 " score (" + level_info_score + "), " +
                 " time (" + level_info_time + ")."
@@ -153,16 +164,18 @@ public class LevelSelectManager : MonoBehaviour {
             return;
         }
 
+        TextMeshProUGUI nameText = level_info_name.GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI scoreText = level_info_score.GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI timeText = level_info_time.GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI queueText = level_info_queue.GetComponent<TextMeshProUGUI>();
 
-        if (scoreText == null || timeText == null || queueText == null)
+        if (nameText == null || scoreText == null || timeText == null || queueText == null)
         {
             Debug.LogError("One or more level info objects is missing a TextMeshProUGUI component.");
             return;
         }
 
+        nameText.text = active_level_selected.levelName;
         scoreText.text = "Best Score: " + active_level_selected.bestScore;
         timeText.text = "Best Time: " + active_level_selected.bestTime.ToString("F2") + "s";
         queueText.text = "Best Queue Size: " + active_level_selected.bestQueueSize;
@@ -221,6 +234,8 @@ public class LevelSelectManager : MonoBehaviour {
                 // button name (displayed as text) will be level name, clicking will update info panel/selected level
                 buttonText.text = levelData.levelName;
                 buttonComponent.onClick.AddListener(() => {
+                    //for debugging click error
+                    Debug.Log("Level button clicked: " + levelData.levelName + " path: " + levelData.resourcePath);
                     active_level_selected = levelData;
                     updateLevelInfo();
                 });
@@ -258,6 +273,7 @@ public class LevelSelectManager : MonoBehaviour {
         {
             // load level data from config using prefab name as key
             string prefabName = levelPrefabs[i].name;
+            ensureLevelConfigExists(prefabName);
 
             // set to default values if level not found in configData
             float bestTime = GameManager.Main.Config.LevelBestTimes.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestTimes[prefabName] : 0f;
@@ -341,6 +357,32 @@ public class LevelSelectManager : MonoBehaviour {
                 Destroy(child.gameObject);
             }
         }
+    }
+
+    // configData needs to have these values stored
+    private void ensureLevelConfigExists(string levelName)
+    {
+        if (!GameManager.Main.Config.LevelBestTimes.ContainsKey(levelName))
+        {
+            GameManager.Main.Config.LevelBestTimes[levelName] = 0f;
+        }
+
+        if (!GameManager.Main.Config.LevelBestScores.ContainsKey(levelName))
+        {
+            GameManager.Main.Config.LevelBestScores[levelName] = 0;
+        }
+
+        if (!GameManager.Main.Config.LevelBestActions.ContainsKey(levelName))
+        {
+            GameManager.Main.Config.LevelBestActions[levelName] = 0;
+        }
+
+        if (!GameManager.Main.Config.LevelsCompleted.ContainsKey(levelName))
+        {
+            GameManager.Main.Config.LevelsCompleted[levelName] = false;
+        }
+
+        GameManager.Main.SaveConfig();
     }
 
 }
