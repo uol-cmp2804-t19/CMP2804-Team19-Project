@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using TMPro;
 
 public class CodeBlockUI : MonoBehaviour
 {
@@ -30,12 +31,13 @@ public class CodeBlockUI : MonoBehaviour
     public int softMaxQueueSize = 60;
 
     // holds the compiled console logs from block execution
-    private string consoleStr = "";
+    public TMP_Text consoleStr;
 
     private void Awake()
     {
         // disable interface before shown, does not default to open
         mainInterfacePanel.SetActive(!mainInterfacePanel.activeSelf);
+        consoleStr.text = "";
     }
 
     private void Start()
@@ -160,17 +162,17 @@ public class CodeBlockUI : MonoBehaviour
     /// </summary>
     public void UpdateConsole(string newStr)
     {
-        if (consoleStr == "")
+        if (consoleStr.text == "")
         {
-            consoleStr = newStr;
+            consoleStr.text = newStr;
         }
         else
         {
-            consoleStr += ", " + newStr;
+            consoleStr.text += ", " + newStr;
         }
         
         // Optional visual debug for confirmation while working on true UI text updates
-        // Debug.Log("Execution Console Updated: " + consoleStr);
+        // Debug.Log("Execution Console Updated: " + consoleStr.text);
     }
 
     /// <summary>
@@ -178,7 +180,7 @@ public class CodeBlockUI : MonoBehaviour
     /// </summary>
     public void ClearConsole()
     {
-        consoleStr = "";
+        consoleStr.text = "";
     }
 
     // create button object & set fixed size
