@@ -327,7 +327,13 @@ public class LevelSelectManager : MonoBehaviour {
             return;
         }
         Debug.Log("go to part 3"); //TODO remove me
-        bootstrap_script.LoadLevel(active_level_selected.resourcePath);
+        
+        //removed dynamic instanation
+        //TODO if fixed would be nice to use this again
+        //bootstrap_script.LoadLevel(active_level_selected.resourcePath);
+
+        // level name should correspond to hardcoded if block
+        bootstrap_script.startHardcodedLevel(active_level_selected.levelName);
         closeMenu();
     }
 

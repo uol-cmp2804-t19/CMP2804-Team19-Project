@@ -430,6 +430,10 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
 
     private void _setupPlayerOnMap()
     {
+        Debug.Log("_setupPlayerOnMap player is " + player);
+        // temp
+        // do nothing
+        /*
         // Initial player setup within the level if not manually assigned
         if (player == null || playerObject == null)
         {
@@ -449,6 +453,7 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
             // else
             Debug.Log("Player successfully added to LevelMapManager via automated find");
         }
+        */
 
         // Player startup
         // Set the initial active map layer to player z-level
@@ -465,6 +470,7 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
             // TODO this is temporary because player is offset from editor positioning
             TeleportPlayerToCell(GetPlayerCell());
         }
+
     }
 
 
