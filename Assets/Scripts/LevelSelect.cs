@@ -73,6 +73,8 @@ public class LevelSelectManager : MonoBehaviour {
     // for removing the button due to a resetting levels bug
     private GameObject active_level_button_selected = null;
 
+    private string[] completed_levels = new string[0];
+
     // this is the level most recently clicked, should default to topmost or null if no levels exist (error)
     // is changed when the respective level button is clicked
     LevelData active_level_selected = new LevelData
@@ -257,6 +259,13 @@ public class LevelSelectManager : MonoBehaviour {
             string prefabName = levelPrefabs[i].name;
             ensureLevelConfigExists(prefabName);
 
+            //temp fix for bug
+            bool alreadyStarted = System.Array.Exists(completed_levels, level => level == prefabName);
+            if (alreadyStarted)
+            {
+                continue;
+            }
+
             // set to default values if level not found in configData
             float bestTime = GameManager.Main.Config.LevelBestTimes.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestTimes[prefabName] : 0f;
             int bestScore = GameManager.Main.Config.LevelBestScores.ContainsKey(prefabName) ? GameManager.Main.Config.LevelBestScores[prefabName] : 0;
@@ -307,12 +316,21 @@ public class LevelSelectManager : MonoBehaviour {
         //bootstrap_script.LoadLevel(active_level_selected.resourcePath);
 
         // to fix level replayability bug
+        /*
         if (active_level_button_selected != null)
         {
             Debug.Log("disabling button for " + active_level_selected.levelName);
             active_level_button_selected.SetActive(false);
             //Destroy(active_level_button_selected);
             active_level_button_selected = null;
+        }
+        */
+        bool alreadyStored = System.Array.Exists(completed_levels, level => level == active_level_selected.levelName);
+
+        if (!alreadyStored)
+        {
+            System.Array.Resize(ref completed_levels, completed_levels.Length + 1);
+            completed_levels[completed_levels.Length - 1] = active_level_selected.levelName;
         }
 
         // level name should correspond to hardcoded if block

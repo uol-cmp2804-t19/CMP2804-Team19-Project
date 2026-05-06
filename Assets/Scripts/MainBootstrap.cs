@@ -52,7 +52,7 @@ public class main_bootstrap : MonoBehaviour
             level_instance = level_1_3;
             startLevel();
         }
-        else if (level_name == "Level 2-1" && level_1_3 != null)
+        else if (level_name == "Level 2-1" && level_2_1 != null)
         {
             level_instance = level_2_1;
             startLevel();
