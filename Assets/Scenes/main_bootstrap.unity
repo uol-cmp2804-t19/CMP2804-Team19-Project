@@ -844,6 +844,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1624870691}
     m_Modifications:
+    - target: {fileID: 1881473590850788002, guid: 464c1d9807b6c32439a1bb3447f83060, type: 3}
+      propertyPath: m_Name
+      value: Layer2-0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3804551601173003013, guid: 464c1d9807b6c32439a1bb3447f83060, type: 3}
+      propertyPath: m_Name
+      value: WorldGrid2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4112309674128207836, guid: 464c1d9807b6c32439a1bb3447f83060, type: 3}
+      propertyPath: m_Name
+      value: Player2
+      objectReference: {fileID: 0}
     - target: {fileID: 4696303031462619051, guid: 464c1d9807b6c32439a1bb3447f83060, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.0209825
@@ -884,6 +896,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6651421065664091969, guid: 464c1d9807b6c32439a1bb3447f83060, type: 3}
+      propertyPath: GameManager
+      value: 
+      objectReference: {fileID: 1872493045}
     - target: {fileID: 7952856273714794002, guid: 464c1d9807b6c32439a1bb3447f83060, type: 3}
       propertyPath: m_Name
       value: Level 1-2
@@ -892,6 +908,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8607121061512802930, guid: 464c1d9807b6c32439a1bb3447f83060, type: 3}
+      propertyPath: playerObject
+      value: 
+      objectReference: {fileID: 1857921967}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1517,6 +1537,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5424097603484080470, guid: 92a6288228061a842bfe3dda5369ff07, type: 3}
+      propertyPath: m_Name
+      value: WorldGrid1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6241330930708650277, guid: 92a6288228061a842bfe3dda5369ff07, type: 3}
+      propertyPath: m_Name
+      value: Player1
+      objectReference: {fileID: 0}
     - target: {fileID: 6241330930708650277, guid: 92a6288228061a842bfe3dda5369ff07, type: 3}
       propertyPath: m_TagString
       value: Player
@@ -1565,6 +1593,14 @@ PrefabInstance:
       propertyPath: GameManager
       value: 
       objectReference: {fileID: 1872493045}
+    - target: {fileID: 7529870685983802605, guid: 92a6288228061a842bfe3dda5369ff07, type: 3}
+      propertyPath: m_Name
+      value: Layer1-0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7701726072264246695, guid: 92a6288228061a842bfe3dda5369ff07, type: 3}
+      propertyPath: playerObject
+      value: 
+      objectReference: {fileID: 1157518963}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1888,6 +1924,26 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3864810918382328973, guid: 0997e9308461f2945b62104f511cf6e6, type: 3}
+      propertyPath: GameManager
+      value: 
+      objectReference: {fileID: 1872493045}
+    - target: {fileID: 7630507510869574388, guid: 0997e9308461f2945b62104f511cf6e6, type: 3}
+      propertyPath: m_Name
+      value: Layer3-0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7969963268357925771, guid: 0997e9308461f2945b62104f511cf6e6, type: 3}
+      propertyPath: m_Name
+      value: Player3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8003724306190997860, guid: 0997e9308461f2945b62104f511cf6e6, type: 3}
+      propertyPath: m_Name
+      value: WorldGrid3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387066833488068206, guid: 0997e9308461f2945b62104f511cf6e6, type: 3}
+      propertyPath: playerObject
+      value: 
+      objectReference: {fileID: 1948057882}
     - target: {fileID: 8881098667397814164, guid: 0997e9308461f2945b62104f511cf6e6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.0209825
