@@ -328,25 +328,11 @@ public class main_bootstrap : MonoBehaviour
 
         PlayerController player = levelManager.getPlayer();
 
-        //TODO remove this logspam and other logspam
-        //Debug.Log("BIG LOGSPAM");
-        //Debug.Log("cb_ui_instance is " + cb_ui_instance);
-        //Debug.Log("cb_parser_instance is " + cb_parser_instance);
-        //Debug.Log("codeBlockUI is " + codeBlockUI);
-
-        //Debug.Log("levelManager is " + levelManager);
-        //Debug.Log("levelMgr player is " + player);
-
         cbParser.activePlayer = player;
         player.level = levelManager;
 
-        //Debug.Log("cbParser is " + cbParser.activePlayer);
-
         CameraFollow cameraFollow = main_camera.GetComponent<CameraFollow>();
         cameraFollow.target = levelManager.player.transform;
-
-        //Debug.Log("camera is " + main_camera);
-        //Debug.Log("cameraComp is " + cameraFollow);
 
         ChangeGameState_ActiveGame();
 
