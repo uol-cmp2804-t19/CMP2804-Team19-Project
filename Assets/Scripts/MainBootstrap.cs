@@ -61,6 +61,7 @@ public class main_bootstrap : MonoBehaviour
     void Awake()
     {
         LoadInstances();
+        //TODO add level select to load from selection of prefabs given argument (after level design)
         // for level select need to check for relevant unloading/game controller setup
         LoadDebugLevelIfExists();
     }
@@ -125,7 +126,10 @@ public class main_bootstrap : MonoBehaviour
             return;
         }
 
+        //TODO transition state will stop gameplay execution and hotkey control
         GameManager.Main.current_game_state = GameManager.GAME_STATE.TRANSITION;
+        
+        //TODO open level metric screen, open and have transition between game, level metric, and title
         
         // store and log (for debug) level metrics - remove log when level metric implemented
         levelManager.saveLevelMetricsToConfig();
@@ -135,9 +139,10 @@ public class main_bootstrap : MonoBehaviour
         ChangeGameState_TitleMenu();
     }
 
-    // change gameState back to title after reporting victory
+    // change gameState back to title after reporting victory (//TODO this is where to add the level metric screen)
     public void Victory()
     {
+        // TODO add handling to stop CB block execution & play when in transition
         GameManager.Main.current_game_state = GameManager.GAME_STATE.TRANSITION;
         ChangeGameState_TitleMenu();
     }

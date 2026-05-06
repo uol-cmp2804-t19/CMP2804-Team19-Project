@@ -28,6 +28,7 @@ public class LevelLayer : MonoBehaviour
     //         Vector3 center = new Vector3();
 
     //         // show world highlight
+    //         //TODO this is an unnecessary draw call every drawGizmos call just do it once?
     //         TileBase[] allTiles = tilemap.GetTilesBlock(tilemap.cellBounds);
     //         // iterate over the x axis
     //         for (int x = 0; x < tilemap.cellBounds.size.x; x++)

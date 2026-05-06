@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+//TODO need to find the level without being assigned for ease of use by team
 namespace LevelObjects
 {
 
