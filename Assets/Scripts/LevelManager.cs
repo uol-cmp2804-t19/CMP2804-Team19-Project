@@ -15,7 +15,8 @@ using System.Collections.Generic;
 /// <summary>
 /// Level manager controls the separate tilemap z-levels and player movement
 /// </summary>
-public class LevelMapManager : MonoBehaviour {
+public class LevelMapManager : MonoBehaviour
+{
 
     public LevelLayer activeLayer = null;
     public PlayerController player = null;
@@ -23,7 +24,7 @@ public class LevelMapManager : MonoBehaviour {
     public bool is_level_active = false;
 
     Dictionary<int, LevelLayer> mapLayerRegister = new Dictionary<int, LevelLayer>();
-    
+
     // metrics fed back to configData
     public string levelName = "undefined_level";
     public int levelScore = 0;
@@ -40,13 +41,16 @@ public class LevelMapManager : MonoBehaviour {
         _setupPlayerOnMap();
     }
 
-    void Update() {
-        if (is_level_active) {
+    void Update()
+    {
+        if (is_level_active)
+        {
             levelTimeSeconds += Time.deltaTime; // seconds
         }
     }
 
-    public void ActivateLevel() {
+    public void ActivateLevel()
+    {
         is_level_active = true;
         gameObject.SetActive(true);
         Debug.Log("New level activated: " + levelName);
@@ -81,10 +85,11 @@ public class LevelMapManager : MonoBehaviour {
             LevelLayer newLayer = mapLayerRegister[newZLevel];
             activeLayer = newLayer;
         }
-        
+
 
     }
-     public void DeactivateLevel() {
+    public void DeactivateLevel()
+    {
         is_level_active = false;
         gameObject.SetActive(false);
         Debug.Log("Level deactivated! (" + levelName + ")");
@@ -117,101 +122,102 @@ public class LevelMapManager : MonoBehaviour {
     /// True if the move is valid, false otherwise
     /// </returns>
     public bool hasTileAtCell(Vector3Int cellPosition)
-{
-    if (player == null)
     {
-        Debug.Log("You forgot to assign a player and/or map!");
-        return false;
-    }
-
-    // x/y for tilemap lookup, z is nil because not storing z layer by tilemap
-    Vector3Int tileCell = new Vector3Int(cellPosition.x, cellPosition.y, 0);
-
-    if (mapLayerRegister.ContainsKey(cellPosition.z))
-    {
-        if (mapLayerRegister[cellPosition.z].tilemap.HasTile(tileCell))
+        if (player == null)
         {
-            return true;
+            Debug.Log("You forgot to assign a player and/or map!");
+            return false;
         }
-    }
 
-    // else
-    Debug.Log("No tile found at cell " + tileCell + " on z-level " + cellPosition.z);
-    return false;
-}
+        // x/y for tilemap lookup, z is nil because not storing z layer by tilemap
+        Vector3Int tileCell = new Vector3Int(cellPosition.x, cellPosition.y, 0);
 
-// confirm is movement is blocked by cell on higher layer
-public bool isBlockedByElevation(Vector3Int cellPosition) {
-    if (player == null)
-    {
-        Debug.Log("You forgot to assign a player and/or map!");
-        return true;
-    }
-
-    // x/y for tilemap lookup, z is nil because not storing z layer by tilemap
-    Vector3Int tileCell = new Vector3Int(cellPosition.x, cellPosition.y, 0);
-
-    // blocked if any layer ABOVE intended z has a tile at target x/y
-    foreach (var (key, value) in mapLayerRegister)
-    {
-        if (key > cellPosition.z)
+        if (mapLayerRegister.ContainsKey(cellPosition.z))
         {
-            if (value.tilemap.HasTile(tileCell))
+            if (mapLayerRegister[cellPosition.z].tilemap.HasTile(tileCell))
             {
-                // TODO remove all the temporary move logs and spammy stuff in gameplay or at least made dev option toggleable
-                Debug.Log("Move blocked by tile on higher layer " + value.name + " at z-level " + key);
                 return true;
             }
         }
+
+        // else
+        Debug.Log("No tile found at cell " + tileCell + " on z-level " + cellPosition.z);
+        return false;
     }
 
-    // else
-    return false;
-}
-
-public int getHighestValidLayer(Vector3Int cellPosition) {
-    // find highest tile at or below intended z
-    int highestLayer = -1;
-
-    // start at highest layer work down, if above the target layer then ignore it
-    // call hasTileAtCell on each layer, then get highest existing
-    // once highest existing found at or below target layer, check if anything higher with isBlockedByElevation
-    // If not then return that layer as valid move, if so return -1 (invalid move)
-
-    foreach (var (key, value) in mapLayerRegister)
+    // confirm is movement is blocked by cell on higher layer
+    public bool isBlockedByElevation(Vector3Int cellPosition)
     {
-        if (key > cellPosition.z)
+        if (player == null)
         {
-            continue;
+            Debug.Log("You forgot to assign a player and/or map!");
+            return true;
         }
-        else
+
+        // x/y for tilemap lookup, z is nil because not storing z layer by tilemap
+        Vector3Int tileCell = new Vector3Int(cellPosition.x, cellPosition.y, 0);
+
+        // blocked if any layer ABOVE intended z has a tile at target x/y
+        foreach (var (key, value) in mapLayerRegister)
         {
-            if (hasTileAtCell(new Vector3Int(cellPosition.x, cellPosition.y, key)) && key > highestLayer)
+            if (key > cellPosition.z)
             {
-                highestLayer = key;
+                if (value.tilemap.HasTile(tileCell))
+                {
+                    Debug.Log("Move blocked by tile on higher layer " + value.name + " at z-level " + key);
+                    return true;
+                }
             }
         }
+
+        // else
+        return false;
     }
 
-    if (highestLayer == -1)
+    public int getHighestValidLayer(Vector3Int cellPosition)
     {
-        Debug.Log("No valid layers found at or below target layer " + cellPosition.z + " for cell " + cellPosition);
-        return -1;
-    }
-    else
-    {
-        if (isBlockedByElevation(new Vector3Int(cellPosition.x, cellPosition.y, highestLayer)))
+        // find highest tile at or below intended z
+        int highestLayer = -1;
+
+        // start at highest layer work down, if above the target layer then ignore it
+        // call hasTileAtCell on each layer, then get highest existing
+        // once highest existing found at or below target layer, check if anything higher with isBlockedByElevation
+        // If not then return that layer as valid move, if so return -1 (invalid move)
+
+        foreach (var (key, value) in mapLayerRegister)
         {
-            Debug.Log("Move blocked by tile on higher layer at z-level " + cellPosition.z);
+            if (key > cellPosition.z)
+            {
+                continue;
+            }
+            else
+            {
+                if (hasTileAtCell(new Vector3Int(cellPosition.x, cellPosition.y, key)) && key > highestLayer)
+                {
+                    highestLayer = key;
+                }
+            }
+        }
+
+        if (highestLayer == -1)
+        {
+            Debug.Log("No valid layers found at or below target layer " + cellPosition.z + " for cell " + cellPosition);
             return -1;
         }
         else
         {
-            return highestLayer;
+            if (isBlockedByElevation(new Vector3Int(cellPosition.x, cellPosition.y, highestLayer)))
+            {
+                Debug.Log("Move blocked by tile on higher layer at z-level " + cellPosition.z);
+                return -1;
+            }
+            else
+            {
+                return highestLayer;
+            }
         }
-    }
 
-}
+    }
 
     /// <summary>
     /// Moves the player in the specified direction.
@@ -233,7 +239,7 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
         // if new z > current z, is valid if tile exists on higher z level, current z level, lower z level... & no tile exists on higher than new z levels
         // this is effectively the same
         // just get the highest valid layer, move there, update player z level
-        
+
         if (player == null || activeLayer == null)
         {
             //TODO add error handling
@@ -252,7 +258,8 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
 
             //TODO remove testing checks in teleportPlayerToCell, logic now called beforehand
             int targetLayer = getHighestValidLayer(targetCell);
-            if (targetLayer == -1) {
+            if (targetLayer == -1)
+            {
                 Debug.Log("No valid target layer found for move to cell " + targetCell);
                 return;
             }
@@ -277,8 +284,10 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
     //     Gizmos.DrawWireCube(center, activeLayer.tilemap.cellSize);
     // }
 
-    public void saveLevelMetricsToConfig() {
-        if (GameManager.Main.Config == null) {
+    public void saveLevelMetricsToConfig()
+    {
+        if (GameManager.Main.Config == null)
+        {
             Debug.Log("No config data found to save level metrics to!");
             return;
         }
@@ -287,34 +296,46 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
 
         // overwrite level name in configData as complete
         GameManager.Main.Config.LevelsCompleted[levelName] = true;
-        
+
         // overwrite level best time if new time is better or no existing time
-        if (GameManager.Main.Config.LevelBestTimes.ContainsKey(levelName)) {
+        if (GameManager.Main.Config.LevelBestTimes.ContainsKey(levelName))
+        {
             float recorded_best_time = GameManager.Main.Config.LevelBestTimes[levelName];
-            if (levelTimeSeconds < recorded_best_time || recorded_best_time == 0) {
+            if (levelTimeSeconds < recorded_best_time || recorded_best_time == 0)
+            {
                 GameManager.Main.Config.LevelBestTimes[levelName] = levelTimeSeconds;
             }
-        } else {
+        }
+        else
+        {
             GameManager.Main.Config.LevelBestTimes[levelName] = levelTimeSeconds;
         }
 
         // overwrite level best score if new score is better or no existing score
-        if (GameManager.Main.Config.LevelBestScores.ContainsKey(levelName)) {
+        if (GameManager.Main.Config.LevelBestScores.ContainsKey(levelName))
+        {
             int recorded_best_score = GameManager.Main.Config.LevelBestScores[levelName];
-            if (levelScore > recorded_best_score || recorded_best_score == 0) {
+            if (levelScore > recorded_best_score || recorded_best_score == 0)
+            {
                 GameManager.Main.Config.LevelBestScores[levelName] = levelScore;
             }
-        } else {
+        }
+        else
+        {
             GameManager.Main.Config.LevelBestScores[levelName] = levelScore;
         }
 
         // overwrite level best actions if new action count is better or no existing action count
-        if (GameManager.Main.Config.LevelBestActions.ContainsKey(levelName)) {
+        if (GameManager.Main.Config.LevelBestActions.ContainsKey(levelName))
+        {
             int recorded_best_blocks = GameManager.Main.Config.LevelBestActions[levelName];
-            if (blockQueueSize < recorded_best_blocks || recorded_best_blocks == 0) {
+            if (blockQueueSize < recorded_best_blocks || recorded_best_blocks == 0)
+            {
                 GameManager.Main.Config.LevelBestActions[levelName] = blockQueueSize;
             }
-        } else {
+        }
+        else
+        {
             GameManager.Main.Config.LevelBestActions[levelName] = blockQueueSize;
         }
     }
@@ -326,7 +347,6 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
     {
         if (player == null || activeLayer == null)
         {
-            //TODO add error handling
             Debug.Log("You forgot to assign a player and/or map!");
             return;
         }
@@ -355,7 +375,8 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
     // private functions
     ##################################################################################################################### */
 
-    private void _setupMapLayer() {
+    private void _setupMapLayer()
+    {
         // Map layer setup
 
         // bugged
@@ -381,8 +402,10 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
         foreach (var (key, value) in mapLayerRegister)
         {
             // set sorting order by specified ZLevel (offset by 1), forcing levellayers with duplicate ZLevels to default to nil & not render
-            if (value != null || value is LevelLayer) {
-                if (value.tilemap == null) {
+            if (value != null || value is LevelLayer)
+            {
+                if (value.tilemap == null)
+                {
                     Debug.Log("No tilemap found on LevelLayer '" + value.name + "', cannot set sorting order!");
                     continue;
                 }
@@ -393,28 +416,32 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
                     continue;
                 }
                 // else
-                renderer.sortingOrder = key+1;
+                renderer.sortingOrder = key + 1;
             }
             else
             {
                 Debug.Log("No LevelLayer found for z-level " + key + ", cannot set sorting order!");
             }
             Debug.Log("Registered map layer for z-level " + key + ": " + value.name);
-            
+
         }
-        Debug.Log("MLR=\n"+mapLayerRegister);
+        Debug.Log("MLR=\n" + mapLayerRegister);
     }
 
-    private void _setupPlayerOnMap() {
+    private void _setupPlayerOnMap()
+    {
         // Initial player setup within the level if not manually assigned
         if (player == null)
         {
             // search for child with tag player, player gets reloaded with level
             player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-            if (player != null) {
+            if (player != null)
+            {
                 Debug.Log("Player successfully added to LevelMapManager via automated find");
-            } else {
-                Debug.Log("Player must be manually assigned to LevelMapManager as cannot be found - does it exist within level scene?"); 
+            }
+            else
+            {
+                Debug.Log("Player must be manually assigned to LevelMapManager as cannot be found - does it exist within level scene?");
                 return;
             }
         }
@@ -435,5 +462,4 @@ public int getHighestValidLayer(Vector3Int cellPosition) {
             TeleportPlayerToCell(GetPlayerCell());
         }
     }
-
 }
