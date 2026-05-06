@@ -4,8 +4,15 @@ using UnityEngine.SceneManagement;
 public class PauseManager : MonoBehaviour
 {
 	public GameObject pauseMenuUI;
+	public GameObject bootstrap_scene;
+	private main_bootstrap bootstrap_script;
 	private bool isPaused = false;
     public GameObject settingsPanel;
+
+	void start()
+	{
+		getBootstrapScriptComponent();
+	}
 
 	void Update()
 	{
@@ -29,6 +36,19 @@ public class PauseManager : MonoBehaviour
 		}
 	}
 
+	
+    private void getBootstrapScriptComponent()
+    {
+        if (bootstrap_scene != null)
+        {
+            bootstrap_script = bootstrap_scene.GetComponent<main_bootstrap>();
+        }
+        else
+        {
+            Debug.Log("bootstrap scene not set in editor!");
+        }
+    }
+
 	public void ResumeGame()
 	{
 		pauseMenuUI.SetActive(false);
@@ -48,6 +68,7 @@ public class PauseManager : MonoBehaviour
 		Time.timeScale = 1f;
 		Debug.Log("TODO - You need to revert to main menu by pressing this, tell GameLoader to unload active level etc.");
 		//SceneManager.LoadScene("MainMenu");
+		bootstrap_script.ChangeGameState_TitleMenu();
 	}
     public void OpenSettings()
     {
