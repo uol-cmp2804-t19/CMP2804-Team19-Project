@@ -18,6 +18,7 @@ public class main_bootstrap : MonoBehaviour
 
     public GameObject level_1_1 = null;
     public GameObject level_1_2 = null;
+    public GameObject level_1_3 = null;
 
     // level prefab & attached script component
     private GameObject level_instance = null;
@@ -44,6 +45,11 @@ public class main_bootstrap : MonoBehaviour
         else if (level_name == "Level 1-2" && level_1_2 != null)
         {
             level_instance = level_1_2;
+            startLevel();
+        }
+        else if (level_name == "Level 1-3" && level_1_3 != null)
+        {
+            level_instance = level_1_3;
             startLevel();
         }
         else
